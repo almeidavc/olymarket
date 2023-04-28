@@ -17,7 +17,8 @@
   "scripts": {
     "native": "cd apps/expo && yarn start",
     "web": "cd apps/next && yarn next",
-    "server": "cd packages/api && yarn start"
+    "server": "cd packages/api && yarn start",
+    "studio": "cd packages/db && npx prisma studio"
   },
   "engines": {
     "node": ">=16.0.0 <17.0.0"
