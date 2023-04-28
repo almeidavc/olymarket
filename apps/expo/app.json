@@ -1,18 +1,23 @@
 {
   "expo": {
-    "name": "solito-nativewind",
-    "slug": "solito-nativewind",
+    "name": "olymarket",
+    "slug": "olymarket",
     "version": "1.0.0",
-    "scheme": "solito-nativewind",
+    "scheme": "olymarket",
     "platforms": [
       "ios",
       "android"
     ],
     "ios": {
-      "bundleIdentifier": "com.solito.nativewind"
+      "bundleIdentifier": "com.almeidavc.olymarket"
     },
     "android": {
       "package": "com.almeidavc.olymarket"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d4cac5ce-e0b5-4873-88c6-02dfb9cf5d6e"
+      }
     }
   }
 }
