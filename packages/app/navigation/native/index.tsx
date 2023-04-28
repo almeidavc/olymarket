@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import { HomeScreen } from '../../features/home/screen'
-import { UserDetailScreen } from '../../features/post/detail-screen'
+import { CreatePostScreen } from '../../features/post/screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 
@@ -51,7 +51,7 @@ export function TabNavigation() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Post" component={UserDetailScreen} />
+      <Tab.Screen name="Post" component={CreatePostScreen} />
     </Tab.Navigator>
   )
 }
