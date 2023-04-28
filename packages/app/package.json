@@ -6,6 +6,10 @@
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
+    "@tanstack/react-query": "^4.29.5",
+    "@trpc/client": "^10.21.3-alpha.3",
+    "@trpc/react-query": "^10.21.3-alpha.3",
+    "@trpc/server": "^10.21.3-alpha.3",
     "moti": "latest",
     "nativewind": "2.0.9",
     "solito": "3.0.0"

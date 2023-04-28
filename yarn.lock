@@ -2810,10 +2810,74 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@npm:4.29.5":
+  version: 4.29.5
+  resolution: "@tanstack/query-core@npm:4.29.5"
+  checksum: 367176beccd78e959c74e69e96497b626dd1c139398501eb7a04cf92215edf262665c3e7bb59df68320779d49893d3153a3b41e750b9046655b45cfe44691b36
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^4.29.5":
+  version: 4.29.5
+  resolution: "@tanstack/react-query@npm:4.29.5"
+  dependencies:
+    "@tanstack/query-core": 4.29.5
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: de45573900810b37216aa8d6599cae5ea43602eaada9fd2224f57ff7ab1de10b3f2e681e7fdb993ee1519ed8ffc7e6e07d6bf3ad1b9da4136b1ae78ca19f31f6
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
   checksum: ad87447820dd3f24825d2d947ebc03072b20a42bfc96cbafec16bff8bbda6c1a81fcb0be56d5b21968560c5359a0af4038a68ba150c3e1694fe4c109a063bed8
+  languageName: node
+  linkType: hard
+
+"@trpc/client@npm:^10.21.3-alpha.3":
+  version: 10.21.3-alpha.3
+  resolution: "@trpc/client@npm:10.21.3-alpha.3"
+  peerDependencies:
+    "@trpc/server": 10.21.3-alpha.3
+  checksum: fffc168b451673961b7003aa27977bce172dc3cb27d3e340ce45bdd2ef9ec1ea8a5a8c57bfbde87eddb0ed9b1114a74a7afb0979f14cd84ac8072275f537cf84
+  languageName: node
+  linkType: hard
+
+"@trpc/react-query@npm:^10.21.3-alpha.3":
+  version: 10.21.3-alpha.3
+  resolution: "@trpc/react-query@npm:10.21.3-alpha.3"
+  peerDependencies:
+    "@tanstack/react-query": ^4.18.0
+    "@trpc/client": 10.21.3-alpha.3
+    "@trpc/server": 10.21.3-alpha.3
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: dd8999c660aca1710544c12587ed4607f015ac474b39875fc2192cdcf6119b8f40f80f7e1dab16b664b818135a5ed4b49f50ff26826a16ba503f96af19b64b89
+  languageName: node
+  linkType: hard
+
+"@trpc/server@npm:^10.21.3-alpha.3":
+  version: 10.21.3-alpha.3
+  resolution: "@trpc/server@npm:10.21.3-alpha.3"
+  checksum: 5c7e6945159f5195fbb5454c1d83150a580c0e657c44b206eb894a6d686104d38fe84bb58fc9f3914ea2e5aed6f0982ea06a5110c32ea16d298f9998735ae123
+  languageName: node
+  linkType: hard
+
+"@types/cors@npm:^2.8.13":
+  version: 2.8.13
+  resolution: "@types/cors@npm:2.8.13"
+  dependencies:
+    "@types/node": "*"
+  checksum: 7ef197ea19d2e5bf1313b8416baa6f3fd6dd887fd70191da1f804f557395357dafd8bc8bed0ac60686923406489262a7c8a525b55748f7b2b8afa686700de907
   languageName: node
   linkType: hard
 
@@ -3238,6 +3302,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"api@workspace:packages/api":
+  version: 0.0.0-use.local
+  resolution: "api@workspace:packages/api"
+  dependencies:
+    "@trpc/client": ^10.21.3-alpha.3
+    "@trpc/server": ^10.21.3-alpha.3
+    "@types/cors": ^2.8.13
+    cors: ^2.8.5
+  languageName: unknown
+  linkType: soft
+
 "app@*, app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
@@ -3245,6 +3320,10 @@ __metadata:
     "@react-navigation/bottom-tabs": ^6.5.7
     "@react-navigation/native": ^6.0.8
     "@react-navigation/native-stack": ^6.5.0
+    "@tanstack/react-query": ^4.29.5
+    "@trpc/client": ^10.21.3-alpha.3
+    "@trpc/react-query": ^10.21.3-alpha.3
+    "@trpc/server": ^10.21.3-alpha.3
     moti: latest
     nativewind: 2.0.9
     solito: 3.0.0
@@ -3537,6 +3616,20 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0
   checksum: 2a1cb879019dffb08d17bec36e13c3a6d74c94773f41c1fd8b14de13f149cc34b705b0a1e07b42fcf35917b49d78db6ff0c5c3b00b202a5235013d517b5c6bbb
+  languageName: node
+  linkType: hard
+
+"babel-plugin-inline-dotenv@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "babel-plugin-inline-dotenv@npm:1.7.0"
+  dependencies:
+    dotenv: ^16.0.0
+  peerDependencies:
+    dotenv-expand: ">= 5.0.0"
+  peerDependenciesMeta:
+    dotenv-expand:
+      optional: true
+  checksum: 1203b100b84d247a0db5d1f2565f452e1afa3f747e5ad872ddbf3533b49ec2173ba2c99d22c05fa902914da8de331fbc714132c2eda7b0a2a26fa909dbb10a67
   languageName: node
   linkType: hard
 
@@ -4457,6 +4550,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cors@npm:^2.8.5":
+  version: 2.8.5
+  resolution: "cors@npm:2.8.5"
+  dependencies:
+    object-assign: ^4
+    vary: ^1
+  checksum: ced838404ccd184f61ab4fdc5847035b681c90db7ac17e428f3d81d69e2989d2b680cc254da0e2554f5ed4f8a341820a1ce3d1c16b499f6e2f47a1b9b07b5006
+  languageName: node
+  linkType: hard
+
 "cosmiconfig@npm:^5.0.5, cosmiconfig@npm:^5.1.0":
   version: 5.2.1
   resolution: "cosmiconfig@npm:5.2.1"
@@ -4858,6 +4961,13 @@ __metadata:
   dependencies:
     esutils: ^2.0.2
   checksum: fd7673ca77fe26cd5cba38d816bc72d641f500f1f9b25b83e8ce28827fe2da7ad583a8da26ab6af85f834138cf8dae9f69b0cd6ab925f52ddab1754db44d99ce
+  languageName: node
+  linkType: hard
+
+"dotenv@npm:^16.0.0":
+  version: 16.0.3
+  resolution: "dotenv@npm:16.0.3"
+  checksum: afcf03f373d7a6d62c7e9afea6328e62851d627a4e73f2e12d0a8deae1cd375892004f3021883f8aec85932cd2834b091f568ced92b4774625b321db83b827f8
   languageName: node
   linkType: hard
 
@@ -5442,7 +5552,9 @@ __metadata:
     "@types/react": ~18.0.27
     "@types/react-native": ~0.69.1
     app: "*"
+    babel-plugin-inline-dotenv: ^1.7.0
     expo: ~48.0.15
+    expo-constants: ^14.2.1
     expo-linking: ~4.0.1
     expo-splash-screen: ~0.18.2
     expo-status-bar: ~1.4.4
@@ -5483,7 +5595,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-constants@npm:~14.2.0, expo-constants@npm:~14.2.1":
+"expo-constants@npm:^14.2.1, expo-constants@npm:~14.2.0, expo-constants@npm:~14.2.1":
   version: 14.2.1
   resolution: "expo-constants@npm:14.2.1"
   dependencies:
@@ -8917,7 +9029,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
+"object-assign@npm:^4, object-assign@npm:^4.0.1, object-assign@npm:^4.1.0, object-assign@npm:^4.1.1":
   version: 4.1.1
   resolution: "object-assign@npm:4.1.1"
   checksum: fcc6e4ea8c7fe48abfbb552578b1c53e0d194086e2e6bbbf59e0a536381a292f39943c6e9628af05b5528aa5e3318bb30d6b2e53cadaf5b8fe9e12c4b69af23f
@@ -12032,7 +12144,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.0.0, use-sync-external-store@npm:^1.1.0":
+"use-sync-external-store@npm:^1.0.0, use-sync-external-store@npm:^1.1.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:
@@ -12105,7 +12217,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vary@npm:~1.1.2":
+"vary@npm:^1, vary@npm:~1.1.2":
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b

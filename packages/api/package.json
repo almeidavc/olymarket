@@ -1,0 +1,15 @@
+{
+  "name": "api",
+  "packageManager": "yarn@3.4.1",
+  "dependencies": {
+    "@trpc/client": "^10.21.3-alpha.3",
+    "@trpc/server": "^10.21.3-alpha.3",
+    "cors": "^2.8.5"
+  },
+  "scripts": {
+    "start": "ts-node index.ts"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13"
+  }
+}

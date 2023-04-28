@@ -1,69 +1,42 @@
-import { A, H1, P, Text, TextLink } from 'app/design/typography'
-import { Row } from 'app/design/layout'
+import { H1, Text, } from 'app/design/typography'
 import { View } from 'app/design/view'
+import { Image } from 'app/design/image'
+import { trpc } from 'app/utils/trpc'
 
-import { MotiLink } from 'solito/moti'
+export function PostCard() {
+  const data = trpc.post.list.useQuery()
+
+  console.log(data.data)
+
+  return (
+    <View className="flex h-[30vh] flex-col justify-between rounded-lg border-2 border-lime-800 p-4">
+      <Image
+        className="h-2/3 w-full bg-black"
+        source={{
+          uri: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/SMPTE_Color_Bars.svg/200px-SMPTE_Color_Bars.svg.png',
+        }}
+        resizeMode="contain"
+      />
+      <View>
+        <Text className="text-lg font-semibold text-lime-900">
+          {/* {post.title} */}
+        </Text>
+        <Text className="text-lime-900">
+          {/* {post.price.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'EUR',
+          })} */}
+        </Text>
+      </View>
+    </View>
+  )
+}
 
 export function HomeScreen() {
   return (
-    <View className="flex-1 items-center justify-center p-3">
-      <H1>Welcome to Solito.</H1>
-      <View className="max-w-xl">
-        <P className="text-center">
-          Here is a basic starter to show you how you can navigate from one
-          screen to another. This screen uses the same code on Next.js and React
-          Native.
-        </P>
-        <P className="text-center">
-          Solito is made by{' '}
-          <A
-            href="https://twitter.com/fernandotherojo"
-            hrefAttrs={{
-              target: '_blank',
-              rel: 'noreferrer',
-            }}
-          >
-            Fernando Rojo
-          </A>
-          .
-        </P>
-        <P className="text-center">
-          NativeWind is made by{' '}
-          <A
-            href="https://twitter.com/mark__lawlor"
-            hrefAttrs={{
-              target: '_blank',
-              rel: 'noreferrer',
-            }}
-          >
-            Mark Lawlor
-          </A>
-          .
-        </P>
-      </View>
-      <View className="h-[32px]" />
-      <Row className="space-x-8">
-        <TextLink href="/user/fernando">Regular Link</TextLink>
-        <MotiLink
-          href="/user/fernando"
-          animate={({ hovered, pressed }) => {
-            'worklet'
-
-            return {
-              scale: pressed ? 0.95 : hovered ? 1.1 : 1,
-              rotateZ: pressed ? '0deg' : hovered ? '-3deg' : '0deg',
-            }
-          }}
-          transition={{
-            type: 'timing',
-            duration: 150,
-          }}
-        >
-          <Text selectable={false} className="text-base font-bold">
-            Moti Link
-          </Text>
-        </MotiLink>
-      </Row>
+    <View className="p-3">
+      <H1>Olymarket</H1>
+      <PostCard />
     </View>
   )
 }
