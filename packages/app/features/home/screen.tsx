@@ -1,5 +1,5 @@
 import { H1, Text } from 'app/design/typography'
-import { View } from 'app/design/view'
+import { View } from 'app/design/core'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { inferProcedureOutput } from '@trpc/server'
