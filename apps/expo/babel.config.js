@@ -5,7 +5,7 @@ module.exports = function (api) {
     plugins: [
       'react-native-reanimated/plugin',
       'nativewind/babel',
-      ['inline-dotenv', { path: '../../.env' }],
+      ['inline-dotenv', { systemVar: 'all' }],
     ],
   }
 }
