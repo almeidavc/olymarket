@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@react-native-picker/picker": "2.4.8",
     "app": "*",
     "babel-plugin-inline-dotenv": "^1.7.0",
     "expo": "~48.0.15",

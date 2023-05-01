@@ -11,14 +11,14 @@ interface PostCardProps {
 }
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { title, price, imageUrl } = post
+  const { title, price, images } = post
 
   return (
     <View className="flex h-[30vh] flex-col justify-between rounded-lg border-2 border-lime-800 p-4">
       <Image
         className="h-2/3 w-full bg-black"
         source={{
-          uri: imageUrl,
+          uri: images![0]?.url,
         }}
         resizeMode="contain"
       />

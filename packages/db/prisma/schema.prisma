@@ -11,9 +11,27 @@ datasource db {
   relationMode = "prisma"
 }
 
+enum Zone {
+  BUNGALOWS
+  TOWER_A
+  TOWER_B
+  NONE
+}
+
 model Post {
-  id       String @id @default(cuid())
-  title    String
-  price    Int
-  imageUrl String @default("https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/SMPTE_Color_Bars.svg/200px-SMPTE_Color_Bars.svg.png")
+  id          String  @id @default(cuid())
+  title       String
+  description String  @default("")
+  zone        Zone    @default(value: NONE)
+  price       Int
+  images      Image[]
+}
+
+model Image {
+  id     String @id @default(cuid())
+  url    String
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  @@index([postId])
 }
