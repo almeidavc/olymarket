@@ -43,17 +43,17 @@ export function FeedScreen() {
 
   return (
     <View className="p-4">
-      <H1>Olymarket</H1>
       <FlatList
+        ListHeaderComponent={<H1>Olymarket</H1>}
         data={posts}
         keyExtractor={(post) => post.id}
         numColumns={2}
-        renderItem={({ item: post }) => (
-          <View className="w-1/2 p-2">
+        renderItem={({ item: post, index }) => (
+          <View className={`w-1/2 py-2 ${index % 2 === 0 ? 'pr-2' : 'pl-2'}`}>
             <PostCard key={post.id} post={post} />
           </View>
         )}
-      ></FlatList>
+      />
     </View>
   )
 }
