@@ -1,10 +1,10 @@
-import { TabNavigation } from 'app/navigation/native'
+import { Navigation } from 'app/navigation/native'
 import { Provider } from 'app/provider'
 
 export default function App() {
   return (
     <Provider>
-      <TabNavigation />
+      <Navigation />
     </Provider>
   )
 }

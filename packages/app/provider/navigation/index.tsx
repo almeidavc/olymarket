@@ -16,7 +16,11 @@ export function NavigationProvider({
             initialRouteName: 'home',
             screens: {
               home: '',
-              'user-detail': 'user/:id',
+              post: 'post',
+              account: 'account',
+              'sign-in': 'sign-in',
+              'sign-up': 'sign-up',
+              verify: 'sign-up/verify',
             },
           },
         }),

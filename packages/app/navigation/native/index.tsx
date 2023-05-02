@@ -2,33 +2,74 @@ import { HomeScreen } from '../../features/home/screen'
 import { CreatePostScreen } from '../../features/post/screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
+import { SignedIn, SignedOut } from '@clerk/clerk-expo'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { SignInScreen } from 'app/features/onboarding/sign-in'
+import { SignUpScreen } from 'app/features/onboarding/sign-up'
+import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
+import { AccountScreen } from 'app/features/account/account'
 
 const tabIcons = {
-  Home: 'home',
-  Post: 'plus',
+  home: 'home',
+  post: 'plus',
+  account: 'user',
 }
 
 const Tab = createBottomTabNavigator()
+const Stack = createNativeStackNavigator()
 
-export function TabNavigation() {
+export function Navigation() {
   return (
-    <Tab.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ color, size }) => (
-          <FontAwesome5 name={tabIcons[route.name]} size={size} color={color} />
-        ),
-      })}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{ headerShown: false }}
-      />
-      <Tab.Screen
-        name="Post"
-        component={CreatePostScreen}
-        options={{ headerTitle: 'Sell an item' }}
-      />
-    </Tab.Navigator>
+    <>
+      <SignedIn>
+        <Tab.Navigator
+          initialRouteName="home"
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ color, size }) => (
+              <FontAwesome5
+                name={tabIcons[route.name]}
+                size={size}
+                color={color}
+              />
+            ),
+          })}
+        >
+          <Tab.Screen
+            name="home"
+            component={HomeScreen}
+            options={{ headerShown: false, tabBarLabel: 'Home' }}
+          />
+          <Tab.Screen
+            name="post"
+            component={CreatePostScreen}
+            options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
+          />
+          <Tab.Screen
+            name="account"
+            component={AccountScreen}
+            options={{ headerTitle: 'Account', tabBarLabel: 'Account' }}
+          />
+        </Tab.Navigator>
+      </SignedIn>
+      <SignedOut>
+        <Stack.Navigator initialRouteName="Sign In">
+          <Stack.Screen
+            name="sign-in"
+            component={SignInScreen}
+            options={{ title: 'Sign In' }}
+          />
+          <Stack.Screen
+            name="sign-up"
+            component={SignUpScreen}
+            options={{ title: 'Sign Up' }}
+          />
+          <Stack.Screen
+            name="verify"
+            component={VerifyEmailScreen}
+            options={{ title: 'Verify email' }}
+          />
+        </Stack.Navigator>
+      </SignedOut>
+    </>
   )
 }

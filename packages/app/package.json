@@ -3,6 +3,7 @@
   "name": "app",
   "main": "index.ts",
   "dependencies": {
+    "@clerk/clerk-expo": "^0.16.4",
     "@react-native-picker/picker": "^2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/native": "^6.0.8",
@@ -13,6 +14,8 @@
     "@trpc/server": "^10.21.3-alpha.3",
     "moti": "latest",
     "nativewind": "2.0.9",
+    "react-native-root-siblings": "^4.1.1",
+    "react-native-root-toast": "^3.4.1",
     "solito": "3.0.0"
   },
   "sideEffects": false
