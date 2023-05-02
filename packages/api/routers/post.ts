@@ -1,4 +1,4 @@
-import { router, publicProcedure } from 'api/trpc'
+import { router, publicProcedure, protectedProcedure } from 'api/trpc'
 import { z } from 'zod'
 import { Zone } from 'db'
 import { getSignedUploadUrl } from '../helpers/signed-url'
@@ -25,7 +25,7 @@ const list = publicProcedure.query(({ ctx }) => {
   })
 })
 
-const create = publicProcedure
+const create = protectedProcedure
   .input(
     z.object({
       title: z.string(),

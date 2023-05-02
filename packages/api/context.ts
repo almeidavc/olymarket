@@ -1,9 +1,10 @@
 import { inferAsyncReturnType } from '@trpc/server'
 import { prisma } from 'db'
 
-export function createContext() {
+export function createContext({ req }) {
   return {
     prisma,
+    auth: req.auth,
   }
 }
 

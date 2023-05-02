@@ -1,12 +1,17 @@
-import { createHTTPServer } from '@trpc/server/adapters/standalone'
 import { appRouter } from './routers'
 import cors from 'cors'
 import { createContext } from './context'
+import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node'
+import * as trpcExpress from '@trpc/server/adapters/express'
+import express from 'express'
 
-const server = createHTTPServer({
-  middleware: cors(),
-  router: appRouter,
-  createContext,
-})
+const app = express()
+app.use(cors())
 
-server.listen(4000)
+app.use(
+  '/trpc',
+  ClerkExpressWithAuth(),
+  trpcExpress.createExpressMiddleware({ router: appRouter, createContext })
+)
+
+app.listen(4000)
