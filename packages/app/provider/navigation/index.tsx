@@ -15,7 +15,12 @@ export function NavigationProvider({
           config: {
             initialRouteName: 'home',
             screens: {
-              home: '',
+              home: {
+                screens: {
+                  feed: '',
+                  post: 'post/:postId',
+                },
+              },
               post: 'post',
               account: 'account',
               'sign-in': 'sign-in',

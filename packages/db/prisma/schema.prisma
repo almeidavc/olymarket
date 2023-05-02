@@ -21,7 +21,7 @@ enum Zone {
 model Post {
   id          String   @id @default(cuid())
   title       String
-  description String   @default("")
+  description String   @default("") @db.Text
   zone        Zone     @default(value: NONE)
   price       Int
   images      Image[]

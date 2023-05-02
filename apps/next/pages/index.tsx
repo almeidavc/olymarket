@@ -1,3 +1,3 @@
-import { HomeScreen } from 'app/features/home/screen'
+import { FeedScreen } from 'app/features/home/feed'
 
-export default HomeScreen
+export default FeedScreen

@@ -8,18 +8,7 @@ import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { getImageDownloadUrl, uploadImages } from './upload-image'
 import { Picker } from '@react-native-picker/picker'
-
-enum Zone {
-  BUNGALOWS = 'BUNGALOWS',
-  TOWER_A = 'TOWER_A',
-  TOWER_B = 'TOWER_B',
-}
-
-const ZoneTitles = new Map<Zone, string>([
-  [Zone.BUNGALOWS, 'Bungalows'],
-  [Zone.TOWER_A, 'Tower A'],
-  [Zone.TOWER_B, 'Tower B'],
-])
+import { Zone, ZoneTitles } from 'app/utils/enums'
 
 const UploadImageButton: React.FC<{
   compact?: boolean
@@ -98,7 +87,7 @@ export function CreatePostScreen() {
   }
 
   return (
-    <View>
+    <ScrollView>
       <View className="bg-neutral-300 p-4">
         {imageUris && imageUris.length ? (
           <ScrollView horizontal={true}>
@@ -127,9 +116,7 @@ export function CreatePostScreen() {
           value={title}
           onChangeText={setTitle}
         />
-      </View>
-      <View className="p-4">
-        <Text>Description</Text>
+        <Text className="mt-4">Description</Text>
         <TextInput
           multiline
           placeholder="example description"
@@ -137,9 +124,7 @@ export function CreatePostScreen() {
           value={description}
           onChangeText={setDescription}
         />
-      </View>
-      <View className="p-4">
-        <Text>Zone</Text>
+        <Text className="mt-4">Zone</Text>
         <View className="-m-4">
           <Picker selectedValue={zone} onValueChange={(zone) => setZone(zone)}>
             {Object.values(Zone).map((zone) => (
@@ -151,9 +136,7 @@ export function CreatePostScreen() {
             ))}
           </Picker>
         </View>
-      </View>
-      <View className="p-4">
-        <Text>Price</Text>
+        <Text className="mt-4">Price</Text>
         <TextInput
           inputMode="numeric"
           placeholder="0€"
@@ -163,13 +146,15 @@ export function CreatePostScreen() {
             setPrice(Number.parseInt(input))
           }}
         />
+        <Button
+          className={`mt-4 ${
+            !title || !price || !imageUris ? 'opacity-10' : ''
+          }`}
+          disabled={!title || !price || !imageUris}
+          title="Create post"
+          onPress={createPost}
+        />
       </View>
-      <Button
-        className={!title || !price || !imageUris ? 'opacity-10' : ''}
-        disabled={!title || !price || !imageUris}
-        title="Create post"
-        onPress={createPost}
-      />
-    </View>
+    </ScrollView>
   )
 }

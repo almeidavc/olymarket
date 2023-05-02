@@ -13,6 +13,22 @@ const getImageUploadUrls = publicProcedure
     return await Promise.all(urls)
   })
 
+const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
+  return ctx.prisma.post.findUnique({
+    where: {
+      id: input,
+    },
+    include: {
+      images: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
+    },
+  })
+})
+
 const list = publicProcedure.query(({ ctx }) => {
   return ctx.prisma.post.findMany({
     orderBy: {
@@ -21,6 +37,7 @@ const list = publicProcedure.query(({ ctx }) => {
     include: {
       images: {
         select: {
+          id: true,
           url: true,
         },
       },
@@ -53,6 +70,7 @@ const create = protectedProcedure
 
 export const postRouter = router({
   getImageUploadUrls,
+  getById,
   list,
   create,
 })

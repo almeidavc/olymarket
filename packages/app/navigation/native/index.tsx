@@ -1,5 +1,4 @@
-import { HomeScreen } from '../../features/home/screen'
-import { CreatePostScreen } from '../../features/post/screen'
+import { CreatePostScreen } from '../../features/post/create-post-screen'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { SignedIn, SignedOut } from '@clerk/clerk-expo'
@@ -8,6 +7,7 @@ import { SignInScreen } from 'app/features/onboarding/sign-in'
 import { SignUpScreen } from 'app/features/onboarding/sign-up'
 import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
 import { AccountScreen } from 'app/features/account/account'
+import { Home } from 'app/features/home'
 
 const tabIcons = {
   home: 'home',
@@ -36,7 +36,7 @@ export function Navigation() {
         >
           <Tab.Screen
             name="home"
-            component={HomeScreen}
+            component={Home}
             options={{ headerShown: false, tabBarLabel: 'Home' }}
           />
           <Tab.Screen
