@@ -15,6 +15,9 @@ const getImageUploadUrls = publicProcedure
 
 const list = publicProcedure.query(({ ctx }) => {
   return ctx.prisma.post.findMany({
+    orderBy: {
+      createdAt: 'desc',
+    },
     include: {
       images: {
         select: {

@@ -19,12 +19,13 @@ enum Zone {
 }
 
 model Post {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
-  description String  @default("")
-  zone        Zone    @default(value: NONE)
+  description String   @default("")
+  zone        Zone     @default(value: NONE)
   price       Int
   images      Image[]
+  createdAt   DateTime @default(now())
 }
 
 model Image {
