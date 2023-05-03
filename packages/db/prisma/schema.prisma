@@ -19,20 +19,21 @@ enum Zone {
 }
 
 model Post {
-  id          String   @id @default(cuid())
-  title       String
-  description String   @default("") @db.Text
-  zone        Zone     @default(value: NONE)
-  price       Int
-  images      Image[]
   createdAt   DateTime @default(now())
+  description String   @default("") @db.Text
+  id          String   @id @default(cuid())
+  images      Image[]
+  price       Int
+  title       String
+  userId      String
+  zone        Zone     @default(value: NONE)
 }
 
 model Image {
   id     String @id @default(cuid())
-  url    String
   post   Post   @relation(fields: [postId], references: [id])
   postId String
+  url    String
 
   @@index([postId])
 }

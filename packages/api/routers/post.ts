@@ -48,17 +48,18 @@ const list = publicProcedure.query(({ ctx }) => {
 const create = protectedProcedure
   .input(
     z.object({
+      images: z.string().url().array(),
+      price: z.number().int(),
       title: z.string(),
       description: z.string().optional(),
       zone: z.nativeEnum(Zone).optional(),
-      price: z.number().int(),
-      images: z.string().url().array(),
     })
   )
   .mutation(({ ctx, input }) => {
     return ctx.prisma.post.create({
       data: {
         ...input,
+        userId: ctx.auth.userId,
         images: {
           createMany: {
             data: input.images.map((url) => ({ url })),
