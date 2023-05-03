@@ -22,7 +22,11 @@ export function NavigationProvider({
                 },
               },
               post: 'post',
-              account: 'account',
+              profile: {
+                screens: {
+                  settings: 'settings',
+                },
+              },
               'sign-in': 'sign-in',
               'sign-up': 'sign-up',
               verify: 'sign-up/verify',

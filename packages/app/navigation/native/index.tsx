@@ -6,13 +6,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { SignInScreen } from 'app/features/onboarding/sign-in'
 import { SignUpScreen } from 'app/features/onboarding/sign-up'
 import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
-import { AccountScreen } from 'app/features/account/account'
 import { Home } from 'app/features/home'
+import { Profile } from 'app/features/profile'
 
 const tabIcons = {
   home: 'home',
   post: 'plus',
-  account: 'user',
+  profile: 'user',
 }
 
 const Tab = createBottomTabNavigator()
@@ -45,9 +45,9 @@ export function Navigation() {
             options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
           />
           <Tab.Screen
-            name="account"
-            component={AccountScreen}
-            options={{ headerTitle: 'Account', tabBarLabel: 'Account' }}
+            name="profile"
+            component={Profile}
+            options={{ headerTitle: 'Profile', tabBarLabel: 'Profile' }}
           />
         </Tab.Navigator>
       </SignedIn>

@@ -1,7 +1,7 @@
 import { useAuth } from '@clerk/clerk-expo'
 import { Button, View } from 'app/design/core'
 
-export function AccountScreen() {
+export function SettingsScreen() {
   const { signOut } = useAuth()
 
   const onSignOutPress = () => {

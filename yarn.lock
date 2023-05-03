@@ -4226,6 +4226,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-navigation/material-top-tabs@npm:^6.6.2":
+  version: 6.6.2
+  resolution: "@react-navigation/material-top-tabs@npm:6.6.2"
+  dependencies:
+    color: ^4.2.3
+    warn-once: ^0.1.0
+  peerDependencies:
+    "@react-navigation/native": ^6.0.0
+    react: "*"
+    react-native: "*"
+    react-native-pager-view: ">= 4.0.0"
+    react-native-tab-view: ">= 3.0.0"
+  checksum: 674a46d486b071e84f4b96164b7e23b6a354816b940e96b9107ee89531a748318f52454292f84d1fc56106ff48d4d20576c6fc882631dbc0a63f714091ecee91
+  languageName: node
+  linkType: hard
+
 "@react-navigation/native-stack@npm:^6.5.0":
   version: 6.9.12
   resolution: "@react-navigation/native-stack@npm:6.9.12"
@@ -4994,6 +5010,7 @@ __metadata:
     "@clerk/clerk-expo": ^0.16.4
     "@react-native-picker/picker": ^2.4.10
     "@react-navigation/bottom-tabs": ^6.5.7
+    "@react-navigation/material-top-tabs": ^6.6.2
     "@react-navigation/native": ^6.0.8
     "@react-navigation/native-stack": ^6.5.0
     "@tanstack/react-query": ^4.29.5
@@ -5002,8 +5019,10 @@ __metadata:
     "@trpc/server": ^10.21.3-alpha.3
     moti: latest
     nativewind: 2.0.9
+    react-native-pager-view: ^6.2.0
     react-native-root-siblings: ^4.1.1
     react-native-root-toast: ^3.4.1
+    react-native-tab-view: ^3.5.1
     solito: 3.0.0
   languageName: unknown
   linkType: soft
@@ -7448,6 +7467,7 @@ __metadata:
     react-dom: 18.2.0
     react-native: 0.71.7
     react-native-gesture-handler: ~2.9.0
+    react-native-pager-view: 6.1.2
     react-native-reanimated: 3.0.2
     react-native-safe-area-context: 4.5.0
     react-native-screens: ~3.20.0
@@ -12270,6 +12290,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-pager-view@npm:6.1.2":
+  version: 6.1.2
+  resolution: "react-native-pager-view@npm:6.1.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 813da82c7816748b7a66c87d281c11cc3d787342b0896ffad686ee15e968911f4ed7b1164cdf196068eb2abcb28513bd85cdd0023280af73ff66e2b42bd2efa1
+  languageName: node
+  linkType: hard
+
+"react-native-pager-view@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "react-native-pager-view@npm:6.2.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 3006fe29f008d472ebfb654922302d138b08f56e7796627263424b5e91a3169dd9d0c450b5396efffd88d511197c5006180430a2b687d2d827926b324f8fb947
+  languageName: node
+  linkType: hard
+
 "react-native-reanimated@npm:3.0.2":
   version: 3.0.2
   resolution: "react-native-reanimated@npm:3.0.2"
@@ -12329,6 +12369,19 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 94ab21378ee82765d329ccb8c92f5ca7cb15df916496fac7ce9a03c45e22579715000dae9c16f0a7d734a8fc1c2d0569fd82ecb71119a0b56046b5ea7533e7c2
+  languageName: node
+  linkType: hard
+
+"react-native-tab-view@npm:^3.5.1":
+  version: 3.5.1
+  resolution: "react-native-tab-view@npm:3.5.1"
+  dependencies:
+    use-latest-callback: ^0.1.5
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-pager-view: "*"
+  checksum: 22213e8bde3b0e16631d290a3da146789dcad461dbdc424cf6448c683a2d75c12abbae5aa329c83788123f6dd0865b451ba57848856483607327fb5fdad2fe12
   languageName: node
   linkType: hard
 
