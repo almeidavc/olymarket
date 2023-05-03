@@ -22,6 +22,7 @@ export function NavigationProvider({
                 },
               },
               post: 'post',
+              chat: 'chat',
               profile: {
                 screens: {
                   settings: 'settings',

@@ -8,11 +8,13 @@ import { SignUpScreen } from 'app/features/onboarding/sign-up'
 import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
 import { Home } from 'app/features/home'
 import { Profile } from 'app/features/profile'
+import { ChatInboxScreen } from 'app/features/chat/inbox'
 
 const tabIcons = {
   home: 'home',
   post: 'plus',
   profile: 'user',
+  chat: 'comments',
 }
 
 const Tab = createBottomTabNavigator()
@@ -43,6 +45,11 @@ export function Navigation() {
             name="post"
             component={CreatePostScreen}
             options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
+          />
+          <Tab.Screen
+            name="chat"
+            component={ChatInboxScreen}
+            options={{ headerTitle: 'Inbox', tabBarLabel: 'Chats' }}
           />
           <Tab.Screen
             name="profile"
