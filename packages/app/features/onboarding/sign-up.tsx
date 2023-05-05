@@ -22,9 +22,7 @@ export function SignUpScreen() {
         emailAddress: email,
         password,
       })
-      console.log(result?.emailAddress)
       const res = await signUp?.prepareEmailAddressVerification()
-      console.log(res)
       router.push('/sign-up/verify')
     } catch (error) {
       Toast.show(error.errors[0].longMessage)
