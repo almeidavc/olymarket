@@ -13,12 +13,14 @@
     "@trpc/client": "^10.21.3-alpha.3",
     "@trpc/react-query": "^10.21.3-alpha.3",
     "@trpc/server": "^10.21.3-alpha.3",
+    "dayjs": "^1.11.7",
     "moti": "latest",
     "nativewind": "2.0.9",
     "react-native-pager-view": "^6.2.0",
     "react-native-root-siblings": "^4.1.1",
     "react-native-root-toast": "^3.4.1",
     "react-native-tab-view": "^3.5.1",
+    "socket.io-client": "^4.6.1",
     "solito": "3.0.0"
   },
   "sideEffects": false

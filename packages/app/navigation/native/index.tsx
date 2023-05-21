@@ -1,4 +1,4 @@
-import { CreatePostScreen } from '../../features/post/create-post-screen'
+import { CreatePostScreen } from '../../features/post/create-post'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { SignedIn, SignedOut } from '@clerk/clerk-expo'
@@ -8,13 +8,14 @@ import { SignUpScreen } from 'app/features/onboarding/sign-up'
 import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
 import { Home } from 'app/features/home'
 import { Profile } from 'app/features/profile'
-import { ChatInboxScreen } from 'app/features/chat/inbox'
+import { Chat } from 'app/features/chat'
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 
 const tabIcons = {
   home: 'home',
   post: 'plus',
   profile: 'user',
-  chat: 'comments',
+  chats: 'comments',
 }
 
 const Tab = createBottomTabNavigator()
@@ -39,7 +40,15 @@ export function Navigation() {
           <Tab.Screen
             name="home"
             component={Home}
-            options={{ headerShown: false, tabBarLabel: 'Home' }}
+            options={({ route }) => {
+              const routeName = getFocusedRouteNameFromRoute(route) ?? 'feed'
+              return {
+                headerShown: false,
+                tabBarLabel: 'Home',
+                tabBarStyle:
+                  routeName === 'contact' ? { display: 'none' } : undefined,
+              }
+            }}
           />
           <Tab.Screen
             name="post"
@@ -47,9 +56,9 @@ export function Navigation() {
             options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
           />
           <Tab.Screen
-            name="chat"
-            component={ChatInboxScreen}
-            options={{ headerTitle: 'Inbox', tabBarLabel: 'Chats' }}
+            name="chats"
+            component={Chat}
+            options={{ tabBarLabel: 'Chats', headerShown: false }}
           />
           <Tab.Screen
             name="profile"

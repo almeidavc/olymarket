@@ -3,7 +3,7 @@ import { prisma } from 'db'
 
 export function createContext({ req }) {
   return {
-    prisma,
+    prisma: prisma,
     auth: req.auth,
   }
 }

@@ -3,6 +3,7 @@
   "private": true,
   "workspaces": [
     "apps/*",
+    "server",
     "packages/*"
   ],
   "devDependencies": {
@@ -17,7 +18,7 @@
   "scripts": {
     "native": "cd apps/expo && yarn start",
     "web": "cd apps/next && yarn next",
-    "server": "cd packages/api && yarn start",
+    "server": "cd server && yarn start",
     "studio": "cd packages/db && npx prisma studio"
   },
   "engines": {

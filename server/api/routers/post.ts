@@ -1,6 +1,6 @@
-import { router, publicProcedure, protectedProcedure } from 'api/trpc'
+import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
-import { Zone } from 'db'
+import { Zone } from '@prisma/client'
 import { getSignedUploadUrl } from '../helpers/signed-url'
 
 const getImageUploadUrls = publicProcedure
@@ -19,6 +19,7 @@ const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
       id: input,
     },
     include: {
+      author: true,
       images: {
         select: {
           id: true,
@@ -59,7 +60,11 @@ const create = protectedProcedure
     return ctx.prisma.post.create({
       data: {
         ...input,
-        userId: ctx.auth.userId,
+        author: {
+          connect: {
+            id: ctx.auth.userId,
+          },
+        },
         images: {
           createMany: {
             data: input.images.map((url) => ({ url })),

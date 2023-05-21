@@ -18,15 +18,27 @@ enum Zone {
   NONE
 }
 
+model User {
+  id              String         @id
+  username        String
+  profileImageUrl String
+  posts           Post[]
+  conversations   Conversation[]
+}
+
 model Post {
-  createdAt   DateTime @default(now())
-  description String   @default("") @db.Text
-  id          String   @id @default(cuid())
-  images      Image[]
-  price       Int
-  title       String
-  userId      String
-  zone        Zone     @default(value: NONE)
+  author        User           @relation(fields: [authorId], references: [id])
+  authorId      String
+  createdAt     DateTime       @default(now())
+  conversations Conversation[]
+  description   String         @default("") @db.Text
+  id            String         @id @default(cuid())
+  images        Image[]
+  price         Int
+  title         String
+  zone          Zone           @default(value: NONE)
+
+  @@index([authorId])
 }
 
 model Image {
@@ -36,4 +48,26 @@ model Image {
   url    String
 
   @@index([postId])
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  messages     Message[]
+  participants User[]
+  post         Post      @relation(fields: [postId], references: [id])
+  postId       String
+
+  @@index([postId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  content        String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String
+  createdAt      DateTime     @default(now())
+  from           String
+  to             String
+
+  @@index([conversationId])
 }

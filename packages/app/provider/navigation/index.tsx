@@ -19,10 +19,17 @@ export function NavigationProvider({
                 screens: {
                   feed: '',
                   post: 'post/:postId',
+                  contact: 'post/:postId/contact/:to',
                 },
               },
               post: 'post',
-              chat: 'chat',
+              chats: {
+                path: 'chats',
+                screens: {
+                  inbox: 'inbox',
+                  chat: ':postId/:to',
+                },
+              },
               profile: {
                 screens: {
                   settings: 'settings',

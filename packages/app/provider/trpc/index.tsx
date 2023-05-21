@@ -4,12 +4,12 @@ import { httpBatchLink } from '@trpc/client'
 import { trpc } from 'app/utils/trpc'
 import { useAuth } from '@clerk/clerk-expo'
 
-function getBaseUrl() {
-  const apiBaseUrl = process.env.TRPC_SERVER_URL_DEV
-  if (!apiBaseUrl) {
-    throw new Error('TRPC server url is not set, please configure it manually')
+function getApiUrl() {
+  const serverUrl = process.env.SERVER_URL
+  if (!serverUrl) {
+    throw new Error('Server url is not set, please configure it manually')
   }
-  return apiBaseUrl
+  return `${serverUrl}/trpc`
 }
 
 export function TRPCProvider({ children }) {
@@ -20,7 +20,7 @@ export function TRPCProvider({ children }) {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: getBaseUrl(),
+          url: getApiUrl(),
           async headers() {
             const authToken = await getToken()
             return {

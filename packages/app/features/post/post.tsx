@@ -5,8 +5,11 @@ import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { ZoneTitles } from 'app/utils/enums'
+import { useRouter } from 'solito/router'
 
 export function PostScreen({ route }) {
+  const router = useRouter()
+
   const { postId } = route.params
 
   const { data: post } = trpc.post.getById.useQuery(postId)
@@ -41,7 +44,13 @@ export function PostScreen({ route }) {
         )}
         <Text className="mt-4">Description</Text>
         <Text className="text-lg">{post.description}</Text>
-        <Button className="mt-4" title="Contact seller" />
+        <Button
+          className="mt-4"
+          title="Contact seller"
+          onPress={() =>
+            router.push(`/post/${post.id}/contact/${post?.authorId}`)
+          }
+        />
       </View>
     </ScrollView>
   )

@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FeedScreen } from './feed'
-import { PostScreen } from '../post/post-screen'
+import { PostScreen } from '../post/post'
+import { ChatScreen, ChatScreenHeader } from '../chat/chat'
 
 const Stack = createNativeStackNavigator()
 
@@ -20,6 +21,13 @@ export function Home() {
           headerTintColor: 'white',
           headerTitle: '',
         }}
+      />
+      <Stack.Screen
+        name="contact"
+        component={ChatScreen}
+        options={({ route }) => ({
+          headerTitle: () => <ChatScreenHeader partnerId={route.params.to} />,
+        })}
       />
     </Stack.Navigator>
   )
