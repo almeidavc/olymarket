@@ -40,6 +40,7 @@ export const chatRouter = router({
     .query(async ({ ctx, input }) => {
       const conversation = await ctx.prisma.conversation.findFirst({
         where: {
+          postId: input.postId,
           participants: {
             every: {
               id: { in: [ctx.auth.userId, input.partnerId] },

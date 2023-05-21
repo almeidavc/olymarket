@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
     // upsert conversation
     let conversation = await prisma.conversation.findFirst({
       where: {
+        postId: payload.postId,
         participants: {
           every: {
             id: { in: [payload.message.from, payload.message.to] },
