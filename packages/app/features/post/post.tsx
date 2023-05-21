@@ -6,9 +6,12 @@ import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { ZoneTitles } from 'app/utils/enums'
 import { useRouter } from 'solito/router'
+import { useAuth } from '@clerk/clerk-expo'
 
 export function PostScreen({ route }) {
   const router = useRouter()
+
+  const { userId } = useAuth()
 
   const { postId } = route.params
 
@@ -44,13 +47,15 @@ export function PostScreen({ route }) {
         )}
         <Text className="mt-4">Description</Text>
         <Text className="text-lg">{post.description}</Text>
-        <Button
-          className="mt-4"
-          title="Contact seller"
-          onPress={() =>
-            router.push(`/post/${post.id}/contact/${post?.authorId}`)
-          }
-        />
+        {userId !== post?.authorId && (
+          <Button
+            className="mt-4"
+            title="Contact seller"
+            onPress={() =>
+              router.push(`/post/${post.id}/contact/${post?.authorId}`)
+            }
+          />
+        )}
       </View>
     </ScrollView>
   )
