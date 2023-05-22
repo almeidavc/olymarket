@@ -1,11 +1,15 @@
 import { useAuth } from '@clerk/clerk-expo'
 import { Button, View } from 'app/design/core'
+import { useQueryClient } from '@tanstack/react-query'
 
 export function SettingsScreen() {
   const { signOut } = useAuth()
 
+  const queryClient = useQueryClient()
+
   const onSignOutPress = () => {
     signOut()
+    queryClient.clear()
   }
 
   return (
