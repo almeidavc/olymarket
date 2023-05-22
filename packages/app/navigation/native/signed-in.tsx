@@ -60,7 +60,14 @@ export function SignedInNavigator() {
       <Tab.Screen
         name="chats"
         component={Chat}
-        options={{ tabBarLabel: 'Chats', headerShown: false }}
+        options={({ route }) => {
+          const routeName = getFocusedRouteNameFromRoute(route) ?? 'inbox'
+          return {
+            headerShown: false,
+            tabBarLabel: 'Chats',
+            tabBarStyle: routeName === 'chat' ? { display: 'none' } : undefined,
+          }
+        }}
       />
       <Tab.Screen
         name="profile"

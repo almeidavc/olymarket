@@ -4,7 +4,6 @@ import { trpc } from 'app/utils/trpc'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { Image } from 'app/design/image'
 import { useRouter } from 'solito/router'
-import { useAuth } from '@clerk/clerk-expo'
 import { AppRouter } from 'server/api/routers'
 import { inferProcedureOutput } from '@trpc/server'
 
@@ -12,8 +11,6 @@ type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
 export function ChatInboxScreen() {
   const router = useRouter()
-
-  const { userId } = useAuth()
 
   const { data: chats } = trpc.chat.list.useQuery()
 
