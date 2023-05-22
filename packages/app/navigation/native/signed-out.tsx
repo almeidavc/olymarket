@@ -1,0 +1,28 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { SignInScreen } from 'app/features/onboarding/sign-in'
+import { SignUpScreen } from 'app/features/onboarding/sign-up'
+import { VerifyEmailScreen } from 'app/features/onboarding/verify-email'
+
+const Stack = createNativeStackNavigator()
+
+export function SignedOutNavigator() {
+  return (
+    <Stack.Navigator initialRouteName="Sign In">
+      <Stack.Screen
+        name="sign-in"
+        component={SignInScreen}
+        options={{ title: 'Sign In' }}
+      />
+      <Stack.Screen
+        name="sign-up"
+        component={SignUpScreen}
+        options={{ title: 'Sign Up' }}
+      />
+      <Stack.Screen
+        name="verify"
+        component={VerifyEmailScreen}
+        options={{ title: 'Verify email' }}
+      />
+    </Stack.Navigator>
+  )
+}
