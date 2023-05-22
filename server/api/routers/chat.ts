@@ -97,6 +97,9 @@ export const chatRouter = router({
             id: ctx.auth.userId,
           },
         },
+        messages: {
+          some: {},
+        },
       },
       include: {
         post: true,
@@ -108,9 +111,41 @@ export const chatRouter = router({
           take: 1,
         },
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
     })
     return conversations.map((conversation) =>
       parseChat(conversation, ctx.auth.userId)
     )
   }),
+  findOrCreate: protectedProcedure
+    .input(z.object({ partnerId: z.string(), postId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      let conversation = await ctx.prisma.conversation.findFirst({
+        where: {
+          postId: input.postId,
+          participants: {
+            every: {
+              id: { in: [ctx.auth.userId, input.partnerId] },
+            },
+          },
+        },
+      })
+      if (!conversation) {
+        conversation = await ctx.prisma.conversation.create({
+          data: {
+            participants: {
+              connect: [{ id: ctx.auth.userId }, { id: input.partnerId }],
+            },
+            post: {
+              connect: {
+                id: input.postId,
+              },
+            },
+          },
+        })
+      }
+      return conversation
+    }),
 })

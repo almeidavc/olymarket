@@ -5031,6 +5031,7 @@ __metadata:
     react-native-tab-view: ^3.5.1
     socket.io-client: ^4.6.1
     solito: 3.0.0
+    superjson: ^1.12.3
   languageName: unknown
   linkType: soft
 
@@ -6373,6 +6374,15 @@ __metadata:
   version: 0.4.2
   resolution: "cookie@npm:0.4.2"
   checksum: a00833c998bedf8e787b4c342defe5fa419abd96b32f4464f718b91022586b8f1bafbddd499288e75c037642493c83083da426c6a9080d309e3bd90fd11baa9b
+  languageName: node
+  linkType: hard
+
+"copy-anything@npm:^3.0.2":
+  version: 3.0.4
+  resolution: "copy-anything@npm:3.0.4"
+  dependencies:
+    is-what: ^4.1.8
+  checksum: 65ba2384db4c8d9fd19bb0d0e14a4381377d8f6733ff725c7340a22b392d1478f1b695e4c7972252d4a129ab66ae1a0c134bffb23151e91f14781c58d8831f1f
   languageName: node
   linkType: hard
 
@@ -9454,6 +9464,13 @@ __metadata:
     call-bind: ^1.0.2
     get-intrinsic: ^1.1.1
   checksum: 5d8698d1fa599a0635d7ca85be9c26d547b317ed8fd83fc75f03efbe75d50001b5eececb1e9971de85fcde84f69ae6f8346bc92d20d55d46201d328e4c74a367
+  languageName: node
+  linkType: hard
+
+"is-what@npm:^4.1.8":
+  version: 4.1.10
+  resolution: "is-what@npm:4.1.10"
+  checksum: 39805a480ede3b52d6855d7472c5f6da99cdde550822d4c8a36805a15b400c9a3f28eb05906248d2888b4a559c66b67675ff8e0f8a2e89b06cd72c73aa2ce3ce
   languageName: node
   linkType: hard
 
@@ -13207,6 +13224,7 @@ __metadata:
     express: ^4.18.2
     jsonwebtoken: ^9.0.0
     socket.io: ^4.6.1
+    superjson: ^1.12.3
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -13953,6 +13971,15 @@ __metadata:
   version: 9.2.1
   resolution: "sudo-prompt@npm:9.2.1"
   checksum: 50a29eec2f264f2b78d891452a64112d839a30bffbff4ec065dba4af691a35b23cdb8f9107d413e25c1a9f1925644a19994c00602495cab033d53f585fdfd665
+  languageName: node
+  linkType: hard
+
+"superjson@npm:^1.12.3":
+  version: 1.12.3
+  resolution: "superjson@npm:1.12.3"
+  dependencies:
+    copy-anything: ^3.0.2
+  checksum: 3549cc1d03e93745632d8114f91ed1668d81a0cf4c618f8f89a1b06f426a9cd1a2879f0e79469a6a193fd19dcea9a8fecff6215d12527b98c40c67cd98f185d3
   languageName: node
   linkType: hard
 

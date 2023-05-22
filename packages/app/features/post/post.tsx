@@ -17,6 +17,23 @@ export function PostScreen({ route }) {
 
   const { data: post } = trpc.post.getById.useQuery(postId)
 
+  const { mutate: findOrCreateChatMutation } =
+    trpc.chat.findOrCreate.useMutation()
+
+  const onContactButtonPress = () => {
+    findOrCreateChatMutation(
+      {
+        postId,
+        partnerId: post!.authorId,
+      },
+      {
+        onSuccess: (chat) => {
+          router.push(`/post/${postId}/contact/${chat?.id}`)
+        },
+      }
+    )
+  }
+
   if (!post) {
     return <Text>404</Text>
   }
@@ -51,9 +68,7 @@ export function PostScreen({ route }) {
           <Button
             className="mt-4"
             title="Contact seller"
-            onPress={() =>
-              router.push(`/post/${post.id}/contact/${post?.authorId}`)
-            }
+            onPress={onContactButtonPress}
           />
         )}
       </View>

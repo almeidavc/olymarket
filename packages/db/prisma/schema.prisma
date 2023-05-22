@@ -52,6 +52,7 @@ model Image {
 
 model Conversation {
   id           String    @id @default(cuid())
+  createdAt    DateTime  @default(now())
   messages     Message[]
   participants User[]
   post         Post      @relation(fields: [postId], references: [id])

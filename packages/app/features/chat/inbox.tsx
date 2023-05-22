@@ -23,11 +23,7 @@ export function ChatInboxScreen() {
       renderItem={({ item: chat }: ListRenderItemInfo<Chat>) => {
         return (
           <TouchableOpacity
-            onPress={() =>
-              router.push(
-                `/chats/${chat.conversation.postId}/${chat.partner?.id}`
-              )
-            }
+            onPress={() => router.push(`/chats/${chat.conversation.id}`)}
           >
             <View className="flex flex-row items-center gap-3 border-b p-4">
               <Image

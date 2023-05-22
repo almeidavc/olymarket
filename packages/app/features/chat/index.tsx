@@ -12,7 +12,7 @@ export function Chat() {
         name="chat"
         component={ChatScreen}
         options={({ route }) => ({
-          headerTitle: () => <ChatScreenHeader partnerId={route.params.to} />,
+          headerTitle: () => <ChatScreenHeader chatId={route.params.chatId} />,
         })}
       />
     </Stack.Navigator>

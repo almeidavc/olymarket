@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { trpc } from 'app/utils/trpc'
 import { useAuth } from '@clerk/clerk-expo'
+import superjson from 'superjson'
 
 function getApiUrl() {
   const serverUrl = process.env.SERVER_URL
@@ -18,6 +19,7 @@ export function TRPCProvider({ children }) {
   const [queryClient] = useState(() => new QueryClient())
   const [trpcClient] = useState(() =>
     trpc.createClient({
+      transformer: superjson,
       links: [
         httpBatchLink({
           url: getApiUrl(),

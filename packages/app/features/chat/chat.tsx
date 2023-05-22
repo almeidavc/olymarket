@@ -7,17 +7,21 @@ import { useState, useEffect } from 'react'
 import { useAuthSocket } from '../../utils/websocket'
 import { useAuth } from '@clerk/clerk-expo'
 import dayjs from 'dayjs'
-import { Message } from '@prisma/client'
+import { useQueryClient } from '@tanstack/react-query'
+import { getQueryKey } from '@trpc/react-query'
+import { inferProcedureOutput } from '@trpc/server'
+import { AppRouter } from 'server/api/routers'
 
-export const ChatScreenHeader: React.FC<{ partnerId: string }> = ({
-  partnerId,
-}) => {
-  const { data: partner } = trpc.user.getById.useQuery({ userId: partnerId })
-  return <Text className="text-xl">{partner?.username}</Text>
+type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
+type Message = Chat['conversation']['messages'][number]
+
+export const ChatScreenHeader: React.FC<{ chatId: string }> = ({ chatId }) => {
+  const { data: chat } = trpc.chat.getById.useQuery({ chatId })
+  return <Text className="text-xl">{chat?.partner?.username}</Text>
 }
 
 export function ChatScreen({ route }) {
-  const { postId, to } = route.params
+  const { chatId } = route.params
 
   const { userId } = useAuth()
 
@@ -26,9 +30,10 @@ export function ChatScreen({ route }) {
   const [writeMessageInput, setWriteMessageInput] = useState('')
   const [messages, setMessages] = useState<Message[]>()
 
-  const { data: chat, isLoading } = trpc.chat.find.useQuery({
-    postId,
-    partnerId: to,
+  const queryClient = useQueryClient()
+
+  const { data: chat, isLoading } = trpc.chat.getById.useQuery({
+    chatId,
   })
 
   useEffect(() => {
@@ -37,8 +42,54 @@ export function ChatScreen({ route }) {
     }
   }, [chat])
 
+  const updateListChatsCache = (updatedChat: Chat) => {
+    queryClient.setQueryData<Chat[]>(
+      getQueryKey(trpc.chat.list, undefined, 'query'),
+      (oldChats) => {
+        const chatExistsInCache =
+          oldChats &&
+          oldChats.some(
+            (oldChat) => oldChat.conversation.id === chat?.conversation.id
+          )
+
+        if (chatExistsInCache) {
+          return oldChats.map((oldChat) =>
+            oldChat.conversation.id === chat!.conversation.id
+              ? updatedChat
+              : oldChat
+          )
+        }
+
+        return [updatedChat, ...(oldChats ?? [])]
+      }
+    )
+  }
+
+  const updateGetChatCache = (updatedChat: Chat) => {
+    queryClient.setQueryData<Chat>(
+      getQueryKey(trpc.chat.getById, { chatId }, 'query'),
+      (oldChat) => updatedChat
+    )
+  }
+
+  const addMessageToCachedChats = (message: Message) => {
+    const chatWithNewMessage = {
+      ...chat!,
+      conversation: {
+        ...chat!.conversation,
+        messages: [message, ...chat!.conversation.messages],
+      },
+    }
+
+    updateListChatsCache(chatWithNewMessage)
+    updateGetChatCache(chatWithNewMessage)
+  }
+
   socket.on('message:receive', ({ message }) => {
-    setMessages((prevMessages) => [message, ...prevMessages])
+    if (chat) {
+      setMessages((prevMessages) => [message, ...prevMessages!])
+      addMessageToCachedChats(message)
+    }
   })
 
   const onSendMessagePress = () => {
@@ -47,12 +98,14 @@ export function ChatScreen({ route }) {
     }
     const message = {
       from: userId,
-      to,
+      to: chat?.partner?.id,
       content: writeMessageInput,
       createdAt: new Date(),
+      conversationId: chat?.conversation?.id,
     }
-    socket.emit('message:send', { postId, message }, ({ message }) => {
-      setMessages((prevMessages) => [message, ...prevMessages])
+    socket.emit('message:send', { message }, ({ message }) => {
+      setMessages((prevMessages) => [message, ...prevMessages!])
+      addMessageToCachedChats(message)
     })
   }
 

@@ -19,7 +19,7 @@ export function NavigationProvider({
                 screens: {
                   feed: '',
                   post: 'post/:postId',
-                  contact: 'post/:postId/contact/:to',
+                  contact: 'post/:postId/contact/:chatId',
                 },
               },
               post: 'post',
@@ -27,7 +27,7 @@ export function NavigationProvider({
                 path: 'chats',
                 screens: {
                   inbox: 'inbox',
-                  chat: ':postId/:to',
+                  chat: ':chatId',
                 },
               },
               profile: {

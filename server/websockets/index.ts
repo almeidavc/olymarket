@@ -9,16 +9,14 @@ import jwt from 'jsonwebtoken'
 import { Message } from '@prisma/client'
 import { prisma } from 'db'
 
-type MessageInput = Pick<Message, 'from' | 'to' | 'content' | 'createdAt'>
-
-interface MessageSendPayload {
-  message: MessageInput
-  postId: string
-}
+type MessageInput = Pick<
+  Message,
+  'from' | 'to' | 'content' | 'createdAt' | 'conversationId'
+>
 
 interface ClientToServerEvents {
   'message:send': (
-    payload: MessageSendPayload,
+    payload: { message: MessageInput },
     acknowledge: (response: { message: Message }) => void
   ) => void
   authenticate
@@ -48,41 +46,9 @@ io.on('connection', (socket) => {
   })
 
   socket.on('message:send', async (payload, acknowledge) => {
-    // upsert conversation
-    let conversation = await prisma.conversation.findFirst({
-      where: {
-        postId: payload.postId,
-        participants: {
-          every: {
-            id: { in: [payload.message.from, payload.message.to] },
-          },
-        },
-      },
-    })
-    if (!conversation) {
-      conversation = await prisma.conversation.create({
-        data: {
-          participants: {
-            connect: [{ id: payload.message.from }, { id: payload.message.to }],
-          },
-          post: {
-            connect: {
-              id: payload.postId,
-            },
-          },
-        },
-      })
-    }
-
-    // create message and connect to conversation
     const message = await prisma.message.create({
       data: {
         ...payload.message,
-        conversation: {
-          connect: {
-            id: conversation.id,
-          },
-        },
       },
     })
 
