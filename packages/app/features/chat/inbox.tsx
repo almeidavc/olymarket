@@ -17,6 +17,7 @@ export function ChatInboxScreen() {
   return (
     <FlatList
       data={chats}
+      keyExtractor={(chat) => chat.conversation.id}
       renderItem={({ item: chat }: ListRenderItemInfo<Chat>) => {
         return (
           <TouchableOpacity
