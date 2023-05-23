@@ -1,9 +1,40 @@
 import { useSignIn } from '@clerk/clerk-expo'
-import { View } from 'app/design/core'
-import { useState } from 'react'
-import { TextInput, Button } from 'app/design/core'
+import { useState, useCallback } from 'react'
+import { TextInput, Button, View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { useRouter } from 'solito/router'
+import { useOAuth } from '@clerk/clerk-expo'
+import { useWarmUpBrowser } from 'app/utils/browser'
+
+function SignInWithGoogle() {
+  useWarmUpBrowser()
+
+  const router = useRouter()
+
+  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' })
+
+  const onSignInPress = useCallback(async () => {
+    try {
+      const { createdSessionId, setActive } = await startOAuthFlow()
+
+      if (createdSessionId) {
+        setActive?.({ session: createdSessionId })
+      } else {
+        router.push('/sign-up/username')
+      }
+    } catch (error) {
+      console.error('OAuth error', error)
+    }
+  }, [])
+
+  return (
+    <Button
+      title="Continue with Google"
+      variant="secondary"
+      onPress={onSignInPress}
+    />
+  )
+}
 
 export function SignInScreen() {
   const router = useRouter()
@@ -33,12 +64,13 @@ export function SignInScreen() {
         <TextInput value={password} onChangeText={setPassword} />
         <Button title="Continue" onPress={onSignInPress} variant="secondary" />
       </View>
-      <View className="mt-5 border-b border-neutral-400" />
       <Button
         title="Sign up for Olymarket"
         onPress={onSignUpPress}
         className="mt-5"
       />
+      <View className="mt-5 border-b border-neutral-400" />
+      <SignInWithGoogle />
     </View>
   )
 }

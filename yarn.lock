@@ -7548,6 +7548,7 @@ __metadata:
     expo-secure-store: ~12.1.1
     expo-splash-screen: ~0.18.2
     expo-status-bar: ~1.4.4
+    expo-web-browser: ~12.1.1
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.71.7
@@ -7740,7 +7741,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-web-browser@npm:~12.1.0":
+"expo-web-browser@npm:~12.1.0, expo-web-browser@npm:~12.1.1":
   version: 12.1.1
   resolution: "expo-web-browser@npm:12.1.1"
   dependencies:

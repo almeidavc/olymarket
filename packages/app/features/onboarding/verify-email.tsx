@@ -3,9 +3,12 @@ import { TextInput, View, Button } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { useState } from 'react'
 import Toast from 'react-native-root-toast'
+import { useRouter } from 'solito/router'
 
 export function VerifyEmailScreen() {
-  const { signUp, setActive } = useSignUp()
+  const router = useRouter()
+
+  const { signUp } = useSignUp()
 
   const [verificationCode, setVerificationCode] = useState('')
 
@@ -14,9 +17,8 @@ export function VerifyEmailScreen() {
       const res = await signUp?.attemptEmailAddressVerification({
         code: verificationCode,
       })
-      if (res?.status === 'complete') {
-        // setting the active session renders the tab navigator automatically
-        setActive?.({ session: signUp?.createdSessionId })
+      if (res && res.unverifiedFields.length === 0) {
+        router.push('/sign-up/username')
       }
     } catch (error) {
       Toast.show(error.errors[0].longMessage)
