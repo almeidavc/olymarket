@@ -102,6 +102,9 @@ const create = protectedProcedure
           },
         },
       },
+      include: {
+        images: true,
+      },
     })
   })
 

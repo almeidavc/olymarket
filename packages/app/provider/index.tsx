@@ -12,11 +12,11 @@ export function Provider({ children }: { children: React.ReactNode }) {
     <RootSiblingParent>
       <SafeArea>
         <ClerkProvider>
-          <NavigationProvider>
-            <MenuProvider>
-              <TRPCProvider>{children}</TRPCProvider>
-            </MenuProvider>
-          </NavigationProvider>
+          <TRPCProvider>
+            <NavigationProvider>
+              <MenuProvider>{children}</MenuProvider>
+            </NavigationProvider>
+          </TRPCProvider>
         </ClerkProvider>
       </SafeArea>
     </RootSiblingParent>

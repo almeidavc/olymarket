@@ -17,6 +17,7 @@ export function TRPCProvider({ children }) {
   const { getToken } = useAuth()
 
   const [queryClient] = useState(() => new QueryClient())
+
   const [trpcClient] = useState(() =>
     trpc.createClient({
       transformer: superjson,

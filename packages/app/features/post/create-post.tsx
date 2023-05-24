@@ -41,7 +41,19 @@ export function CreatePostScreen() {
   const [price, setPrice] = useState<number | undefined>()
   const [zone, setZone] = useState<Zone | undefined>()
 
-  const { mutate: createPostMutation } = trpc.post.create.useMutation()
+  const context = trpc.useContext()
+
+  const { mutate: createPostMutation } = trpc.post.create.useMutation({
+    onSuccess: (createdPost) => {
+      context.post.list.invalidate()
+      context.post.listMine.setData(undefined, (oldPosts) => {
+        if (oldPosts) {
+          return [createdPost, ...oldPosts]
+        }
+      })
+    },
+  })
+
   const { refetch: refetchImageUploadUrls } =
     trpc.post.getImageUploadUrls.useQuery(imageUris?.length ?? 0, {
       refetchOnMount: false,
