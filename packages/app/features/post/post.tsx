@@ -11,9 +11,8 @@ import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 import { Link } from 'solito/link'
 import { Feather } from '@expo/vector-icons'
-import { PostStatus } from '@prisma/client'
 import { Tag } from 'app/components/tag'
-import { PostStatusTitles, PostStatusColors } from 'app/utils/enums'
+import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
 import {
   Menu,
   MenuTrigger,
@@ -75,7 +74,23 @@ export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
     },
   })
 
-  const { mutate: markAsSold } = trpc.post.markAsSold.useMutation()
+  const { mutate: markAsSold } = trpc.post.markAsSold.useMutation({
+    onSuccess: (soldPost) => {
+      context.post.list.invalidate()
+      context.post.listMine.setData(undefined, (oldPosts) => {
+        if (oldPosts) {
+          return oldPosts.map((post) =>
+            post.id === soldPost.id
+              ? {
+                  ...post,
+                  status: PostStatus.SOLD,
+                }
+              : post
+          )
+        }
+      })
+    },
+  })
 
   const onRemovePostPress = () => {
     removePostMutation({ postId: post?.id })
