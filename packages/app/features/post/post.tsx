@@ -62,7 +62,19 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
 }
 
 export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
-  const { mutate: removePostMutation } = trpc.post.remove.useMutation()
+  const context = trpc.useContext()
+
+  const { mutate: removePostMutation } = trpc.post.remove.useMutation({
+    onSuccess: (removedPost) => {
+      context.post.list.invalidate()
+      context.post.listMine.setData(undefined, (oldPosts) => {
+        if (oldPosts) {
+          return oldPosts.filter((post) => post.id !== removedPost.id)
+        }
+      })
+    },
+  })
+
   const { mutate: markAsSold } = trpc.post.markAsSold.useMutation()
 
   const onRemovePostPress = () => {

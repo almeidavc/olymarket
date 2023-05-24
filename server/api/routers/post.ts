@@ -120,7 +120,11 @@ const remove = protectedProcedure
       },
     })
 
-    if (post?.authorId !== ctx.auth.userId) {
+    if (!post) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+
+    if (post.authorId !== ctx.auth.userId) {
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
@@ -134,6 +138,8 @@ const remove = protectedProcedure
     })
 
     post?.images?.forEach((img) => deleteImage(img.externalKey))
+
+    return post
   })
 
 const markAsSold = protectedProcedure
