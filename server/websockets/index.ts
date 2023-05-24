@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
     // emit message to the other chat participant
     const receiverSocket = getSocketIdByUserId(message.to)
     if (receiverSocket) {
-      io.to(receiverSocket).emit('message:receive', { message })
+      socket.to(receiverSocket).emit('message:receive', { message })
     }
   })
 })

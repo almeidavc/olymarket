@@ -85,12 +85,20 @@ export function ChatScreen({ route }) {
     updateGetChatCache(chatWithNewMessage)
   }
 
-  socket.on('message:receive', ({ message }) => {
-    if (chat) {
-      setMessages((prevMessages) => [message, ...prevMessages!])
-      addMessageToCachedChats(message)
+  const onReceiveMessage = (message: Message) => {
+    setMessages((prevMessages) => [message, ...prevMessages!])
+    addMessageToCachedChats(message)
+  }
+
+  useEffect(() => {
+    socket.on('message:receive', ({ message }) => {
+      onReceiveMessage(message)
+    })
+
+    return () => {
+      socket.off('message:receive')
     }
-  })
+  }, [])
 
   const onSendMessagePress = () => {
     if (!writeMessageInput) {
