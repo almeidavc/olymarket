@@ -31,6 +31,7 @@
   },
   "scripts": {
     "start": "expo start --dev-client",
+    "build": "eas build -p ios",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"

@@ -1,6 +1,9 @@
 {
   "name": "db",
   "packageManager": "yarn@3.4.1",
+  "scripts": {
+    "reset": "prisma migrate reset && prisma db push"
+  },
   "devDependencies": {
     "prisma": "^4.13.0"
   },

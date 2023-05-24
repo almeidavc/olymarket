@@ -6,11 +6,9 @@ export async function uploadImage(imageUri, uploadImageUrl) {
   // upload image
   const result = await fetch(uploadImageUrl, {
     method: 'PUT',
-    headers: {
-      contentType: 'image/jpeg',
-    },
-    body: new File([blob], 'test.jpg'),
+    body: blob,
   })
+
   return result
 }
 
