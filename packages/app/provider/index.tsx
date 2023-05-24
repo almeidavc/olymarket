@@ -2,7 +2,6 @@ import { NavigationProvider } from './navigation'
 import { TRPCProvider } from './trpc'
 import { SafeArea } from './safe-area'
 import { ClerkProvider } from './clerk'
-import { MenuProvider } from 'react-native-popup-menu'
 
 // react-native-root-toast
 import { RootSiblingParent } from 'react-native-root-siblings'
@@ -13,9 +12,7 @@ export function Provider({ children }: { children: React.ReactNode }) {
       <SafeArea>
         <ClerkProvider>
           <TRPCProvider>
-            <NavigationProvider>
-              <MenuProvider>{children}</MenuProvider>
-            </NavigationProvider>
+            <NavigationProvider>{children}</NavigationProvider>
           </TRPCProvider>
         </ClerkProvider>
       </SafeArea>

@@ -1,4 +1,4 @@
-import { View, Button } from 'app/design/core'
+import { View, Button, TouchableOpacity } from 'app/design/core'
 import { Text, H1 } from 'app/design/typography'
 import { ScrollView } from 'react-native'
 import { Image } from 'app/design/image'
@@ -13,12 +13,7 @@ import { Link } from 'solito/link'
 import { Feather } from '@expo/vector-icons'
 import { Tag } from 'app/components/tag'
 import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
-import {
-  Menu,
-  MenuTrigger,
-  MenuOptions,
-  MenuOption,
-} from 'react-native-popup-menu'
+import ContextMenu from 'react-native-context-menu-view'
 
 export const PostStatusTag = ({ status }: { status: PostStatus }) => {
   return (
@@ -126,17 +121,36 @@ export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
             )}
           </View>
         </View>
-        <Menu>
-          <MenuTrigger>
-            <View className="p-2">
-              <Feather name="more-horizontal" />
+        <TouchableOpacity onPress={(e) => e.stopPropagation()}>
+          <ContextMenu
+            dropdownMenuMode={true}
+            onPress={(event) => {
+              const { name } = event.nativeEvent
+              switch (name) {
+                case 'Mark as sold':
+                  onMarkPostAsSoldPress()
+                  break
+                case 'Remove post':
+                  onRemovePostPress()
+              }
+            }}
+            actions={[
+              {
+                title: 'Mark as sold',
+                systemIcon: 'checkmark',
+              },
+              {
+                title: 'Remove post',
+                systemIcon: 'trash',
+                destructive: true,
+              },
+            ]}
+          >
+            <View className="text-xxl p-2">
+              <Feather name="more-horizontal" size={20} />
             </View>
-          </MenuTrigger>
-          <MenuOptions>
-            <MenuOption text="Mark as sold" onSelect={onMarkPostAsSoldPress} />
-            <MenuOption text="Remove post" onSelect={onRemovePostPress} />
-          </MenuOptions>
-        </Menu>
+          </ContextMenu>
+        </TouchableOpacity>
       </View>
     </Link>
   )

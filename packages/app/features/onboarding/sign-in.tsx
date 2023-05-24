@@ -15,11 +15,12 @@ function SignInWithGoogle() {
 
   const onSignInPress = useCallback(async () => {
     try {
-      const { createdSessionId, setActive } = await startOAuthFlow()
+      const { createdSessionId, setActive, authSessionResult } =
+        await startOAuthFlow()
 
       if (createdSessionId) {
         setActive?.({ session: createdSessionId })
-      } else {
+      } else if (authSessionResult?.type === 'success') {
         router.push('/sign-up/username')
       }
     } catch (error) {

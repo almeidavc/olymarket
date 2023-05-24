@@ -6,6 +6,7 @@
     "expo": "~48.0.15",
     "expo-auth-session": "~4.0.3",
     "expo-constants": "^14.2.1",
+    "expo-dev-client": "~2.2.1",
     "expo-image-picker": "^14.1.1",
     "expo-linking": "~4.0.1",
     "expo-secure-store": "~12.1.1",
@@ -15,6 +16,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.71.7",
+    "react-native-context-menu-view": "^1.9.1",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-pager-view": "6.1.2",
     "react-native-reanimated": "3.0.2",
@@ -31,7 +33,7 @@
   },
   "scripts": {
     "start": "expo start --dev-client",
-    "build": "eas build -p ios",
+    "build": "eas build --profile development --platform ios",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
