@@ -21,7 +21,3 @@ export function uploadImages(imageUris, uploadImageUrls) {
   }
   return Promise.all(uploads)
 }
-
-export function getImageDownloadUrl(imageKey) {
-  return `${process.env.S3_BUCKET_URL}/${imageKey}`
-}

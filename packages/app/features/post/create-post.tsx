@@ -6,7 +6,7 @@ import { useState } from 'react'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
-import { getImageDownloadUrl, uploadImages } from './upload-image'
+import { uploadImages } from './upload-image'
 import { Picker } from '@react-native-picker/picker'
 import { Zone, ZoneTitles } from 'app/utils/enums'
 
@@ -60,7 +60,7 @@ export function CreatePostScreen() {
           zone,
           description,
           price: price!,
-          images: imageUploadUrls.map((img) => getImageDownloadUrl(img.key)),
+          images: imageUploadUrls.map((img) => img.key),
         })
       },
     })

@@ -1,7 +1,8 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { Zone } from '@prisma/client'
-import { getSignedUploadUrl } from '../helpers/signed-url'
+import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../s3'
+import { TRPCError } from '@trpc/server'
 
 const getImageUploadUrls = publicProcedure
   .input(z.number().int().positive())
@@ -49,7 +50,7 @@ const list = publicProcedure.query(({ ctx }) => {
 const create = protectedProcedure
   .input(
     z.object({
-      images: z.string().url().array(),
+      images: z.string().array(),
       price: z.number().int(),
       title: z.string(),
       description: z.string().optional(),
@@ -67,11 +68,39 @@ const create = protectedProcedure
         },
         images: {
           createMany: {
-            data: input.images.map((url) => ({ url })),
+            data: input.images.map((key) => ({
+              externalKey: key,
+              url: getImageDownloadUrl(key),
+            })),
           },
         },
       },
     })
+  })
+
+const _delete = protectedProcedure
+  .input(z.object({ postId: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const post = await ctx.prisma.post.findUnique({
+      where: {
+        id: input.postId,
+      },
+      include: {
+        images: true,
+      },
+    })
+
+    if (post?.authorId !== ctx.auth.userId) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    await ctx.prisma.post.delete({
+      where: {
+        id: input.postId,
+      },
+    })
+
+    post?.images?.forEach((img) => deleteImage(img.externalKey))
   })
 
 export const postRouter = router({
@@ -79,4 +108,5 @@ export const postRouter = router({
   getById,
   list,
   create,
+  delete: _delete,
 })
