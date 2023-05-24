@@ -6,6 +6,7 @@ import { Image } from 'app/design/image'
 import { useRouter } from 'solito/router'
 import { AppRouter } from 'server/api/routers'
 import { inferProcedureOutput } from '@trpc/server'
+import { PostStatusTag } from '../post/post'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
@@ -28,15 +29,19 @@ export function ChatInboxScreen() {
                 className="h-12 w-12 rounded-full "
                 source={{ uri: chat.partner?.profileImageUrl }}
               />
-              <View className="flex flex-col">
+              <View className="flex flex-grow flex-col">
                 <Text>{chat.partner?.username}</Text>
                 <Text className="text-base font-semibold">
-                  {chat?.conversation?.post?.title}
+                  {chat?.post?.title}
                 </Text>
                 <Text className="text-xs">
                   {chat?.conversation?.messages?.[0]?.content}
                 </Text>
               </View>
+              {(chat?.post?.status === 'REMOVED' ||
+                chat?.post?.status === 'SOLD') && (
+                <PostStatusTag status={chat?.post?.status} />
+              )}
             </View>
           </TouchableOpacity>
         )

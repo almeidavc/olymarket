@@ -33,6 +33,12 @@ export function NavigationProvider({
               profile: {
                 screens: {
                   settings: 'settings',
+                  selling: {
+                    screens: {
+                      feed: 'selling/feed',
+                      post: 'selling/post/:postId',
+                    },
+                  },
                 },
               },
               'sign-in': 'sign-in',

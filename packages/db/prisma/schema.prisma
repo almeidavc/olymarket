@@ -18,6 +18,12 @@ enum Zone {
   NONE
 }
 
+enum PostStatus {
+  CREATED
+  REMOVED
+  SOLD
+}
+
 model User {
   id              String         @id
   username        String
@@ -36,6 +42,7 @@ model Post {
   images        Image[]
   price         Int
   title         String
+  status        PostStatus     @default(value: CREATED)
   zone          Zone           @default(value: NONE)
 
   @@index([authorId])

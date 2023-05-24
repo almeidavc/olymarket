@@ -72,7 +72,7 @@ export function SignedInNavigator() {
       <Tab.Screen
         name="profile"
         component={Profile}
-        options={{ headerTitle: 'Profile', tabBarLabel: 'Profile' }}
+        options={{ headerShown: false, tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
   )

@@ -31,6 +31,7 @@ function parseChat(conversation: CompleteConversation, me: string) {
     conversation,
     me: findMeInParticipants(conversation, me),
     partner: findPartnerInParticipants(conversation, me),
+    post: conversation?.post,
   }
 }
 

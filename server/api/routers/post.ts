@@ -1,6 +1,6 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
-import { Zone } from '@prisma/client'
+import { Zone, PostStatus } from '@prisma/client'
 import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../s3'
 import { TRPCError } from '@trpc/server'
 
@@ -33,6 +33,33 @@ const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
 
 const list = publicProcedure.query(({ ctx }) => {
   return ctx.prisma.post.findMany({
+    where: {
+      status: {
+        notIn: [PostStatus.REMOVED, PostStatus.SOLD],
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      images: {
+        select: {
+          id: true,
+          url: true,
+        },
+      },
+    },
+  })
+})
+
+const listMine = protectedProcedure.query(({ ctx }) => {
+  return ctx.prisma.post.findMany({
+    where: {
+      authorId: ctx.auth.userId,
+      status: {
+        not: PostStatus.REMOVED,
+      },
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -78,7 +105,7 @@ const create = protectedProcedure
     })
   })
 
-const _delete = protectedProcedure
+const remove = protectedProcedure
   .input(z.object({ postId: z.string() }))
   .mutation(async ({ ctx, input }) => {
     const post = await ctx.prisma.post.findUnique({
@@ -94,19 +121,47 @@ const _delete = protectedProcedure
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
-    await ctx.prisma.post.delete({
+    await ctx.prisma.post.update({
       where: {
         id: input.postId,
+      },
+      data: {
+        status: PostStatus.REMOVED,
       },
     })
 
     post?.images?.forEach((img) => deleteImage(img.externalKey))
   })
 
+const markAsSold = protectedProcedure
+  .input(z.object({ postId: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const post = await ctx.prisma.post.findUnique({
+      where: {
+        id: input.postId,
+      },
+    })
+
+    if (post?.authorId !== ctx.auth.userId) {
+      throw new TRPCError({ code: 'UNAUTHORIZED' })
+    }
+
+    return await ctx.prisma.post.update({
+      where: {
+        id: input.postId,
+      },
+      data: {
+        status: PostStatus.SOLD,
+      },
+    })
+  })
+
 export const postRouter = router({
   getImageUploadUrls,
   getById,
   list,
+  listMine,
   create,
-  delete: _delete,
+  remove,
+  markAsSold,
 })
