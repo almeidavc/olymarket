@@ -19,12 +19,14 @@ interface ImageSelectProps {
   imageUris: string[]
   setImageUris: (uris: string[]) => void
   selectionLimit: number
+  showHelperText: boolean
 }
 
 const ImageSelect: React.FC<ImageSelectProps> = ({
   imageUris,
   setImageUris,
   selectionLimit,
+  showHelperText,
 }) => {
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -104,13 +106,18 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
         </View>
       ) : (
         <TouchableOpacity
-          className="flex h-full items-center justify-center"
+          className="relative flex h-full items-center justify-center"
           onPress={pickImages}
         >
           <MaterialCommunityIcons name="image-plus" size={60} color="#6b7280" />
           <Text className="mt-2 text-sm font-semibold text-gray-500">
             Add images
           </Text>
+          {showHelperText && (
+            <Text className="absolute bottom-0 mb-2 text-center text-sm text-red-600">
+              Please upload at least one image.
+            </Text>
+          )}
         </TouchableOpacity>
       )}
     </View>
@@ -125,6 +132,7 @@ export function CreatePostScreen() {
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState<number | undefined>()
   const [zone, setZone] = useState<Zone | undefined>()
+  const [showImagesHelperText, setShowImagesHelperText] = useState(false)
 
   const context = trpc.useContext()
 
@@ -169,6 +177,15 @@ export function CreatePostScreen() {
     refetchImageUploadUrls()
   }
 
+  const onCreatePostPress = () => {
+    if (imageUris.length === 0) {
+      setShowImagesHelperText(true)
+    } else {
+      setShowImagesHelperText(false)
+      handleSubmit(onSubmit)()
+    }
+  }
+
   const onSubmit = (data) => console.log(data)
 
   return (
@@ -177,6 +194,7 @@ export function CreatePostScreen() {
         imageUris={imageUris}
         setImageUris={setImageUris}
         selectionLimit={10}
+        showHelperText={showImagesHelperText}
       />
       <View className="flex flex-col divide-y divide-gray-300">
         <View className="flex flex-col gap-4 p-4">
@@ -261,7 +279,7 @@ export function CreatePostScreen() {
         className="mx-4 mt-4"
         title="Create post"
         // onPress={createPost}
-        onPress={handleSubmit(onSubmit)}
+        onPress={onCreatePostPress}
       />
     </KeyboardAwareScrollView>
   )
