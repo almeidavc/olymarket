@@ -1,3 +1,4 @@
+import { useRouter } from 'solito/router'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
@@ -184,15 +185,18 @@ export function CreatePostScreen({ navigation, route }) {
   }
 
   const onCreatePostPress = () => {
-    if (imageUris.length === 0) {
-      setShowImagesHelperText(true)
-    } else {
-      setShowImagesHelperText(false)
-      handleSubmit(onSubmit)()
-    }
+    navigation.navigate('success-message')
+
+    // if (imageUris.length === 0) {
+    //   setShowImagesHelperText(true)
+    // } else {
+    //   setShowImagesHelperText(false)
+    //   handleSubmit(onSubmit)()
+    // }
   }
 
-  const onSubmit = (data) => console.log(data)
+  // const onSubmit = (data) => console.log(data)
+  const onSubmit = (data) => navigation.navigate('success-message')
 
   return (
     <KeyboardAwareScrollView>
@@ -307,6 +311,31 @@ const ChooseZoneModal = ({ navigation, route }) => {
   )
 }
 
+const SuccessMessageModal = ({ navigation }) => {
+  const router = useRouter()
+
+  return (
+    <View className="mb-32 flex flex-grow items-center justify-center">
+      <View className="mx-auto mb-3.5 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 p-2 dark:bg-green-900">
+        <AntDesign name="check" size={50} color="#22c55e" />
+      </View>
+      <Text className="mb-4 text-4xl font-extrabold  text-gray-900">
+        Success!
+      </Text>
+      <Text className="mb-8 text-2xl font-normal text-gray-500">
+        Your post has been created.
+      </Text>
+      <Button
+        title="See your posts"
+        onPress={() => {
+          navigation.goBack()
+          router.push('/selling/feed')
+        }}
+      />
+    </View>
+  )
+}
+
 export function Post() {
   return (
     <Stack.Navigator initialRouteName="create-post">
@@ -320,6 +349,11 @@ export function Post() {
         name="choose-zone"
         component={ChooseZoneModal}
         options={{ presentation: 'modal', headerTitle: 'Location' }}
+      />
+      <Stack.Screen
+        name="success-message"
+        component={SuccessMessageModal}
+        options={{ presentation: 'modal', headerShown: false }}
       />
     </Stack.Navigator>
   )
