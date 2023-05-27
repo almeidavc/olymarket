@@ -5,43 +5,122 @@ import { ScrollView } from 'react-native'
 import { useState } from 'react'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
-import { FontAwesome5 } from '@expo/vector-icons'
 import { uploadImages } from './upload-image'
 import { Zone, ZoneTitles } from 'app/utils/enums'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { FormInput } from 'app/components/form'
 import ContextMenu from 'react-native-context-menu-view'
-import { Button } from 'app/design/button'
+import { Button, IconButton } from 'app/design/button'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 
-const UploadImageButton: React.FC<{
-  compact?: boolean
-  uploadImages: () => void
-}> = ({ compact = false, uploadImages }) => {
+interface ImageSelectProps {
+  imageUris: string[]
+  setImageUris: (uris: string[]) => void
+  selectionLimit: number
+}
+
+const ImageSelect: React.FC<ImageSelectProps> = ({
+  imageUris,
+  setImageUris,
+  selectionLimit,
+}) => {
+  const pickImages = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: true,
+      selectionLimit: selectionLimit - imageUris.length,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
+      // allowsEditing: true,
+      // aspect: [4, 3],
+    })
+
+    if (!result.canceled && result.assets.length) {
+      const newImageUris = result.assets.map((asset) => asset.uri)
+      setImageUris([...imageUris, ...newImageUris])
+    }
+  }
+
+  const deselectImage = (imageUri) => {
+    setImageUris(imageUris.filter((imgUri) => imgUri !== imageUri))
+  }
+
+  const setAsMainImage = (imageUri: string, imageIndex: number) => {
+    const swappedImageUris = [...imageUris]
+    swappedImageUris[imageIndex] = swappedImageUris[0]!
+    swappedImageUris[0] = imageUri
+    setImageUris(swappedImageUris)
+  }
+
   return (
-    <TouchableOpacity
-      onPress={uploadImages}
-      style={{
-        padding: 8,
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        borderRadius: 8,
-      }}
-    >
-      {compact && <FontAwesome5 name="plus" />}
-      {!compact && (
-        <Text>
-          <FontAwesome5 name="plus" /> Upload images
-        </Text>
+    <View className="h-[260px] bg-gray-200">
+      {imageUris.length ? (
+        <View className="space-between flex h-full flex-col">
+          <Text className="mt-4 w-full text-center text-xs font-semibold text-gray-500">
+            Add up to {selectionLimit} images.
+          </Text>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            {imageUris.map((imageUri, index) => (
+              <View
+                className={`relative my-6 ml-4 ${
+                  index === selectionLimit - 1 ? 'mr-4' : ''
+                }`}
+              >
+                <ContextMenu
+                  actions={[
+                    {
+                      title: 'Set as main photo',
+                    },
+                  ]}
+                  onPress={() => setAsMainImage(imageUri, index)}
+                >
+                  <Image
+                    className="h-[180px] w-[180px] rounded-lg"
+                    key={imageUri}
+                    source={{ uri: imageUri }}
+                  />
+                </ContextMenu>
+                <View className="absolute right-0 top-0 -mr-[10px] -mt-[10px]">
+                  <IconButton
+                    size="small"
+                    icon={<AntDesign name="close" />}
+                    onPress={() => deselectImage(imageUri)}
+                  />
+                </View>
+              </View>
+            ))}
+            {imageUris.length < selectionLimit && (
+              <View className="relative m-4 my-6 flex h-[180px] w-[180px] items-center justify-center">
+                <IconButton
+                  shape="square"
+                  variant="secondary"
+                  icon={<AntDesign name="plus" />}
+                  onPress={pickImages}
+                />
+              </View>
+            )}
+          </ScrollView>
+        </View>
+      ) : (
+        <TouchableOpacity
+          className="flex h-full items-center justify-center"
+          onPress={pickImages}
+        >
+          <MaterialCommunityIcons name="image-plus" size={60} color="#6b7280" />
+          <Text className="mt-2 text-sm font-semibold text-gray-500">
+            Add images
+          </Text>
+        </TouchableOpacity>
       )}
-    </TouchableOpacity>
+    </View>
   )
 }
 
 export function CreatePostScreen() {
   const { control, handleSubmit, formState, setFocus } = useForm()
 
-  const [imageUris, setImageUris] = useState<string[] | undefined>()
+  const [imageUris, setImageUris] = useState<string[]>([])
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState<number | undefined>()
@@ -83,20 +162,6 @@ export function CreatePostScreen() {
       },
     })
 
-  const pickImages = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      allowsMultipleSelection: true,
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
-      // allowsEditing: true,
-      // aspect: [4, 3],
-    })
-
-    if (!result.canceled && result.assets.length) {
-      setImageUris(result.assets.map((asset) => asset.uri))
-    }
-  }
-
   const createPost = async () => {
     if (!title || !price || !imageUris || !imageUris.length) {
       throw new Error('The post you are trying to create is not valid')
@@ -108,26 +173,11 @@ export function CreatePostScreen() {
 
   return (
     <KeyboardAwareScrollView>
-      <View className="bg-neutral-300 p-4">
-        {imageUris && imageUris.length ? (
-          <ScrollView horizontal={true}>
-            {imageUris.map((imageUri) => (
-              <Image
-                className="m-2 h-[20vh] w-[20vh]"
-                key={imageUri}
-                source={{ uri: imageUri }}
-              />
-            ))}
-            <View className="m-2 flex h-[20vh] w-[20vh] items-center justify-center">
-              <UploadImageButton compact={true} uploadImages={pickImages} />
-            </View>
-          </ScrollView>
-        ) : (
-          <View className="m-2 flex h-[20vh] items-center justify-center">
-            <UploadImageButton compact={false} uploadImages={pickImages} />
-          </View>
-        )}
-      </View>
+      <ImageSelect
+        imageUris={imageUris}
+        setImageUris={setImageUris}
+        selectionLimit={10}
+      />
       <View className="flex flex-col divide-y divide-gray-300">
         <View className="flex flex-col gap-4 p-4">
           <View>

@@ -1,6 +1,8 @@
+import React from 'react'
 import { Text } from './typography'
 import { View } from './core'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { Icon } from '@expo/vector-icons/build/createIconSet'
 
 const buttonVariants = {
   primary:
@@ -28,6 +30,61 @@ export const Button: React.FC<ButtonProps> = ({
     <TouchableOpacity {...props}>
       <View className={buttonVariants[variant]}>
         <Text className={textVariants[variant]}>{title}</Text>
+      </View>
+    </TouchableOpacity>
+  )
+}
+
+const iconButtonVariants = {
+  primary:
+    'text-white bg-blue-700 font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+  secondary:
+    'text-blue-700 border border-blue-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500',
+}
+
+const iconColorVariants = {
+  primary: 'white',
+  secondary: '#1d4ed8',
+}
+
+const iconButtonShapes = {
+  circle: 'rounded-full',
+  square: 'rounded-lg',
+}
+
+const iconSizes = {
+  small: 16,
+  medium: 22,
+}
+
+const iconButtonPaddings = {
+  small: 'p-1.5',
+  medium: 'p-2.5',
+}
+
+interface IconButtonProps extends Omit<TouchableOpacityProps, 'children'> {
+  icon: Icon<any, any>
+  size: 'small' | 'medium'
+  shape?: 'circle' | 'square'
+  variant?: 'primary' | 'secondary'
+}
+
+export const IconButton: React.FC<IconButtonProps> = ({
+  icon,
+  size = 'medium',
+  shape = 'circle',
+  variant = 'primary',
+  ...props
+}) => {
+  return (
+    <TouchableOpacity {...props}>
+      <View
+        className={`${iconButtonVariants[variant]} ${iconButtonPaddings[size]} ${iconButtonShapes[shape]}`}
+      >
+        {React.cloneElement(icon, {
+          size: iconSizes[size],
+          color: iconColorVariants[variant],
+        })}
       </View>
     </TouchableOpacity>
   )
