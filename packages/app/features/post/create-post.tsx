@@ -10,7 +10,7 @@ import { uploadImages } from './upload-image'
 import { Zone, ZoneTitles } from 'app/utils/enums'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
-import { LabeledInput } from 'app/components/input'
+import { FormInput } from 'app/components/form'
 import ContextMenu from 'react-native-context-menu-view'
 import { Button } from 'app/design/button'
 
@@ -39,7 +39,7 @@ const UploadImageButton: React.FC<{
 }
 
 export function CreatePostScreen() {
-  const { control, handleSubmit, formState } = useForm()
+  const { control, handleSubmit, formState, setFocus } = useForm()
 
   const [imageUris, setImageUris] = useState<string[] | undefined>()
   const [title, setTitle] = useState('')
@@ -131,8 +131,9 @@ export function CreatePostScreen() {
       <View className="flex flex-col divide-y divide-gray-300">
         <View className="flex flex-col gap-4 p-4">
           <View>
-            <Controller
+            <FormInput
               name="title"
+              label="Title"
               control={control}
               rules={{
                 required: 'A title is required.',
@@ -141,25 +142,18 @@ export function CreatePostScreen() {
                   message: 'The maximum length for the title is 60 characters.',
                 },
               }}
-              render={({
-                field: { value, onChange, onBlur },
-                fieldState: { invalid, error },
-              }) => (
-                <LabeledInput
-                  label="Title"
-                  placeholder="Title"
-                  value={value}
-                  onChangeValue={onChange}
-                  onBlur={onBlur}
-                  invalid={invalid}
-                  errorMessage={error?.message}
-                />
-              )}
+              textInput={{
+                placeholder: 'Title',
+                returnKeyType: 'next',
+                onSubmitEditing: () => setFocus('description'),
+                blurOnSubmit: false,
+              }}
             />
           </View>
           <View>
-            <Controller
+            <FormInput
               name="description"
+              label="Description"
               control={control}
               rules={{
                 maxLength: {
@@ -167,26 +161,14 @@ export function CreatePostScreen() {
                   message: 'The description is too long.',
                 },
               }}
-              render={({
-                field: { value, onChange, onBlur },
-                fieldState: { invalid, error },
-              }) => (
-                <LabeledInput
-                  label="Description"
-                  placeholder="Description"
-                  multiline
-                  className="h-28"
-                  value={value}
-                  onChangeValue={onChange}
-                  onBlur={onBlur}
-                  invalid={invalid}
-                  errorMessage={error?.message}
-                />
-              )}
+              textInput={{
+                placeholder: 'Description',
+                multiline: true,
+              }}
             />
           </View>
         </View>
-        <View className="p-4">
+        {/* <View className="p-4">
           <ContextMenu
             dropdownMenuMode={true}
             actions={Object.keys(Zone).map((zoneKey) => ({
@@ -197,17 +179,18 @@ export function CreatePostScreen() {
               setZone(name)
             }}
           >
-            <LabeledInput
+            <FormInput
               label="Zone"
               value={zone}
               placeholder="Zone"
               editable={false}
             />
           </ContextMenu>
-        </View>
+        </View> */}
         <View className="p-4">
-          <Controller
+          <FormInput
             name="price"
+            label="Price"
             control={control}
             rules={{
               required: 'A price is required.',
@@ -216,21 +199,11 @@ export function CreatePostScreen() {
                 message: 'Price can only consist of digits.',
               },
             }}
-            render={({
-              field: { value, onChange, onBlur },
-              fieldState: { invalid, error },
-            }) => (
-              <LabeledInput
-                label="Price"
-                inputMode="numeric"
-                placeholder="0€"
-                value={value}
-                onChangeValue={onChange}
-                onBlur={onBlur}
-                invalid={invalid}
-                errorMessage={error?.message}
-              />
-            )}
+            textInput={{
+              placeholder: '0',
+              inputMode: 'numeric',
+              returnKeyType: 'done',
+            }}
           />
         </View>
       </View>
