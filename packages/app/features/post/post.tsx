@@ -1,4 +1,4 @@
-import { View, Button, TouchableOpacity } from 'app/design/core'
+import { View, TouchableOpacity } from 'app/design/core'
 import { Text, H1 } from 'app/design/typography'
 import { ScrollView } from 'react-native'
 import { Image } from 'app/design/image'
@@ -13,6 +13,7 @@ import { Link } from 'solito/link'
 import { Feather } from '@expo/vector-icons'
 import { Tag } from 'app/components/tag'
 import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
+import { Button } from 'app/design/button'
 import ContextMenu from 'react-native-context-menu-view'
 
 export const PostStatusTag = ({ status }: { status: PostStatus }) => {

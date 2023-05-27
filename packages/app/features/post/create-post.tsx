@@ -1,4 +1,4 @@
-import { View, Button, TouchableOpacity, TextInput } from 'app/design/core'
+import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import * as ImagePicker from 'expo-image-picker'
 import { ScrollView } from 'react-native'
@@ -10,8 +10,9 @@ import { uploadImages } from './upload-image'
 import { Zone, ZoneTitles } from 'app/utils/enums'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm, Controller } from 'react-hook-form'
-import { LabeledInput, Label } from 'app/components/input'
+import { LabeledInput } from 'app/components/input'
 import ContextMenu from 'react-native-context-menu-view'
+import { Button } from 'app/design/button'
 
 const UploadImageButton: React.FC<{
   compact?: boolean
@@ -232,13 +233,13 @@ export function CreatePostScreen() {
             )}
           />
         </View>
-        <Button
-          className="mt-4"
-          title="Create post"
-          // onPress={createPost}
-          onPress={handleSubmit(onSubmit)}
-        />
       </View>
+      <Button
+        className="mx-4 mt-4"
+        title="Create post"
+        // onPress={createPost}
+        onPress={handleSubmit(onSubmit)}
+      />
     </KeyboardAwareScrollView>
   )
 }
