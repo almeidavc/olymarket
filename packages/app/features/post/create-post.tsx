@@ -7,8 +7,11 @@ import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { uploadImages } from './upload-image'
-import { Picker } from '@react-native-picker/picker'
 import { Zone, ZoneTitles } from 'app/utils/enums'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { useForm, Controller } from 'react-hook-form'
+import { LabeledInput, Label } from 'app/components/input'
+import ContextMenu from 'react-native-context-menu-view'
 
 const UploadImageButton: React.FC<{
   compact?: boolean
@@ -35,6 +38,8 @@ const UploadImageButton: React.FC<{
 }
 
 export function CreatePostScreen() {
+  const { control, handleSubmit, formState } = useForm()
+
   const [imageUris, setImageUris] = useState<string[] | undefined>()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -98,8 +103,10 @@ export function CreatePostScreen() {
     refetchImageUploadUrls()
   }
 
+  const onSubmit = (data) => console.log(data)
+
   return (
-    <ScrollView>
+    <KeyboardAwareScrollView>
       <View className="bg-neutral-300 p-4">
         {imageUris && imageUris.length ? (
           <ScrollView horizontal={true}>
@@ -120,53 +127,118 @@ export function CreatePostScreen() {
           </View>
         )}
       </View>
-      <View className="p-4">
-        <Text>Title</Text>
-        <TextInput
-          placeholder="example title"
-          className="text-xl"
-          value={title}
-          onChangeText={setTitle}
-        />
-        <Text className="mt-4">Description</Text>
-        <TextInput
-          multiline
-          placeholder="example description"
-          className="text-xl"
-          value={description}
-          onChangeText={setDescription}
-        />
-        <Text className="mt-4">Zone</Text>
-        <View className="-m-4">
-          <Picker selectedValue={zone} onValueChange={(zone) => setZone(zone)}>
-            {Object.values(Zone).map((zone) => (
-              <Picker.Item
-                key={zone}
-                label={ZoneTitles.get(zone)}
-                value={zone}
-              />
-            ))}
-          </Picker>
+      <View className="flex flex-col divide-y divide-gray-300">
+        <View className="flex flex-col gap-4 p-4">
+          <View>
+            <Controller
+              name="title"
+              control={control}
+              rules={{
+                required: 'A title is required.',
+                maxLength: {
+                  value: 60,
+                  message: 'The maximum length for the title is 60 characters.',
+                },
+              }}
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { invalid, error },
+              }) => (
+                <LabeledInput
+                  label="Title"
+                  placeholder="Title"
+                  value={value}
+                  onChangeValue={onChange}
+                  onBlur={onBlur}
+                  invalid={invalid}
+                  errorMessage={error?.message}
+                />
+              )}
+            />
+          </View>
+          <View>
+            <Controller
+              name="description"
+              control={control}
+              rules={{
+                maxLength: {
+                  value: 2 ** 16 - 1,
+                  message: 'The description is too long.',
+                },
+              }}
+              render={({
+                field: { value, onChange, onBlur },
+                fieldState: { invalid, error },
+              }) => (
+                <LabeledInput
+                  label="Description"
+                  placeholder="Description"
+                  multiline
+                  className="h-28"
+                  value={value}
+                  onChangeValue={onChange}
+                  onBlur={onBlur}
+                  invalid={invalid}
+                  errorMessage={error?.message}
+                />
+              )}
+            />
+          </View>
         </View>
-        <Text className="mt-4">Price</Text>
-        <TextInput
-          inputMode="numeric"
-          placeholder="0€"
-          className="text-xl"
-          value={price ? `${price}` : ''}
-          onChangeText={(input) => {
-            setPrice(Number.parseInt(input))
-          }}
-        />
+        <View className="p-4">
+          <ContextMenu
+            dropdownMenuMode={true}
+            actions={Object.keys(Zone).map((zoneKey) => ({
+              title: ZoneTitles.get(zoneKey),
+            }))}
+            onPress={(event) => {
+              const { name } = event.nativeEvent
+              setZone(name)
+            }}
+          >
+            <LabeledInput
+              label="Zone"
+              value={zone}
+              placeholder="Zone"
+              editable={false}
+            />
+          </ContextMenu>
+        </View>
+        <View className="p-4">
+          <Controller
+            name="price"
+            control={control}
+            rules={{
+              required: 'A price is required.',
+              pattern: {
+                value: /^[0-9]+$/,
+                message: 'Price can only consist of digits.',
+              },
+            }}
+            render={({
+              field: { value, onChange, onBlur },
+              fieldState: { invalid, error },
+            }) => (
+              <LabeledInput
+                label="Price"
+                inputMode="numeric"
+                placeholder="0€"
+                value={value}
+                onChangeValue={onChange}
+                onBlur={onBlur}
+                invalid={invalid}
+                errorMessage={error?.message}
+              />
+            )}
+          />
+        </View>
         <Button
-          className={`mt-4 ${
-            !title || !price || !imageUris ? 'opacity-10' : ''
-          }`}
-          disabled={!title || !price || !imageUris}
+          className="mt-4"
           title="Create post"
-          onPress={createPost}
+          // onPress={createPost}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
-    </ScrollView>
+    </KeyboardAwareScrollView>
   )
 }
