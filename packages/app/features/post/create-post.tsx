@@ -1,3 +1,4 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import * as ImagePicker from 'expo-image-picker'
@@ -14,6 +15,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { Button, IconButton } from 'app/design/button'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
+import { RadioButton } from 'app/components/radio'
 
 interface ImageSelectProps {
   imageUris: string[]
@@ -65,6 +67,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             {imageUris.map((imageUri, index) => (
               <View
+                key={imageUri}
                 className={`relative my-6 ml-4 ${
                   index === selectionLimit - 1 ? 'mr-4' : ''
                 }`}
@@ -79,7 +82,6 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
                 >
                   <Image
                     className="h-[180px] w-[180px] rounded-lg"
-                    key={imageUri}
                     source={{ uri: imageUri }}
                   />
                 </ContextMenu>
@@ -124,14 +126,18 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
   )
 }
 
-export function CreatePostScreen() {
+const Stack = createNativeStackNavigator()
+
+export function CreatePostScreen({ navigation, route }) {
+  const { zone } = route.params
+
   const { control, handleSubmit, formState, setFocus } = useForm()
 
   const [imageUris, setImageUris] = useState<string[]>([])
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [price, setPrice] = useState<number | undefined>()
-  const [zone, setZone] = useState<Zone | undefined>()
+  // const [zone, setZone] = useState<Zone | undefined>()
   const [showImagesHelperText, setShowImagesHelperText] = useState(false)
 
   const context = trpc.useContext()
@@ -236,25 +242,22 @@ export function CreatePostScreen() {
             />
           </View>
         </View>
-        {/* <View className="p-4">
-          <ContextMenu
-            dropdownMenuMode={true}
-            actions={Object.keys(Zone).map((zoneKey) => ({
-              title: ZoneTitles.get(zoneKey),
-            }))}
-            onPress={(event) => {
-              const { name } = event.nativeEvent
-              setZone(name)
-            }}
+        <View className="p-4">
+          <TouchableOpacity
+            className="flex h-8 flex-row items-center justify-between"
+            onPress={() => navigation.navigate('choose-zone', { zone })}
           >
-            <FormInput
-              label="Zone"
-              value={zone}
-              placeholder="Zone"
-              editable={false}
-            />
-          </ContextMenu>
-        </View> */}
+            <Text className="text-sm font-medium text-gray-900">Location</Text>
+            <View className="flex flex-row items-center">
+              {zone && (
+                <Text className="mr-2 text-sm font-medium text-gray-500">
+                  {ZoneTitles.get(zone)}
+                </Text>
+              )}
+              <AntDesign name="right" size={16} color="#6b7280" />
+            </View>
+          </TouchableOpacity>
+        </View>
         <View className="p-4">
           <FormInput
             name="price"
@@ -282,5 +285,42 @@ export function CreatePostScreen() {
         onPress={onCreatePostPress}
       />
     </KeyboardAwareScrollView>
+  )
+}
+
+const ChooseZoneModal = ({ navigation, route }) => {
+  const { zone } = route.params
+
+  return (
+    <View className="px-4 py-2">
+      {Object.keys(Zone).map((zoneKey) => (
+        <View className="w-full border-b border-gray-200">
+          <RadioButton
+            key={zoneKey}
+            label={ZoneTitles.get(zoneKey as Zone)!}
+            isSelected={zone === zoneKey}
+            select={() => navigation.navigate('create-post', { zone: zoneKey })}
+          />
+        </View>
+      ))}
+    </View>
+  )
+}
+
+export function Post() {
+  return (
+    <Stack.Navigator initialRouteName="create-post">
+      <Stack.Screen
+        name="create-post"
+        component={CreatePostScreen}
+        options={{ headerShown: false }}
+        initialParams={{ zone: undefined }}
+      />
+      <Stack.Screen
+        name="choose-zone"
+        component={ChooseZoneModal}
+        options={{ presentation: 'modal', headerTitle: 'Location' }}
+      />
+    </Stack.Navigator>
   )
 }

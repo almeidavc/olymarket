@@ -1,4 +1,4 @@
-import { CreatePostScreen } from '../../features/post/create-post'
+import { Post } from '../../features/post/create-post'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
@@ -54,7 +54,7 @@ export function SignedInNavigator() {
       />
       <Tab.Screen
         name="post"
-        component={CreatePostScreen}
+        component={Post}
         options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
       />
       <Tab.Screen

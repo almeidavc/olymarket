@@ -20,12 +20,15 @@ const inputVariants = {
     'bg-red-50 border border-red-500 text-red-900 placeholder-red-700 rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400',
 }
 
-interface LabelProps {
+interface FormLabelProps {
   title: string
   variant?: string
 }
 
-export const Label: React.FC<LabelProps> = ({ title, variant = 'default' }) => {
+export const FormLabel: React.FC<FormLabelProps> = ({
+  title,
+  variant = 'default',
+}) => {
   return <Text className={labelVariants[variant]}>{title}</Text>
 }
 
@@ -49,7 +52,7 @@ export const FormInput: React.FC<FormInputProps> = ({
         fieldState: { invalid, error },
       }) => (
         <View>
-          <Label title={label} />
+          <FormLabel title={label} />
           <TextInput
             ref={ref}
             value={value}
