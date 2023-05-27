@@ -242,6 +242,7 @@ export function CreatePostScreen({ navigation, route }) {
               textInput={{
                 placeholder: 'Description',
                 multiline: true,
+                style: { height: 160 },
               }}
             />
           </View>
