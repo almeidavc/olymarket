@@ -9,17 +9,18 @@ export function FeedScreen() {
   const { data: posts, refetch, isRefetching } = trpc.post.list.useQuery()
 
   return (
-    <View className="p-4">
+    <View className="mx-4 mt-12">
       <FlatList
         ListHeaderComponent={<H1>Olymarket</H1>}
         refreshControl={
           <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
         }
+        showsVerticalScrollIndicator={false}
         data={posts}
         keyExtractor={(post) => post.id}
         numColumns={2}
         renderItem={({ item: post, index }) => (
-          <View className={`w-1/2 py-2 ${index % 2 === 0 ? 'pr-2' : 'pl-2'}`}>
+          <View className={`w-1/2 py-1.5 ${index % 2 === 0 ? 'pr-1' : 'pl-1'}`}>
             <PostCard post={post} />
           </View>
         )}

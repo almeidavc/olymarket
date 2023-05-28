@@ -32,19 +32,19 @@ interface PostCardProps {
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <Link href={`/post/${post.id}`}>
-      <View className="flex h-[30vh] flex-col justify-between rounded-lg border-2 border-lime-800 p-4">
+      <View className="rounded-lg border border-gray-200 bg-white shadow">
         <Image
-          className="h-2/3 w-full bg-black"
+          className="h-[25vh] w-full rounded-t-lg bg-gray-200"
+          resizeMode="cover"
           source={{
             uri: post.images![0]?.url,
           }}
-          resizeMode="contain"
         />
-        <View>
-          <Text className="text-lg font-semibold text-lime-900">
+        <View className="p-2">
+          <Text className="text-lg tracking-tight text-gray-600">
             {post.title}
           </Text>
-          <Text className="text-lime-900">
+          <Text className="mb-1 font-bold text-sky-900">
             {post.price.toLocaleString('en-US', {
               style: 'currency',
               currency: 'EUR',
