@@ -130,7 +130,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
 const Stack = createNativeStackNavigator()
 
 export function CreatePostScreen({ navigation, route }) {
-  const { getValues, control, handleSubmit, setFocus } = useForm()
+  const { getValues, control, handleSubmit, setFocus, reset } = useForm()
 
   const { zone } = route.params
   const [imageUris, setImageUris] = useState<string[]>([])
@@ -140,9 +140,18 @@ export function CreatePostScreen({ navigation, route }) {
 
   const context = trpc.useContext()
 
+  const resetForm = () => {
+    reset()
+    setImageUris([])
+    navigation.setParams({ zone: undefined })
+    setShowImagesHelperText(false)
+  }
+
   const { mutate: createPostMutation } = trpc.post.create.useMutation({
     onSuccess: (createdPost) => {
       setIsCreatePostLoading(false)
+
+      resetForm()
 
       navigation.navigate('success-message')
 
