@@ -276,6 +276,10 @@ export function CreatePostScreen({ navigation, route }) {
                 value: /^[0-9]+$/,
                 message: 'Price can only consist of digits.',
               },
+              maxLength: {
+                value: 4,
+                message: 'The maximum price is 9999.',
+              },
             }}
             textInput={{
               placeholder: '0',
