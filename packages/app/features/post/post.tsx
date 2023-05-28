@@ -15,6 +15,7 @@ import { Tag } from 'app/components/tag'
 import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
 import { Button } from 'app/design/button'
 import ContextMenu from 'react-native-context-menu-view'
+import dayjs from 'app/utils/dayjs'
 
 export const PostStatusTag = ({ status }: { status: PostStatus }) => {
   return (
@@ -192,33 +193,50 @@ export function PostScreen({ route }) {
       <ScrollView horizontal={true}>
         {post.images.map((img) => (
           <Image
-            className="aspect-square w-screen"
+            className="h-[55vh] w-screen"
             key={img.id}
             source={{ uri: img.url }}
           />
         ))}
       </ScrollView>
-      <View className="p-4">
-        <H1 className="mb-0 text-3xl font-bold">{post.title}</H1>
-        <Text className="text-lg font-extrabold text-blue-900">
-          {new Intl.NumberFormat('de-DE', {
-            style: 'currency',
-            currency: 'EUR',
-          }).format(post.price)}
-        </Text>
-        {post.zone !== 'NONE' && (
-          <Text>
-            <FontAwesome5 name="map-marker-alt" /> {ZoneTitles.get(post.zone)}
+      <View className="divide-y divide-gray-300">
+        <View className="flex flex-row items-center justify-between p-4">
+          <View className="flex flex-row items-center">
+            <Image
+              className="mr-3 h-12 w-12 rounded-full"
+              source={{ uri: post.author.profileImageUrl }}
+            />
+            <View>
+              <Text className="mb-1">{post.author.username}</Text>
+              <Text className="text-gray-600">
+                {dayjs().to(dayjs(post?.createdAt))}
+              </Text>
+            </View>
+          </View>
+          {userId !== post.authorId && (
+            <Button title="Contact seller" onPress={onContactButtonPress} />
+          )}
+        </View>
+        <View className="p-4">
+          <Text className="mb-1 text-xl">{post.title}</Text>
+          <Text className="mb-1 text-lg font-bold text-sky-900">
+            {new Intl.NumberFormat('de-DE', {
+              style: 'currency',
+              currency: 'EUR',
+            }).format(post.price)}
           </Text>
-        )}
-        <Text className="mt-4">Description</Text>
-        <Text className="text-lg">{post.description}</Text>
-        {userId !== post?.authorId && (
-          <Button
-            className="mt-4"
-            title="Contact seller"
-            onPress={onContactButtonPress}
-          />
+          {post.zone !== 'NONE' && (
+            <Text className="text-gray-600">
+              <FontAwesome5 name="map-marker-alt" color="#4b5563" />{' '}
+              {ZoneTitles.get(post.zone)}
+            </Text>
+          )}
+        </View>
+        {post.description && (
+          <View className="p-4">
+            <Text className="mb-2 text-gray-600">Description</Text>
+            <Text>{post.description}</Text>
+          </View>
         )}
       </View>
     </ScrollView>

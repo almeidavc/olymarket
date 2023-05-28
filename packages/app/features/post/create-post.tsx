@@ -300,7 +300,7 @@ export function CreatePostScreen({ navigation, route }) {
       </View>
       <Button
         loading={isCreatePostLoading}
-        className="mx-4 mt-4"
+        className="m-4"
         title="Create post"
         onPress={onCreatePostPress}
       />
