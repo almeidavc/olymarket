@@ -1,7 +1,7 @@
 import { useSignIn } from '@clerk/clerk-expo'
 import { useState, useCallback } from 'react'
 import { TextInput, View } from 'app/design/core'
-import { Button } from 'app/design/button'
+import { Button } from 'app/components/button'
 import { Text } from 'app/design/typography'
 import { useRouter } from 'solito/router'
 import { useOAuth } from '@clerk/clerk-expo'

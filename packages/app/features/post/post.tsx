@@ -1,6 +1,6 @@
 import { View, TouchableOpacity } from 'app/design/core'
-import { Text, H1 } from 'app/design/typography'
-import { ScrollView } from 'react-native'
+import { Text } from 'app/design/typography'
+import { ScrollView, TouchableWithoutFeedback } from 'react-native'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
@@ -13,9 +13,10 @@ import { Link } from 'solito/link'
 import { Feather } from '@expo/vector-icons'
 import { Tag } from 'app/components/tag'
 import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
-import { Button } from 'app/design/button'
+import { Button } from 'app/components/button'
 import ContextMenu from 'react-native-context-menu-view'
 import dayjs from 'app/utils/dayjs'
+import { ImageSlider } from 'app/components/image-slider'
 
 export const PostStatusTag = ({ status }: { status: PostStatus }) => {
   return (
@@ -35,14 +36,17 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <Link href={`/post/${post.id}`}>
       <View className="rounded-lg border border-gray-200 bg-white shadow">
         <Image
-          className="h-[25vh] w-full rounded-t-lg bg-gray-200"
+          className="h-[25vh] w-full rounded-t-lg"
           resizeMode="cover"
           source={{
             uri: post.images![0]?.url,
           }}
         />
         <View className="p-2">
-          <Text className="text-lg tracking-tight text-gray-600">
+          <Text
+            className="text-lg tracking-tight text-gray-600"
+            numberOfLines={1}
+          >
             {post.title}
           </Text>
           <Text className="mb-1 font-bold text-sky-900">
@@ -190,15 +194,7 @@ export function PostScreen({ route }) {
 
   return (
     <ScrollView>
-      <ScrollView horizontal={true}>
-        {post.images.map((img) => (
-          <Image
-            className="h-[55vh] w-screen"
-            key={img.id}
-            source={{ uri: img.url }}
-          />
-        ))}
-      </ScrollView>
+      <ImageSlider imageUris={post.images.map((img) => img.url)} />
       <View className="divide-y divide-gray-300">
         <View className="flex flex-row items-center justify-between p-4">
           <View className="flex flex-row items-center">

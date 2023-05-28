@@ -1,6 +1,6 @@
 import { useAuth } from '@clerk/clerk-expo'
 import { View } from 'app/design/core'
-import { Button } from 'app/design/button'
+import { Button } from 'app/components/button'
 import { useQueryClient } from '@tanstack/react-query'
 
 export function SettingsScreen() {

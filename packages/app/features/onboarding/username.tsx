@@ -3,7 +3,7 @@ import Toast from 'react-native-root-toast'
 import { View } from 'app/design/core'
 import { useState } from 'react'
 import { TextInput } from 'app/design/core'
-import { Button } from 'app/design/button'
+import { Button } from 'app/components/button'
 import { Text } from 'app/design/typography'
 
 export function ChooseUsernameScreen() {

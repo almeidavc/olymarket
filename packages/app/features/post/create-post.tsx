@@ -13,7 +13,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useForm } from 'react-hook-form'
 import { FormInput } from 'app/components/form'
 import ContextMenu from 'react-native-context-menu-view'
-import { Button, IconButton } from 'app/design/button'
+import { Button, IconButton } from 'app/components/button'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
 import { RadioButton } from 'app/components/radio'

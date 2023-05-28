@@ -1,6 +1,6 @@
 import React from 'react'
-import { Text } from './typography'
-import { View } from './core'
+import { Text } from '../design/typography'
+import { View } from '../design/core'
 import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Icon } from '@expo/vector-icons/build/createIconSet'
 import { LoadingSpinner } from 'app/components/spinner'

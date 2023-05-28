@@ -1,6 +1,6 @@
 import { useSignUp } from '@clerk/clerk-expo'
 import { TextInput, View } from 'app/design/core'
-import { Button } from 'app/design/button'
+import { Button } from 'app/components/button'
 import { Text } from 'app/design/typography'
 import { useState } from 'react'
 import Toast from 'react-native-root-toast'

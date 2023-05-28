@@ -1,0 +1,39 @@
+import Carousel, { CarouselProps, Pagination } from 'react-native-snap-carousel'
+import { View } from 'app/design/core'
+import React, { useState } from 'react'
+
+export const PaginatedCarousel: React.FC<
+  Omit<CarouselProps<any>, 'onSnapToItem'>
+> = ({ data, renderItem, ...props }) => {
+  const [activeItemIndex, setActiveItemIndex] = useState(0)
+
+  return (
+    <View className="relative">
+      <Carousel
+        data={data}
+        renderItem={renderItem}
+        inactiveSlideScale={1}
+        containerCustomStyle={{ backgroundColor: 'black' }}
+        onSnapToItem={(index) => setActiveItemIndex(index)}
+        {...props}
+      />
+      <View className="absolute bottom-0 flex w-full items-center justify-center">
+        <Pagination
+          dotsLength={data.length}
+          activeDotIndex={activeItemIndex}
+          animatedFriction={20}
+          inactiveDotScale={0.8}
+          dotContainerStyle={{
+            marginHorizontal: 2,
+          }}
+          dotStyle={{
+            width: 8,
+            height: 8,
+            borderRadius: 9999,
+            backgroundColor: 'white',
+          }}
+        />
+      </View>
+    </View>
+  )
+}
