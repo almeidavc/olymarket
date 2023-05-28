@@ -22,6 +22,7 @@
     "react-native-pager-view": "^6.2.0",
     "react-native-root-siblings": "^4.1.1",
     "react-native-root-toast": "^3.4.1",
+    "react-native-svg": "^13.9.0",
     "react-native-tab-view": "^3.5.1",
     "socket.io-client": "^4.6.1",
     "solito": "3.0.0",

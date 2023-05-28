@@ -130,21 +130,22 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
 const Stack = createNativeStackNavigator()
 
 export function CreatePostScreen({ navigation, route }) {
+  const { getValues, control, handleSubmit, setFocus } = useForm()
+
   const { zone } = route.params
-
-  const { control, handleSubmit, formState, setFocus } = useForm()
-
   const [imageUris, setImageUris] = useState<string[]>([])
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [price, setPrice] = useState<number | undefined>()
-  // const [zone, setZone] = useState<Zone | undefined>()
+
   const [showImagesHelperText, setShowImagesHelperText] = useState(false)
+  const [isCreatePostLoading, setIsCreatePostLoading] = useState(false)
 
   const context = trpc.useContext()
 
   const { mutate: createPostMutation } = trpc.post.create.useMutation({
     onSuccess: (createdPost) => {
+      setIsCreatePostLoading(false)
+
+      navigation.navigate('success-message')
+
       context.post.list.invalidate()
       context.post.listMine.setData(undefined, (oldPosts) => {
         if (oldPosts) {
@@ -154,7 +155,7 @@ export function CreatePostScreen({ navigation, route }) {
     },
   })
 
-  const { refetch: refetchImageUploadUrls } =
+  const { refetch: fetchImageUploadUrlsAndCreatePost } =
     trpc.post.getImageUploadUrls.useQuery(imageUris?.length ?? 0, {
       refetchOnMount: false,
       enabled: false,
@@ -167,36 +168,37 @@ export function CreatePostScreen({ navigation, route }) {
         } catch {
           throw new Error('Something went wrong while uploading the images')
         }
+
+        const { title, description, price } = getValues()
+
         createPostMutation({
           title,
-          zone,
           description,
-          price: price!,
+          zone,
+          price: Number.parseInt(price),
           images: imageUploadUrls.map((img) => img.key),
         })
       },
     })
 
-  const createPost = async () => {
-    if (!title || !price || !imageUris || !imageUris.length) {
-      throw new Error('The post you are trying to create is not valid')
+  const onCreatePost = () => {
+    if (isCreatePostLoading) {
+      return
     }
-    refetchImageUploadUrls()
+
+    setIsCreatePostLoading(true)
+
+    fetchImageUploadUrlsAndCreatePost()
   }
 
   const onCreatePostPress = () => {
-    navigation.navigate('success-message')
-
-    // if (imageUris.length === 0) {
-    //   setShowImagesHelperText(true)
-    // } else {
-    //   setShowImagesHelperText(false)
-    //   handleSubmit(onSubmit)()
-    // }
+    if (imageUris.length === 0) {
+      setShowImagesHelperText(true)
+    } else {
+      setShowImagesHelperText(false)
+      handleSubmit(onCreatePost)()
+    }
   }
-
-  // const onSubmit = (data) => console.log(data)
-  const onSubmit = (data) => navigation.navigate('success-message')
 
   return (
     <KeyboardAwareScrollView>
@@ -284,9 +286,9 @@ export function CreatePostScreen({ navigation, route }) {
         </View>
       </View>
       <Button
+        loading={isCreatePostLoading}
         className="mx-4 mt-4"
         title="Create post"
-        // onPress={createPost}
         onPress={onCreatePostPress}
       />
     </KeyboardAwareScrollView>
@@ -299,9 +301,8 @@ const ChooseZoneModal = ({ navigation, route }) => {
   return (
     <View className="px-4 py-2">
       {Object.keys(Zone).map((zoneKey) => (
-        <View className="w-full border-b border-gray-200">
+        <View key={zoneKey} className="w-full border-b border-gray-200">
           <RadioButton
-            key={zoneKey}
             label={ZoneTitles.get(zoneKey as Zone)!}
             isSelected={zone === zoneKey}
             select={() => navigation.navigate('create-post', { zone: zoneKey })}
