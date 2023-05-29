@@ -1,49 +1,92 @@
 import { useSignUp } from '@clerk/clerk-expo'
-import Toast from 'react-native-root-toast'
 import { View } from 'app/design/core'
-import { useState } from 'react'
-import { TextInput } from 'app/design/core'
-import { Button } from 'app/components/button'
-import { Text } from 'app/design/typography'
 import { useRouter } from 'solito/router'
+import { FormInput } from 'app/components/form'
+import { useForm } from 'react-hook-form'
+import { SafeAreaView } from 'react-native'
+import { Button } from 'app/components/button'
 
 export function SignUpScreen() {
   const router = useRouter()
 
   const { signUp } = useSignUp()
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const { control, handleSubmit, setError } = useForm()
 
-  const onSignUpPress = async () => {
+  const onSignUp = async ({ email, password }) => {
     try {
-      const res = await signUp?.create({
+      const signUpResult = await signUp?.create({
         emailAddress: email,
         password,
       })
-      if (!res) {
-        throw new Error('An error occured when signing up with email')
+
+      if (!signUpResult) {
+        return
       }
-      if (res.unverifiedFields.includes('email_address')) {
-        await signUp?.prepareEmailAddressVerification()
+
+      if (signUpResult.unverifiedFields.includes('email_address')) {
+        await signUpResult.prepareEmailAddressVerification()
         router.push('/sign-up/verify-email')
       } else {
         router.push('sign-up/username')
       }
-    } catch (error) {
-      Toast.show(error.errors[0].longMessage)
+    } catch (e) {
+      const error = e.errors[0]
+
+      if (error.code === 'form_param_format_invalid') {
+        setError('email', {
+          message: 'Email must be a valid email address.',
+        })
+        return
+      }
+
+      switch (error.meta.paramName) {
+        case 'email_address':
+          setError('email', {
+            message: error.longMessage,
+          })
+          break
+        case 'password':
+          setError('password', {
+            message: error.longMessage,
+          })
+      }
     }
   }
 
   return (
-    <View className="p-4">
-      <View className="flex flex-col gap-1">
-        <Text>Email</Text>
-        <TextInput value={email} onChangeText={setEmail} />
-        <Text>Password</Text>
-        <TextInput value={password} onChangeText={setPassword} />
-        <Button title="Continue" onPress={onSignUpPress} />
+    <SafeAreaView>
+      <View className="p-4">
+        <FormInput
+          name="email"
+          label="Email"
+          control={control}
+          rules={{
+            required: 'Please enter an email address.',
+          }}
+          textInput={{
+            placeholder: 'Email',
+            returnKeyType: 'done',
+          }}
+        />
+        <FormInput
+          name="password"
+          label="Password"
+          control={control}
+          rules={{
+            required: 'Please enter a password.',
+          }}
+          textInput={{
+            placeholder: 'Password',
+            returnKeyType: 'done',
+          }}
+        />
+        <Button
+          className="mt-4"
+          title="Continue"
+          onPress={handleSubmit(onSignUp)}
+        />
       </View>
-    </View>
+    </SafeAreaView>
   )
 }

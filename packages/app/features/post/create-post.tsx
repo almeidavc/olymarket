@@ -218,7 +218,7 @@ export function CreatePostScreen({ navigation, route }) {
         showHelperText={showImagesHelperText}
       />
       <View className="flex flex-col divide-y divide-gray-300">
-        <View className="flex flex-col gap-4 p-4">
+        <View className="flex flex-col p-4">
           <View>
             <FormInput
               name="title"

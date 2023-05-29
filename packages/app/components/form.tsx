@@ -45,29 +45,31 @@ export const FormInput: React.FC<FormInputProps> = ({
   ...controllerProps
 }) => {
   return (
-    <Controller
-      {...controllerProps}
-      render={({
-        field: { value, ref, onChange, onBlur },
-        fieldState: { invalid, error },
-      }) => (
-        <View>
-          <FormLabel title={label} />
-          <TextInput
-            ref={ref}
-            value={value}
-            onChangeText={onChange}
-            onBlur={onBlur}
-            className={inputVariants[invalid ? 'invalid' : 'default']}
-            placeholderTextColor={invalid ? '#b91c1c' : undefined}
-            style={{ fontSize: sizeVariants[size] }}
-            {...textInput}
-          />
-          {invalid && error?.message && (
-            <Text className="mt-2 text-sm text-red-600">{error.message}</Text>
-          )}
-        </View>
-      )}
-    />
+    <View className={'mb-4'}>
+      <Controller
+        {...controllerProps}
+        render={({
+          field: { value, ref, onChange, onBlur },
+          fieldState: { invalid, error },
+        }) => (
+          <View>
+            <FormLabel title={label} />
+            <TextInput
+              ref={ref}
+              value={value}
+              onChangeText={onChange}
+              onBlur={onBlur}
+              className={inputVariants[invalid ? 'invalid' : 'default']}
+              placeholderTextColor={invalid ? '#b91c1c' : undefined}
+              style={{ fontSize: sizeVariants[size] }}
+              {...textInput}
+            />
+            {invalid && error?.message && (
+              <Text className="mt-2 text-sm text-red-600">{error.message}</Text>
+            )}
+          </View>
+        )}
+      />
+    </View>
   )
 }

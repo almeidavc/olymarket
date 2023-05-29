@@ -12,7 +12,7 @@ export function SignedOutNavigator() {
       <Stack.Screen
         name="sign-in"
         component={SignInScreen}
-        options={{ title: 'Sign In' }}
+        options={{ headerShown: false }}
       />
       <Stack.Screen
         name="sign-up"

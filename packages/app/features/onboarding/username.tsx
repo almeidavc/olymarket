@@ -1,34 +1,48 @@
 import { useSignUp } from '@clerk/clerk-expo'
-import Toast from 'react-native-root-toast'
 import { View } from 'app/design/core'
-import { useState } from 'react'
-import { TextInput } from 'app/design/core'
 import { Button } from 'app/components/button'
-import { Text } from 'app/design/typography'
+import { SafeAreaView } from 'react-native'
+import { FormInput } from 'app/components/form'
+import { useForm } from 'react-hook-form'
 
 export function ChooseUsernameScreen() {
   const { signUp, setActive } = useSignUp()
 
-  const [username, setUsername] = useState('')
+  const { control, handleSubmit, setError } = useForm()
 
-  const onSignUpPress = async () => {
+  const onSignUp = async ({ username }) => {
     try {
-      const res = await signUp?.update({
-        username: username,
+      const updateUsernameResult = await signUp?.update({
+        username,
       })
-      if (res?.status === 'complete') {
+
+      if (updateUsernameResult?.status === 'complete') {
         setActive?.({ session: signUp?.createdSessionId })
       }
     } catch (error) {
-      Toast.show(error.errors[0].longMessage)
+      setError('username', {
+        message: error.errors[0].longMessage,
+      })
     }
   }
 
   return (
-    <View className="p-4">
-      <Text>Username</Text>
-      <TextInput value={username} onChangeText={setUsername} />
-      <Button title="Sign up" onPress={onSignUpPress} />
-    </View>
+    <SafeAreaView>
+      <View className="p-4">
+        <FormInput
+          name="username"
+          label="Username"
+          control={control}
+          rules={{
+            required: 'The username cannot be empty.',
+          }}
+          textInput={{
+            placeholder: 'Username',
+            returnKeyType: 'done',
+          }}
+        />
+        <Button title="Sign up" onPress={handleSubmit(onSignUp)} />
+      </View>
+    </SafeAreaView>
   )
 }
