@@ -32,11 +32,11 @@ export function NavigationProvider({
               },
               profile: {
                 screens: {
-                  settings: 'settings',
-                  selling: {
+                  post: 'profile/selling/post/:postId',
+                  'profile-tabs': {
                     screens: {
-                      feed: 'selling/feed',
-                      post: 'selling/post/:postId',
+                      selling: 'profile/selling',
+                      settings: 'profile/settings',
                     },
                   },
                 },

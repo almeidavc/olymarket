@@ -102,7 +102,7 @@ export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
   }
 
   return (
-    <Link href={`/selling/post/${post.id}`}>
+    <Link href={`/profile/selling/post/${post.id}`}>
       <View className="flex flex-row justify-between border-b">
         <View className="flex flex-row gap-2">
           <Image
