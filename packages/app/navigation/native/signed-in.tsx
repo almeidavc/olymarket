@@ -34,6 +34,7 @@ export function SignedInNavigator() {
     <Tab.Navigator
       initialRouteName="home"
       screenOptions={({ route }) => ({
+        tabBarActiveTintColor: '#0369a1',
         tabBarIcon: ({ color, size }) => (
           <FontAwesome5 name={tabIcons[route.name]} size={size} color={color} />
         ),

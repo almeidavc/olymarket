@@ -9,9 +9,23 @@ const Stack = createNativeStackNavigator()
 
 export function ProfileTabs() {
   return (
-    <Tab.Navigator initialRouteName="selling">
-      <Tab.Screen name="selling" component={SellingScreen} />
-      <Tab.Screen name="settings" component={SettingsScreen} />
+    <Tab.Navigator
+      initialRouteName="selling"
+      screenOptions={{
+        tabBarIndicatorStyle: { backgroundColor: '#0369a1' },
+        tabBarLabelStyle: { fontWeight: '600', textTransform: 'none' },
+      }}
+    >
+      <Tab.Screen
+        name="selling"
+        component={SellingScreen}
+        options={{ tabBarLabel: 'Selling' }}
+      />
+      <Tab.Screen
+        name="settings"
+        component={SettingsScreen}
+        options={{ tabBarLabel: 'Settings' }}
+      />
     </Tab.Navigator>
   )
 }
