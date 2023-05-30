@@ -6,8 +6,10 @@ import { Image } from 'app/design/image'
 import { useRouter } from 'solito/router'
 import { AppRouter } from 'server/api/routers'
 import { inferProcedureOutput } from '@trpc/server'
-import { PostStatusTag } from '../post/post'
 import { RefreshControl } from 'react-native'
+import dayjs from 'app/utils/dayjs'
+import { Tag } from 'app/components/tag'
+import { PostStatus } from 'app/utils/enums'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
@@ -28,24 +30,34 @@ export function ChatInboxScreen() {
           <TouchableOpacity
             onPress={() => router.push(`/chats/${chat.conversation.id}`)}
           >
-            <View className="flex flex-row items-center gap-3 border-b p-4">
+            <View className="flex h-[104px] flex-row items-center border-b border-gray-300 p-4">
               <Image
-                className="h-12 w-12 rounded-full "
+                className="mr-4 h-12 w-12 rounded-full"
                 source={{ uri: chat.partner?.profileImageUrl }}
               />
-              <View className="flex flex-grow flex-col">
-                <Text>{chat.partner?.username}</Text>
-                <Text className="text-base font-semibold">
-                  {chat?.post?.title}
-                </Text>
-                <Text className="text-xs">
+              <View className="mb-1 flex h-full flex-1 flex-col justify-start">
+                <View className="mb-0.5 flex flex-row justify-between">
+                  <Text>{chat.partner?.username}</Text>
+                  <Text className="text-gray-600">
+                    {dayjs().to(
+                      dayjs(chat.conversation.messages[0]?.createdAt)
+                    )}
+                  </Text>
+                </View>
+                <View className="mb-0.5 flex flex-row items-center justify-between">
+                  <Text className="w-9/12 text-lg" numberOfLines={1}>
+                    {chat?.post?.title}
+                  </Text>
+                  {chat.post.status === PostStatus.REMOVED && (
+                    <View>
+                      <Tag label="Deleted" color="red" />
+                    </View>
+                  )}
+                </View>
+                <Text className="text-xs text-gray-600" numberOfLines={2}>
                   {chat?.conversation?.messages?.[0]?.content}
                 </Text>
               </View>
-              {(chat?.post?.status === 'REMOVED' ||
-                chat?.post?.status === 'SOLD') && (
-                <PostStatusTag status={chat?.post?.status} />
-              )}
             </View>
           </TouchableOpacity>
         )
