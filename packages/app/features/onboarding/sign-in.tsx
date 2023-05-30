@@ -128,6 +128,8 @@ export function SignInScreen() {
               textInput={{
                 placeholder: 'Password',
                 returnKeyType: 'done',
+                secureTextEntry: true,
+                textContentType: 'password',
               }}
             />
             <Button

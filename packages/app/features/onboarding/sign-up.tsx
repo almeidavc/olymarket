@@ -67,6 +67,7 @@ export function SignUpScreen() {
           textInput={{
             placeholder: 'Email',
             returnKeyType: 'done',
+            keyboardType: 'email-address',
           }}
         />
         <FormInput
@@ -79,6 +80,8 @@ export function SignUpScreen() {
           textInput={{
             placeholder: 'Password',
             returnKeyType: 'done',
+            secureTextEntry: true,
+            textContentType: 'newPassword',
           }}
         />
         <Button
