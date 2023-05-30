@@ -4,7 +4,7 @@ import { ScrollView } from 'react-native'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
-import { ZoneTitles } from 'app/utils/enums'
+import { PostStatus, ZoneTitles } from 'app/utils/enums'
 import { useRouter } from 'solito/router'
 import { useAuth } from '@clerk/clerk-expo'
 import { inferProcedureOutput } from '@trpc/server'
@@ -97,6 +97,23 @@ export function PostScreen({ route }) {
         context.post.listMine.setData(undefined, (oldPosts) => {
           if (oldPosts) {
             return oldPosts.filter((post) => post.id !== removedPost.id)
+          }
+        })
+
+        context.chat.list.setData(undefined, (oldChats) => {
+          if (oldChats) {
+            return oldChats.map((chat) => {
+              if (chat.post.id === removedPost.id) {
+                return {
+                  ...chat,
+                  post: {
+                    ...chat.post,
+                    status: PostStatus.REMOVED,
+                  },
+                }
+              }
+              return chat
+            })
           }
         })
 
