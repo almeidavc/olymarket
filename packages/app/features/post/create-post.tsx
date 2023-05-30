@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import * as ImagePicker from 'expo-image-picker'
-import { ScrollView } from 'react-native'
+import { Modal, ScrollView } from 'react-native'
 import { useState } from 'react'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
@@ -130,6 +130,8 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
 const Stack = createNativeStackNavigator()
 
 export function CreatePostScreen({ navigation, route }) {
+  const router = useRouter()
+
   const { getValues, control, handleSubmit, setFocus, reset } = useForm()
 
   const { zone } = route.params
@@ -137,6 +139,7 @@ export function CreatePostScreen({ navigation, route }) {
 
   const [showImagesHelperText, setShowImagesHelperText] = useState(false)
   const [isCreatePostLoading, setIsCreatePostLoading] = useState(false)
+  const [showSuccessMessageModal, setShowSuccessMessageModal] = useState(false)
 
   const context = trpc.useContext()
 
@@ -151,9 +154,9 @@ export function CreatePostScreen({ navigation, route }) {
     onSuccess: (createdPost) => {
       setIsCreatePostLoading(false)
 
-      resetForm()
+      setShowSuccessMessageModal(true)
 
-      navigation.navigate('success-message')
+      resetForm()
 
       context.post.list.invalidate()
       context.post.listMine.setData(undefined, (oldPosts) => {
@@ -210,101 +213,126 @@ export function CreatePostScreen({ navigation, route }) {
   }
 
   return (
-    <KeyboardAwareScrollView>
-      <ImageSelect
-        imageUris={imageUris}
-        setImageUris={setImageUris}
-        selectionLimit={10}
-        showHelperText={showImagesHelperText}
-      />
-      <View className="flex flex-col divide-y divide-gray-300">
-        <View className="flex flex-col p-4">
-          <View>
-            <FormInput
-              name="title"
-              label="Title"
-              control={control}
-              rules={{
-                required: 'A title is required.',
-                maxLength: {
-                  value: 60,
-                  message: 'The maximum length for the title is 60 characters.',
-                },
-              }}
-              textInput={{
-                placeholder: 'Title',
-                returnKeyType: 'next',
-                onSubmitEditing: () => setFocus('description'),
-                blurOnSubmit: false,
-              }}
-            />
+    <>
+      <Modal visible={showSuccessMessageModal}>
+        <View className="mb-32 flex flex-grow items-center justify-center">
+          <View className="mx-auto mb-3.5 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 p-2 dark:bg-green-900">
+            <AntDesign name="check" size={50} color="#22c55e" />
           </View>
-          <View>
-            <FormInput
-              name="description"
-              label="Description"
-              control={control}
-              rules={{
-                maxLength: {
-                  value: 2 ** 16 - 1,
-                  message: 'The description is too long.',
-                },
-              }}
-              textInput={{
-                placeholder: 'Description',
-                multiline: true,
-                style: { height: 160 },
-              }}
-            />
-          </View>
-        </View>
-        <View className="p-4">
-          <TouchableOpacity
-            className="flex h-8 flex-row items-center justify-between"
-            onPress={() => navigation.navigate('choose-zone', { zone })}
-          >
-            <Text className="text-sm font-medium text-gray-900">Location</Text>
-            <View className="flex flex-row items-center">
-              {zone && (
-                <Text className="mr-2 text-sm font-medium text-gray-500">
-                  {ZoneTitles.get(zone)}
-                </Text>
-              )}
-              <AntDesign name="right" size={16} color="#6b7280" />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View className="p-4">
-          <FormInput
-            name="price"
-            label="Price"
-            control={control}
-            rules={{
-              required: 'A price is required.',
-              pattern: {
-                value: /^[0-9]+$/,
-                message: 'Price can only consist of digits.',
-              },
-              maxLength: {
-                value: 4,
-                message: 'The maximum price is 9999.',
-              },
-            }}
-            textInput={{
-              placeholder: '0',
-              inputMode: 'numeric',
-              returnKeyType: 'done',
+          <Text className="mb-4 text-4xl font-extrabold  text-gray-900">
+            Success!
+          </Text>
+          <Text className="mb-8 text-2xl font-normal text-gray-500">
+            Your post has been created.
+          </Text>
+          <Button
+            title="See your posts"
+            onPress={() => {
+              setShowSuccessMessageModal(false)
+              router.push('/profile/selling')
             }}
           />
         </View>
-      </View>
-      <Button
-        loading={isCreatePostLoading}
-        className="m-4"
-        title="Create post"
-        onPress={onCreatePostPress}
-      />
-    </KeyboardAwareScrollView>
+      </Modal>
+      <KeyboardAwareScrollView>
+        <ImageSelect
+          imageUris={imageUris}
+          setImageUris={setImageUris}
+          selectionLimit={10}
+          showHelperText={showImagesHelperText}
+        />
+        <View className="flex flex-col divide-y divide-gray-300">
+          <View className="flex flex-col p-4">
+            <View>
+              <FormInput
+                name="title"
+                label="Title"
+                control={control}
+                rules={{
+                  required: 'A title is required.',
+                  maxLength: {
+                    value: 60,
+                    message:
+                      'The maximum length for the title is 60 characters.',
+                  },
+                }}
+                textInput={{
+                  placeholder: 'Title',
+                  returnKeyType: 'next',
+                  onSubmitEditing: () => setFocus('description'),
+                  blurOnSubmit: false,
+                }}
+              />
+            </View>
+            <View>
+              <FormInput
+                name="description"
+                label="Description"
+                control={control}
+                rules={{
+                  maxLength: {
+                    value: 2 ** 16 - 1,
+                    message: 'The description is too long.',
+                  },
+                }}
+                textInput={{
+                  placeholder: 'Description',
+                  multiline: true,
+                  style: { height: 160 },
+                }}
+              />
+            </View>
+          </View>
+          <View className="p-4">
+            <TouchableOpacity
+              className="flex h-8 flex-row items-center justify-between"
+              onPress={() => navigation.navigate('choose-zone', { zone })}
+            >
+              <Text className="text-sm font-medium text-gray-900">
+                Location
+              </Text>
+              <View className="flex flex-row items-center">
+                {zone && (
+                  <Text className="mr-2 text-sm font-medium text-gray-500">
+                    {ZoneTitles.get(zone)}
+                  </Text>
+                )}
+                <AntDesign name="right" size={16} color="#6b7280" />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View className="p-4">
+            <FormInput
+              name="price"
+              label="Price"
+              control={control}
+              rules={{
+                required: 'A price is required.',
+                pattern: {
+                  value: /^[0-9]+$/,
+                  message: 'Price can only consist of digits.',
+                },
+                maxLength: {
+                  value: 4,
+                  message: 'The maximum price is 9999.',
+                },
+              }}
+              textInput={{
+                placeholder: '0',
+                inputMode: 'numeric',
+                returnKeyType: 'done',
+              }}
+            />
+          </View>
+        </View>
+        <Button
+          loading={isCreatePostLoading}
+          className="m-4"
+          title="Create post"
+          onPress={onCreatePostPress}
+        />
+      </KeyboardAwareScrollView>
+    </>
   )
 }
 
@@ -326,31 +354,6 @@ const ChooseZoneModal = ({ navigation, route }) => {
   )
 }
 
-const SuccessMessageModal = ({ navigation }) => {
-  const router = useRouter()
-
-  return (
-    <View className="mb-32 flex flex-grow items-center justify-center">
-      <View className="mx-auto mb-3.5 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 p-2 dark:bg-green-900">
-        <AntDesign name="check" size={50} color="#22c55e" />
-      </View>
-      <Text className="mb-4 text-4xl font-extrabold  text-gray-900">
-        Success!
-      </Text>
-      <Text className="mb-8 text-2xl font-normal text-gray-500">
-        Your post has been created.
-      </Text>
-      <Button
-        title="See your posts"
-        onPress={() => {
-          navigation.goBack()
-          router.push('/selling/feed')
-        }}
-      />
-    </View>
-  )
-}
-
 export function Post() {
   return (
     <Stack.Navigator initialRouteName="create-post">
@@ -364,11 +367,6 @@ export function Post() {
         name="choose-zone"
         component={ChooseZoneModal}
         options={{ presentation: 'modal', headerTitle: 'Location' }}
-      />
-      <Stack.Screen
-        name="success-message"
-        component={SuccessMessageModal}
-        options={{ presentation: 'modal', headerShown: false }}
       />
     </Stack.Navigator>
   )
