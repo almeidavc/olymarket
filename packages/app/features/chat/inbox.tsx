@@ -7,18 +7,22 @@ import { useRouter } from 'solito/router'
 import { AppRouter } from 'server/api/routers'
 import { inferProcedureOutput } from '@trpc/server'
 import { PostStatusTag } from '../post/post'
+import { RefreshControl } from 'react-native'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
 export function ChatInboxScreen() {
   const router = useRouter()
 
-  const { data: chats } = trpc.chat.list.useQuery()
+  const { data: chats, refetch, isRefetching } = trpc.chat.list.useQuery()
 
   return (
     <FlatList
       data={chats}
       keyExtractor={(chat) => chat.conversation.id}
+      refreshControl={
+        <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+      }
       renderItem={({ item: chat }: ListRenderItemInfo<Chat>) => {
         return (
           <TouchableOpacity
