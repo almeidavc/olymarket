@@ -1,6 +1,6 @@
-import { View, TouchableOpacity } from 'app/design/core'
+import { View } from 'app/design/core'
 import { Text } from 'app/design/typography'
-import { ScrollView, TouchableWithoutFeedback } from 'react-native'
+import { ScrollView } from 'react-native'
 import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
@@ -10,22 +10,9 @@ import { useAuth } from '@clerk/clerk-expo'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 import { Link } from 'solito/link'
-import { Feather } from '@expo/vector-icons'
-import { Tag } from 'app/components/tag'
-import { PostStatus, PostStatusTitles, PostStatusColors } from 'app/utils/enums'
-import { Button } from 'app/components/button'
-import ContextMenu from 'react-native-context-menu-view'
 import dayjs from 'app/utils/dayjs'
 import { ImageSlider } from 'app/components/image-slider'
-
-export const PostStatusTag = ({ status }: { status: PostStatus }) => {
-  return (
-    <Tag
-      label={PostStatusTitles.get(status)}
-      color={PostStatusColors.get(status)}
-    />
-  )
-}
+import { Button } from 'app/components/button'
 
 interface PostCardProps {
   post: inferProcedureOutput<AppRouter['post']['list']>[number]
@@ -34,7 +21,7 @@ interface PostCardProps {
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <Link href={`/post/${post.id}`}>
-      <View className="rounded-lg border border-gray-200 bg-white shadow">
+      <View className="rounded-lg border border-gray-300 bg-white shadow">
         <Image
           className="h-[25vh] w-full rounded-t-lg"
           resizeMode="cover"
@@ -62,101 +49,28 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
 }
 
 export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
-  const context = trpc.useContext()
-
-  const { mutate: removePostMutation } = trpc.post.remove.useMutation({
-    onSuccess: (removedPost) => {
-      context.post.list.invalidate()
-      context.post.listMine.setData(undefined, (oldPosts) => {
-        if (oldPosts) {
-          return oldPosts.filter((post) => post.id !== removedPost.id)
-        }
-      })
-    },
-  })
-
-  const { mutate: markAsSold } = trpc.post.markAsSold.useMutation({
-    onSuccess: (soldPost) => {
-      context.post.list.invalidate()
-      context.post.listMine.setData(undefined, (oldPosts) => {
-        if (oldPosts) {
-          return oldPosts.map((post) =>
-            post.id === soldPost.id
-              ? {
-                  ...post,
-                  status: PostStatus.SOLD,
-                }
-              : post
-          )
-        }
-      })
-    },
-  })
-
-  const onRemovePostPress = () => {
-    removePostMutation({ postId: post?.id })
-  }
-
-  const onMarkPostAsSoldPress = () => {
-    markAsSold({ postId: post?.id })
-  }
-
   return (
     <Link href={`/profile/selling/post/${post.id}`}>
-      <View className="flex flex-row justify-between border-b">
+      <View className="flex flex-row justify-between border-b border-gray-300">
         <View className="flex flex-row gap-2">
           <Image
-            className="h-[12vh] w-[15vh] bg-black"
+            className="h-[12vh] w-[15vh] bg-gray-300"
             source={{
               uri: post.images![0]?.url,
             }}
-            resizeMode="contain"
           />
-          <View>
-            <Text className="text-lg font-semibold text-lime-900">
+          <View className="flex flex-col items-start">
+            <Text className="text-lg tracking-tight text-gray-600">
               {post.title}
             </Text>
-            <Text className="text-lime-900">
+            <Text className="mb-1 font-bold text-sky-900">
               {post.price.toLocaleString('en-US', {
                 style: 'currency',
                 currency: 'EUR',
               })}
             </Text>
-            {(post?.status === 'REMOVED' || post?.status === 'SOLD') && (
-              <PostStatusTag status={post?.status} />
-            )}
           </View>
         </View>
-        <TouchableOpacity onPress={(e) => e.stopPropagation()}>
-          <ContextMenu
-            dropdownMenuMode={true}
-            onPress={(event) => {
-              const { name } = event.nativeEvent
-              switch (name) {
-                case 'Mark as sold':
-                  onMarkPostAsSoldPress()
-                  break
-                case 'Remove post':
-                  onRemovePostPress()
-              }
-            }}
-            actions={[
-              {
-                title: 'Mark as sold',
-                systemIcon: 'checkmark',
-              },
-              {
-                title: 'Remove post',
-                systemIcon: 'trash',
-                destructive: true,
-              },
-            ]}
-          >
-            <View className="text-xxl p-2">
-              <Feather name="more-horizontal" size={20} />
-            </View>
-          </ContextMenu>
-        </TouchableOpacity>
       </View>
     </Link>
   )
@@ -173,6 +87,48 @@ export function PostScreen({ route }) {
 
   const { mutate: findOrCreateChatMutation } =
     trpc.chat.findOrCreate.useMutation()
+
+  const context = trpc.useContext()
+
+  const { mutate: removePostMutation, isLoading } =
+    trpc.post.remove.useMutation({
+      onSuccess: (removedPost) => {
+        context.post.list.invalidate()
+        context.post.listMine.setData(undefined, (oldPosts) => {
+          if (oldPosts) {
+            return oldPosts.filter((post) => post.id !== removedPost.id)
+          }
+        })
+
+        router.back()
+      },
+    })
+
+  // const { mutate: markAsSold } = trpc.post.markAsSold.useMutation({
+  //   onSuccess: (soldPost) => {
+  //     context.post.list.invalidate()
+  //     context.post.listMine.setData(undefined, (oldPosts) => {
+  //       if (oldPosts) {
+  //         return oldPosts.map((post) =>
+  //           post.id === soldPost.id
+  //             ? {
+  //                 ...post,
+  //                 status: PostStatus.SOLD,
+  //               }
+  //             : post
+  //         )
+  //       }
+  //     })
+  //   },
+  // })
+
+  const onRemovePostPress = () => {
+    removePostMutation({ postId: post!.id })
+  }
+
+  // const onMarkPostAsSoldPress = () => {
+  //   markAsSold({ postId: post!.id })
+  // }
 
   const onContactButtonPress = () => {
     findOrCreateChatMutation(
@@ -232,6 +188,16 @@ export function PostScreen({ route }) {
           <View className="p-4">
             <Text className="mb-2 text-gray-600">Description</Text>
             <Text>{post.description}</Text>
+          </View>
+        )}
+        {userId === post.authorId && (
+          <View className="p-4">
+            <Button
+              loading={isLoading}
+              className="w-full"
+              title="Remove post"
+              onPress={onRemovePostPress}
+            />
           </View>
         )}
       </View>
