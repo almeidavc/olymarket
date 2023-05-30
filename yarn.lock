@@ -12820,7 +12820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-snap-carousel@npm:^3.9.1":
+"react-native-snap-carousel@npm:3.9.1":
   version: 3.9.1
   resolution: "react-native-snap-carousel@npm:3.9.1"
   dependencies:
@@ -12830,6 +12830,19 @@ __metadata:
     react: ">=15.0.0"
     react-native: "*"
   checksum: e71f6887ba8e86b4aea6d6a88c304135a7acbb5ef9173b78018fc0e6d9965da9ec1d7c794db31282dc85892c6ca89f398d07145ab3e7d1e28cf12a09c247bb9d
+  languageName: node
+  linkType: hard
+
+"react-native-snap-carousel@patch:react-native-snap-carousel@npm%3A3.9.1#./.yarn/patches/react-native-snap-carousel-npm-3.9.1-14bebfe4a7.patch::locator=solito-with-tailwind%40workspace%3A.":
+  version: 3.9.1
+  resolution: "react-native-snap-carousel@patch:react-native-snap-carousel@npm%3A3.9.1#./.yarn/patches/react-native-snap-carousel-npm-3.9.1-14bebfe4a7.patch::version=3.9.1&hash=1b04a9&locator=solito-with-tailwind%40workspace%3A."
+  dependencies:
+    prop-types: ^15.6.1
+    react-addons-shallow-compare: 15.6.2
+  peerDependencies:
+    react: ">=15.0.0"
+    react-native: "*"
+  checksum: 15ca8713d345d05927ebbc2cd74de95233bd958a2835071bf1985e5d57d1145a42f9c7ee811ed9e247d61603e55639d69a2d1014ed975e4cbdfe78212e20205d
   languageName: node
   linkType: hard
 
