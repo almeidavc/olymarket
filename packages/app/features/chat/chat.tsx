@@ -42,34 +42,32 @@ export function ChatScreen({ route }) {
     }
   }, [chat])
 
+  const context = trpc.useContext()
+
   const updateListChatsCache = (updatedChat: Chat) => {
-    queryClient.setQueryData<Chat[]>(
-      getQueryKey(trpc.chat.list, undefined, 'query'),
-      (oldChats) => {
-        const chatExistsInCache =
-          oldChats &&
-          oldChats.some(
-            (oldChat) => oldChat.conversation.id === chat?.conversation.id
-          )
-
-        if (chatExistsInCache) {
-          return oldChats.map((oldChat) =>
-            oldChat.conversation.id === chat!.conversation.id
-              ? updatedChat
-              : oldChat
-          )
-        }
-
-        return [updatedChat, ...(oldChats ?? [])]
+    context.chat.list.setData(undefined, (oldChats) => {
+      if (oldChats === undefined) {
+        return
       }
-    )
+
+      const chatExistsInCache = oldChats.some(
+        (oldChat) => oldChat.conversation.id === chat?.conversation.id
+      )
+
+      if (chatExistsInCache) {
+        return oldChats.map((oldChat) =>
+          oldChat.conversation.id === chat!.conversation.id
+            ? updatedChat
+            : oldChat
+        )
+      }
+
+      return [updatedChat, ...oldChats]
+    })
   }
 
   const updateGetChatCache = (updatedChat: Chat) => {
-    queryClient.setQueryData<Chat>(
-      getQueryKey(trpc.chat.getById, { chatId }, 'query'),
-      (oldChat) => updatedChat
-    )
+    context.chat.getById.setData({ chatId }, (oldChat) => updatedChat)
   }
 
   const addMessageToCachedChats = (message: Message) => {
