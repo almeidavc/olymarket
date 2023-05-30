@@ -47,14 +47,14 @@ export const Button: React.FC<ButtonProps> = ({
 
 const iconButtonVariants = {
   primary:
-    'text-white bg-blue-700 font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+    'text-white bg-sky-700 font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
   secondary:
-    'text-blue-700 border border-blue-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500',
+    'text-sky-700 border border-sky-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500',
 }
 
 const iconColorVariants = {
   primary: 'white',
-  secondary: '#1d4ed8',
+  secondary: '#0369a1',
 }
 
 const iconButtonShapes = {
