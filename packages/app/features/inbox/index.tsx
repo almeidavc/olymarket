@@ -13,7 +13,7 @@ import { PostStatus } from 'app/utils/enums'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
-export function ChatInboxScreen() {
+export function InboxScreen() {
   const router = useRouter()
 
   const { data: chats, refetch, isRefetching } = trpc.chat.list.useQuery()
@@ -28,7 +28,7 @@ export function ChatInboxScreen() {
       renderItem={({ item: chat }: ListRenderItemInfo<Chat>) => {
         return (
           <TouchableOpacity
-            onPress={() => router.push(`/chats/${chat.conversation.id}`)}
+            onPress={() => router.push(`/chat/${chat.conversation.id}`)}
           >
             <View className="flex h-24 flex-row items-center border-b border-gray-300 p-4">
               <Image

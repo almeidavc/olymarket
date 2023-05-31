@@ -155,7 +155,7 @@ export function PostScreen({ route }) {
       },
       {
         onSuccess: (chat) => {
-          router.push(`/post/${postId}/contact/${chat?.id}`)
+          router.push(`/chat/${chat?.id}`)
         },
       }
     )

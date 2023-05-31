@@ -15,32 +15,38 @@ export function NavigationProvider({
           config: {
             initialRouteName: 'home',
             screens: {
-              home: {
+              // signed in
+              'main-tabs': {
                 screens: {
-                  feed: '',
-                  post: 'post/:postId',
-                  contact: 'post/:postId/contact/:chatId',
-                },
-              },
-              post: 'post',
-              chats: {
-                path: 'chats',
-                screens: {
-                  inbox: 'inbox',
-                  chat: ':chatId',
-                },
-              },
-              profile: {
-                screens: {
-                  post: 'profile/selling/post/:postId',
-                  'profile-tabs': {
+                  home: {
                     screens: {
-                      selling: 'profile/selling',
-                      settings: 'profile/settings',
+                      feed: '',
+                      post: 'post/:postId',
+                    },
+                  },
+                  post: 'post',
+                  chats: {
+                    path: 'chats',
+                    screens: {
+                      inbox: 'inbox',
+                    },
+                  },
+                  profile: {
+                    screens: {
+                      post: 'profile/selling/post/:postId',
+                      'profile-tabs': {
+                        screens: {
+                          selling: 'profile/selling',
+                          settings: 'profile/settings',
+                        },
+                      },
                     },
                   },
                 },
               },
+              chat: 'chat/:chatId',
+
+              // signed out
               'sign-in': 'sign-in',
               'sign-up': 'sign-up',
               'verify-email': 'sign-up/verify-email',

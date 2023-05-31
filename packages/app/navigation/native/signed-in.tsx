@@ -3,11 +3,13 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
 import { Profile } from 'app/features/profile'
-import { Chat } from 'app/features/chat'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import { useEffect } from 'react'
 import { CommonActions } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { ChatScreen, ChatScreenHeader } from 'app/features/chat'
+import { InboxScreen } from 'app/features/inbox'
 
 const tabIcons = {
   home: 'home',
@@ -18,18 +20,7 @@ const tabIcons = {
 
 const Tab = createBottomTabNavigator()
 
-export function SignedInNavigator() {
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'home' }],
-      })
-    )
-  }, [])
-
+export function MainTabs() {
   return (
     <Tab.Navigator
       initialRouteName="home"
@@ -48,8 +39,6 @@ export function SignedInNavigator() {
           return {
             headerShown: false,
             tabBarLabel: 'Home',
-            tabBarStyle:
-              routeName === 'contact' ? { display: 'none' } : undefined,
           }
         }}
       />
@@ -60,15 +49,8 @@ export function SignedInNavigator() {
       />
       <Tab.Screen
         name="chats"
-        component={Chat}
-        options={({ route }) => {
-          const routeName = getFocusedRouteNameFromRoute(route) ?? 'inbox'
-          return {
-            headerShown: false,
-            tabBarLabel: 'Chats',
-            tabBarStyle: routeName === 'chat' ? { display: 'none' } : undefined,
-          }
-        }}
+        component={InboxScreen}
+        options={{ headerTitle: 'Chats', tabBarLabel: 'Chats' }}
       />
       <Tab.Screen
         name="profile"
@@ -76,5 +58,40 @@ export function SignedInNavigator() {
         options={{ headerShown: false, tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
+  )
+}
+
+const Stack = createNativeStackNavigator()
+
+export function SignedInNavigator() {
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'main-tabs' }],
+      })
+    )
+  }, [])
+
+  return (
+    <Stack.Navigator
+      initialRouteName="main-tabs"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
+      <Stack.Screen
+        name="main-tabs"
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="chat"
+        component={ChatScreen}
+        options={({ route }) => ({
+          headerTitle: () => <ChatScreenHeader chatId={route.params.chatId} />,
+        })}
+      />
+    </Stack.Navigator>
   )
 }
