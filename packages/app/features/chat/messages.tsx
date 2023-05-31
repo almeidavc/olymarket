@@ -28,7 +28,7 @@ export const ChatMessages = React.forwardRef<FlatList, ChatMessagesProps>(
             justifyContent: 'flex-end',
           }}
           inverted={true}
-          keyExtractor={(message) => message.createdAt}
+          keyExtractor={(message) => `${message.createdAt.valueOf()}`}
           data={messages}
           renderItem={({ item: message }) => {
             const mainAxisAlignment =
