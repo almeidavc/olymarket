@@ -8,7 +8,8 @@ import { useEffect } from 'react'
 import { CommonActions } from '@react-navigation/native'
 import { useNavigation } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { ChatScreen, ChatScreenHeader } from 'app/features/chat'
+import { ChatScreen } from 'app/features/chat'
+import { ChatScreenHeader } from 'app/features/chat/header'
 import { InboxScreen } from 'app/features/inbox'
 
 const tabIcons = {
