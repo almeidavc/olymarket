@@ -89,6 +89,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
                 <View className="absolute right-0 top-0 -mr-[10px] -mt-[10px]">
                   <IconButton
                     size={16}
+                    textClassName="p-1.5"
                     icon={<AntDesign name="close" />}
                     onPress={() => deselectImage(imageUri)}
                   />

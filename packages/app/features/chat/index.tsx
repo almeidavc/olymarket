@@ -2,12 +2,7 @@ import { TextInput, View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
-import {
-  ActivityIndicator,
-  FlatList,
-  KeyboardAvoidingView,
-  SafeAreaView,
-} from 'react-native'
+import { ActivityIndicator, FlatList, KeyboardAvoidingView } from 'react-native'
 import { useState, useEffect } from 'react'
 import { useAuthSocket } from '../../utils/websocket'
 import { useAuth } from '@clerk/clerk-expo'
@@ -17,8 +12,8 @@ import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 import { useForm, Controller } from 'react-hook-form'
 import { useHeaderHeight } from '@react-navigation/elements'
-import { inputVariants } from 'app/components/form'
 import { IconButton } from 'app/components/button'
+import { SafeAreaView } from 'app/design/core'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 type Message = Chat['conversation']['messages'][number]
@@ -135,13 +130,13 @@ export function ChatScreen({ route }) {
   if (!chat) return <Text>404</Text>
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="-mb-2 bg-white">
       <KeyboardAvoidingView
         behavior="padding"
         keyboardVerticalOffset={headerHeight}
       >
         <View className="flex h-full flex-col">
-          <View className="flex-1 border-b border-gray-300 bg-stone-200">
+          <View className="flex-1 bg-stone-200">
             <FlatList
               contentContainerStyle={{
                 flexGrow: 1,
@@ -172,8 +167,8 @@ export function ChatScreen({ route }) {
               )}
             />
           </View>
-          <View className="flex flex-row items-end gap-4 p-4">
-            <View className="flex-1">
+          <View className="flex flex-row items-end border-t-[0.5px] border-gray-300 px-4 py-2">
+            <View className="mr-3 flex-1">
               <Controller
                 name="newMessage"
                 control={control}
@@ -184,18 +179,18 @@ export function ChatScreen({ route }) {
                     value={value}
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    placeholder="Write a message"
                     maxLength={2 ** 16 - 1}
                     multiline={true}
-                    className={inputVariants['default']}
+                    className="rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
                   />
                 )}
               />
             </View>
             <IconButton
-              size={17}
+              size={16}
               variant={watchNewMessage ? 'primary' : 'secondary'}
               onPress={handleSubmit(onSendMessage)}
+              textClassName="p-2"
               icon={<FontAwesome5 name="paper-plane" />}
             />
           </View>

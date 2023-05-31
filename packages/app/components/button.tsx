@@ -62,17 +62,12 @@ const iconButtonShapes = {
   square: 'rounded-lg',
 }
 
-const iconButtonPaddings = {
-  16: 'p-1.5',
-  17: 'p-2.5',
-  22: 'p-2.5',
-}
-
 interface IconButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   icon: Icon<any, any>
   size?: number
   shape?: 'circle' | 'square'
   variant?: 'primary' | 'secondary'
+  textClassName?: string
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({
@@ -80,12 +75,13 @@ export const IconButton: React.FC<IconButtonProps> = ({
   size = 22,
   shape = 'circle',
   variant = 'primary',
+  textClassName,
   ...props
 }) => {
   return (
     <TouchableOpacity {...props}>
       <View
-        className={`${iconButtonVariants[variant]} ${iconButtonShapes[shape]} ${iconButtonPaddings[size]}`}
+        className={`${iconButtonVariants[variant]} ${iconButtonShapes[shape]} ${textClassName}`}
       >
         {React.cloneElement(icon, {
           size,
