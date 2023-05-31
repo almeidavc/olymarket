@@ -30,12 +30,12 @@ export function ChatInboxScreen() {
           <TouchableOpacity
             onPress={() => router.push(`/chats/${chat.conversation.id}`)}
           >
-            <View className="flex h-[104px] flex-row items-center border-b border-gray-300 p-4">
+            <View className="flex h-24 flex-row items-center border-b border-gray-300 p-4">
               <Image
                 className="mr-4 h-12 w-12 rounded-full"
                 source={{ uri: chat.partner?.profileImageUrl }}
               />
-              <View className="mb-1 flex h-full flex-1 flex-col justify-start">
+              <View className="flex h-full flex-1 flex-col justify-start">
                 <View className="mb-0.5 flex flex-row justify-between">
                   <Text>{chat.partner?.username}</Text>
                   <Text className="text-gray-600">
@@ -54,7 +54,7 @@ export function ChatInboxScreen() {
                     </View>
                   )}
                 </View>
-                <Text className="text-xs text-gray-600" numberOfLines={2}>
+                <Text className="text-sm text-gray-600" numberOfLines={1}>
                   {chat?.conversation?.messages?.[0]?.content}
                 </Text>
               </View>
