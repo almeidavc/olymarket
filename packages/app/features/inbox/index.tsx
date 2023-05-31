@@ -16,7 +16,13 @@ type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 export function InboxScreen() {
   const router = useRouter()
 
-  const { data: chats, refetch, isRefetching } = trpc.chat.list.useQuery()
+  const {
+    data: chats,
+    refetch,
+    isRefetching,
+  } = trpc.chat.list.useQuery(undefined, {
+    refetchOnMount: false,
+  })
 
   return (
     <FlatList

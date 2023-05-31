@@ -11,6 +11,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { ChatScreen } from 'app/features/chat'
 import { ChatScreenHeader } from 'app/features/chat/header'
 import { InboxScreen } from 'app/features/inbox'
+import { trpc } from 'app/utils/trpc'
 
 const tabIcons = {
   home: 'home',
@@ -65,6 +66,13 @@ export function MainTabs() {
 const Stack = createNativeStackNavigator()
 
 export function SignedInNavigator() {
+  const context = trpc.useContext()
+
+  useEffect(() => {
+    context.post.listMine.prefetch()
+    context.chat.list.prefetch()
+  }, [])
+
   const navigation = useNavigation()
 
   useEffect(() => {
