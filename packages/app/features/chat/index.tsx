@@ -2,29 +2,25 @@ import { TextInput, View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
-import { ActivityIndicator, FlatList, KeyboardAvoidingView } from 'react-native'
-import { useState, useEffect } from 'react'
+import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
+import { useRef, useState, useEffect } from 'react'
 import { useAuthSocket } from '../../utils/websocket'
 import { useAuth } from '@clerk/clerk-expo'
-import dayjs from 'dayjs'
-import { useQueryClient } from '@tanstack/react-query'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
-import { useForm, Controller } from 'react-hook-form'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { IconButton } from 'app/components/button'
 import { SafeAreaView } from 'app/design/core'
+import { ChatMessages, MessageBasic } from './messages'
+import { FlatList } from 'react-native'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
-type Message = Chat['conversation']['messages'][number]
-
-export const ChatScreenHeader: React.FC<{ chatId: string }> = ({ chatId }) => {
-  const { data: chat } = trpc.chat.getById.useQuery({ chatId })
-  return <Text className="text-xl">{chat?.partner?.username}</Text>
-}
+export type Message = Chat['conversation']['messages'][number]
 
 export function ChatScreen({ route }) {
   const headerHeight = useHeaderHeight()
+
+  const messagesContainer = useRef<FlatList>(null)
 
   const { chatId } = route.params
 
@@ -32,27 +28,18 @@ export function ChatScreen({ route }) {
 
   const socket = useAuthSocket()
 
-  const { watch, control, handleSubmit } = useForm()
-
-  const watchNewMessage = watch('newMessage')
-
-  const [messages, setMessages] = useState<Message[]>()
-
-  const queryClient = useQueryClient()
+  const [input, setInput] = useState<string>('')
+  const [pendingMessages, setPendingMessages] = useState<MessageBasic[]>([])
 
   const { data: chat, isLoading } = trpc.chat.getById.useQuery({
     chatId,
   })
 
-  useEffect(() => {
-    if (!messages && chat) {
-      setMessages(chat.conversation?.messages ?? [])
-    }
-  }, [chat])
+  const messages = chat?.conversation?.messages
 
   const context = trpc.useContext()
 
-  const updateListChatsCache = (updatedChat: Chat) => {
+  const updateListChatsCache = (chat: Chat) => {
     context.chat.list.setData(undefined, (oldChats) => {
       if (oldChats === undefined) {
         return
@@ -64,41 +51,36 @@ export function ChatScreen({ route }) {
 
       if (chatExistsInCache) {
         return oldChats.map((oldChat) =>
-          oldChat.conversation.id === chat!.conversation.id
-            ? updatedChat
-            : oldChat
+          oldChat.conversation.id === chat!.conversation.id ? chat : oldChat
         )
       }
 
-      return [updatedChat, ...oldChats]
+      return [chat, ...oldChats]
     })
   }
 
-  const updateGetChatCache = (updatedChat: Chat) => {
-    context.chat.getById.setData({ chatId }, (oldChat) => updatedChat)
+  const updateGetChatCache = (chat: Chat) => {
+    context.chat.getById.setData({ chatId }, () => chat)
   }
 
   const addMessageToCachedChats = (message: Message) => {
-    const chatWithNewMessage = {
-      ...chat!,
+    const outdatedChat = context.chat.getById.getData({ chatId })
+
+    const updatedChat = {
+      ...outdatedChat!,
       conversation: {
-        ...chat!.conversation,
-        messages: [message, ...chat!.conversation.messages],
+        ...outdatedChat!.conversation,
+        messages: [message, ...outdatedChat!.conversation.messages],
       },
     }
 
-    updateListChatsCache(chatWithNewMessage)
-    updateGetChatCache(chatWithNewMessage)
-  }
-
-  const onReceiveMessage = (message: Message) => {
-    setMessages((prevMessages) => [message, ...prevMessages!])
-    addMessageToCachedChats(message)
+    updateListChatsCache(updatedChat)
+    updateGetChatCache(updatedChat)
   }
 
   useEffect(() => {
     socket.on('message:receive', ({ message }) => {
-      onReceiveMessage(message)
+      addMessageToCachedChats(message)
     })
 
     return () => {
@@ -106,18 +88,31 @@ export function ChatScreen({ route }) {
     }
   }, [])
 
-  const onSendMessage = ({ newMessage }) => {
+  const sendMessage = (content: string) => {
     const message = {
       from: userId,
-      to: chat?.partner?.id,
-      content: newMessage,
+      to: chat!.partner!.id,
+      content: input,
       createdAt: new Date(),
-      conversationId: chat?.conversation?.id,
+      conversationId: chat!.conversation.id,
     }
+
     socket.emit('message:send', { message }, ({ message }) => {
-      setMessages((prevMessages) => [message, ...prevMessages!])
       addMessageToCachedChats(message)
+      setPendingMessages((prevMessages) =>
+        prevMessages.slice(0, prevMessages.length - 1)
+      )
     })
+
+    setInput('')
+    setPendingMessages((prevMessages) => [message, ...prevMessages!])
+    messagesContainer?.current?.scrollToOffset({ offset: 0 })
+  }
+
+  const onSendMessagePress = () => {
+    if (input) {
+      sendMessage(input)
+    }
   }
 
   if (isLoading) {
@@ -136,60 +131,25 @@ export function ChatScreen({ route }) {
         keyboardVerticalOffset={headerHeight}
       >
         <View className="flex h-full flex-col">
-          <View className="flex-1 bg-stone-200">
-            <FlatList
-              contentContainerStyle={{
-                flexGrow: 1,
-                justifyContent: 'flex-end',
-              }}
-              inverted={true}
-              keyExtractor={(message) =>
-                message.id || message.createdAt.getUTCMilliseconds().toString()
-              }
-              data={messages}
-              renderItem={({ item: message }) => (
-                <View
-                  className={`flex flex-row p-2 px-4 ${
-                    message.from === userId ? 'justify-start' : 'justify-end'
-                  }`}
-                >
-                  <View
-                    className={`flex flex-col gap-1 rounded-xl bg-white p-2 ${
-                      message.from === userId ? 'items-start' : 'items-end'
-                    }`}
-                  >
-                    <Text className="flex-1">{message.content}</Text>
-                    <Text className="text-xs">
-                      {dayjs(message.createdAt).format('HH:mm')}
-                    </Text>
-                  </View>
-                </View>
-              )}
-            />
-          </View>
+          <ChatMessages
+            ref={messagesContainer}
+            messages={[...pendingMessages, ...(messages ?? [])]}
+          />
           <View className="flex flex-row items-end border-t-[0.5px] border-gray-300 px-4 py-2">
             <View className="mr-3 flex-1">
-              <Controller
-                name="newMessage"
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, ref, onChange, onBlur } }) => (
-                  <TextInput
-                    ref={ref}
-                    value={value}
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    maxLength={2 ** 16 - 1}
-                    multiline={true}
-                    className="rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                )}
+              <TextInput
+                value={input}
+                onChangeText={setInput}
+                maxLength={2 ** 16 - 1}
+                multiline={true}
+                className="rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               />
             </View>
             <IconButton
               size={16}
-              variant={watchNewMessage ? 'primary' : 'secondary'}
-              onPress={handleSubmit(onSendMessage)}
+              disabled={!input}
+              variant={input ? 'primary' : 'secondary'}
+              onPress={onSendMessagePress}
               textClassName="p-2"
               icon={<FontAwesome5 name="paper-plane" />}
             />
