@@ -47,9 +47,9 @@ export const Button: React.FC<ButtonProps> = ({
 
 const iconButtonVariants = {
   primary:
-    'text-white bg-sky-700 font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800',
+    'text-white bg-sky-700 border border-transparent font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 p-2.5',
   secondary:
-    'text-sky-700 border border-sky-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500',
+    'text-sky-700 border border-sky-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 p-2.5',
 }
 
 const iconColorVariants = {
@@ -62,26 +62,22 @@ const iconButtonShapes = {
   square: 'rounded-lg',
 }
 
-const iconSizes = {
-  small: 16,
-  medium: 22,
-}
-
 const iconButtonPaddings = {
-  small: 'p-1.5',
-  medium: 'p-2.5',
+  16: 'p-1.5',
+  17: 'p-2.5',
+  22: 'p-2.5',
 }
 
 interface IconButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   icon: Icon<any, any>
-  size: 'small' | 'medium'
+  size?: number
   shape?: 'circle' | 'square'
   variant?: 'primary' | 'secondary'
 }
 
 export const IconButton: React.FC<IconButtonProps> = ({
   icon,
-  size = 'medium',
+  size = 22,
   shape = 'circle',
   variant = 'primary',
   ...props
@@ -89,10 +85,10 @@ export const IconButton: React.FC<IconButtonProps> = ({
   return (
     <TouchableOpacity {...props}>
       <View
-        className={`${iconButtonVariants[variant]} ${iconButtonPaddings[size]} ${iconButtonShapes[shape]}`}
+        className={`${iconButtonVariants[variant]} ${iconButtonShapes[shape]} ${iconButtonPaddings[size]}`}
       >
         {React.cloneElement(icon, {
-          size: iconSizes[size],
+          size,
           color: iconColorVariants[variant],
         })}
       </View>
