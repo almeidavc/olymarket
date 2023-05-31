@@ -8,7 +8,10 @@ const Stack = createNativeStackNavigator()
 
 export function SignedOutNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Sign In">
+    <Stack.Navigator
+      initialRouteName="Sign In"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
       <Stack.Screen
         name="sign-in"
         component={SignInScreen}

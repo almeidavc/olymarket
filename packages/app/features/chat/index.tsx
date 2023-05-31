@@ -6,7 +6,10 @@ const Stack = createNativeStackNavigator()
 
 export function Chat() {
   return (
-    <Stack.Navigator initialRouteName="inbox">
+    <Stack.Navigator
+      initialRouteName="inbox"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
       <Stack.Screen name="inbox" component={ChatInboxScreen} />
       <Stack.Screen
         name="chat"

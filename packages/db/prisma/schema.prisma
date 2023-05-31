@@ -71,7 +71,7 @@ model Conversation {
 
 model Message {
   id             String       @id @default(cuid())
-  content        String
+  content        String       @db.Text
   conversation   Conversation @relation(fields: [conversationId], references: [id])
   conversationId String
   createdAt      DateTime     @default(now())

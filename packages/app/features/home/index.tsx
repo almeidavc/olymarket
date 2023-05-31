@@ -7,7 +7,10 @@ const Stack = createNativeStackNavigator()
 
 export function Home() {
   return (
-    <Stack.Navigator initialRouteName="feed">
+    <Stack.Navigator
+      initialRouteName="feed"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
       <Stack.Screen
         name="feed"
         component={FeedScreen}

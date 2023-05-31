@@ -88,7 +88,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
                 </ContextMenu>
                 <View className="absolute right-0 top-0 -mr-[10px] -mt-[10px]">
                   <IconButton
-                    size="small"
+                    size={16}
                     icon={<AntDesign name="close" />}
                     onPress={() => deselectImage(imageUri)}
                   />
@@ -356,7 +356,10 @@ const ChooseZoneModal = ({ navigation, route }) => {
 
 export function Post() {
   return (
-    <Stack.Navigator initialRouteName="create-post">
+    <Stack.Navigator
+      initialRouteName="create-post"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
       <Stack.Screen
         name="create-post"
         component={CreatePostScreen}

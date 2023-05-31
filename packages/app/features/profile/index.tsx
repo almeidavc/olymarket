@@ -32,7 +32,10 @@ export function ProfileTabs() {
 
 export function Profile() {
   return (
-    <Stack.Navigator initialRouteName="selling">
+    <Stack.Navigator
+      initialRouteName="selling"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
       <Stack.Screen
         name="profile-tabs"
         component={ProfileTabs}
