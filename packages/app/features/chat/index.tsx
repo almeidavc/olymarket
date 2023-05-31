@@ -142,6 +142,7 @@ export function ChatScreen({ route }) {
                 onChangeText={setInput}
                 maxLength={2 ** 16 - 1}
                 multiline={true}
+                enablesReturnKeyAutomatically={true}
                 className="rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
               />
             </View>
