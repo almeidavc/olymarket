@@ -21,12 +21,7 @@ const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
     },
     include: {
       author: true,
-      images: {
-        select: {
-          id: true,
-          url: true,
-        },
-      },
+      images: true,
     },
   })
 })
@@ -42,12 +37,7 @@ const list = publicProcedure.query(({ ctx }) => {
       createdAt: 'desc',
     },
     include: {
-      images: {
-        select: {
-          id: true,
-          url: true,
-        },
-      },
+      images: true,
     },
   })
 })
@@ -64,12 +54,7 @@ const listMine = protectedProcedure.query(({ ctx }) => {
       createdAt: 'desc',
     },
     include: {
-      images: {
-        select: {
-          id: true,
-          url: true,
-        },
-      },
+      images: true,
     },
   })
 })
