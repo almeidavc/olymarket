@@ -28,11 +28,12 @@ export const Button: React.FC<ButtonProps> = ({
   title,
   variant = 'primary',
   loading = false,
+  disabled,
   className,
   ...props
 }) => {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity disabled={disabled || loading} {...props}>
       <View className={`${buttonVariants[variant]} ${className}`}>
         {loading && (
           <View className="mr-3">
