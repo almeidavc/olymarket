@@ -1,4 +1,4 @@
-import { Post } from '../../features/post/create-post'
+import { Post } from '../../features/post/create'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
