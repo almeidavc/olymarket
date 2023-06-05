@@ -90,7 +90,7 @@ export function PostScreen({ route }) {
 
   const context = trpc.useContext()
 
-  const { mutate: removePostMutation, isLoading } =
+  const { mutate: removePostMutation, isLoading: isRemovePostLoading } =
     trpc.post.remove.useMutation({
       onSuccess: (removedPost) => {
         context.post.list.invalidate()
@@ -139,14 +139,6 @@ export function PostScreen({ route }) {
   //   },
   // })
 
-  const onRemovePostPress = () => {
-    removePostMutation({ postId: post!.id })
-  }
-
-  // const onMarkPostAsSoldPress = () => {
-  //   markAsSold({ postId: post!.id })
-  // }
-
   const onContactButtonPress = () => {
     findOrCreateChatMutation(
       {
@@ -159,6 +151,18 @@ export function PostScreen({ route }) {
         },
       }
     )
+  }
+
+  const onRemovePostPress = () => {
+    removePostMutation({ postId: post!.id })
+  }
+
+  // const onMarkPostAsSoldPress = () => {
+  //   markAsSold({ postId: post!.id })
+  // }
+
+  const onReportPostPress = () => {
+    router.push(`/post/${postId}/report`)
   }
 
   if (!post) {
@@ -210,10 +214,19 @@ export function PostScreen({ route }) {
         {userId === post.authorId && (
           <View className="p-4">
             <Button
-              loading={isLoading}
+              loading={isRemovePostLoading}
               className="w-full"
               title="Remove post"
               onPress={onRemovePostPress}
+            />
+          </View>
+        )}
+        {userId !== post.authorId && (
+          <View className="p-4">
+            <Button
+              variant="secondary"
+              title="Report post"
+              onPress={onReportPostPress}
             />
           </View>
         )}

@@ -150,6 +150,36 @@ const markAsSold = protectedProcedure
     })
   })
 
+const report = protectedProcedure
+  .input(z.object({ postId: z.string(), reason: z.string() }))
+  .mutation(async ({ ctx, input }) => {
+    const post = await ctx.prisma.post.findUnique({
+      where: {
+        id: input.postId,
+      },
+    })
+
+    if (!post) {
+      throw new TRPCError({ code: 'NOT_FOUND' })
+    }
+
+    return await ctx.prisma.postReport.create({
+      data: {
+        post: {
+          connect: {
+            id: input.postId,
+          },
+        },
+        reason: input.reason,
+        reporter: {
+          connect: {
+            id: ctx.auth.userId,
+          },
+        },
+      },
+    })
+  })
+
 export const postRouter = router({
   getImageUploadUrls,
   getById,
@@ -158,4 +188,5 @@ export const postRouter = router({
   create,
   remove,
   markAsSold,
+  report,
 })

@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FeedScreen } from './feed'
 import { PostScreen } from '../post/post'
+import { ReportPostScreen } from '../post/report'
 
 const Stack = createNativeStackNavigator()
 
@@ -23,6 +24,11 @@ export function Home() {
           headerTintColor: 'white',
           headerTitle: '',
         }}
+      />
+      <Stack.Screen
+        name="report"
+        component={ReportPostScreen}
+        options={{ headerTitle: 'Report post' }}
       />
     </Stack.Navigator>
   )

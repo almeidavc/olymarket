@@ -30,6 +30,7 @@ model User {
   profileImageUrl String
   posts           Post[]
   conversations   Conversation[]
+  postReports     PostReport[]
 }
 
 model Post {
@@ -44,8 +45,20 @@ model Post {
   title         String
   status        PostStatus     @default(value: CREATED)
   zone          Zone           @default(value: NONE)
+  reports       PostReport[]
 
   @@index([authorId])
+}
+
+model PostReport {
+  id         String @id @default(cuid())
+  post       Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     String
+  reason     String @db.Text
+  reporter   User   @relation(fields: [reporterId], references: [id])
+  reporterId String
+
+  @@index([postId])
 }
 
 model Image {

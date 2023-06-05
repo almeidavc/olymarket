@@ -22,6 +22,7 @@ export function NavigationProvider({
                     screens: {
                       feed: '',
                       post: 'post/:postId',
+                      report: 'post/:postId/report',
                     },
                   },
                   post: 'post',
