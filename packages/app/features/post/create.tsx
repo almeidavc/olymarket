@@ -5,7 +5,6 @@ import { Text } from 'app/design/typography'
 import * as ImagePicker from 'expo-image-picker'
 import { Modal, ScrollView } from 'react-native'
 import { useState } from 'react'
-import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { uploadImages } from './upload-image'
 import { Zone, ZoneTitles } from 'app/utils/enums'
@@ -17,6 +16,7 @@ import { Button, IconButton } from 'app/components/button'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
 import { RadioButton } from 'app/components/radio'
+import { Image } from 'app/design/image'
 
 interface ImageSelectProps {
   imageUris: string[]

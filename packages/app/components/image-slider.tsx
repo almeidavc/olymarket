@@ -1,6 +1,5 @@
 import { View } from 'app/design/core'
 import React, { useState } from 'react'
-import { Image } from 'app/design/image'
 import { TouchableOpacity } from 'app/design/core'
 import Constants from 'expo-constants'
 import {
@@ -10,6 +9,7 @@ import {
 } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { PaginatedCarousel } from './carousel'
+import { Image } from 'app/design/image'
 
 interface ImageSliderProps {
   imageUris: string[]

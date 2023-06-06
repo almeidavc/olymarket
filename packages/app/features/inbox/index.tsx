@@ -1,7 +1,6 @@
 import { View, TouchableOpacity, SafeAreaView } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
-import { Image } from 'app/design/image'
 import { useRouter } from 'solito/router'
 import { AppRouter } from 'server/api/routers'
 import { inferProcedureOutput } from '@trpc/server'
@@ -10,6 +9,7 @@ import dayjs from 'app/utils/dayjs'
 import { Tag } from 'app/components/tag'
 import { PostStatus } from 'app/utils/enums'
 import { FlashList } from '@shopify/flash-list'
+import { Image } from 'app/design/image'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 

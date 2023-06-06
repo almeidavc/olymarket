@@ -1,7 +1,6 @@
 import { View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { ScrollView } from 'react-native'
-import { Image } from 'app/design/image'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { PostStatus, ZoneTitles } from 'app/utils/enums'
@@ -10,6 +9,7 @@ import { useAuth } from '@clerk/clerk-expo'
 import dayjs from 'app/utils/dayjs'
 import { ImageSlider } from 'app/components/image-slider'
 import { Button } from 'app/components/button'
+import { Image } from 'app/design/image'
 
 export function PostScreen({ route }) {
   const router = useRouter()

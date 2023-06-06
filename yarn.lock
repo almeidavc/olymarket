@@ -7709,6 +7709,7 @@ __metadata:
     react-dom: 18.2.0
     react-native: 0.71.7
     react-native-context-menu-view: ^1.9.1
+    react-native-fast-image: ^8.6.3
     react-native-gesture-handler: ~2.9.0
     react-native-pager-view: 6.1.2
     react-native-reanimated: 3.0.2
@@ -12771,6 +12772,16 @@ __metadata:
     react: ^16.8.1 || ^17.0.0 || ^18.0.0
     react-native: ">=0.60.0-rc.0 <1.0.x"
   checksum: 6ac34a9080e77c6c72dde27b31f25f01137f69b51e3863f1ff0715357ac384122b84ab2d57c9336f8d7e1973c94d920d41504b2ce9e548e7b480bf4dc4c51415
+  languageName: node
+  linkType: hard
+
+"react-native-fast-image@npm:^8.6.3":
+  version: 8.6.3
+  resolution: "react-native-fast-image@npm:8.6.3"
+  peerDependencies:
+    react: ^17 || ^18
+    react-native: ">=0.60.0"
+  checksum: 29289cb6b2eae0983c8922b22e2d9de3be07322bb7991c5def19f95eadefaedb0e308ff0b38cc1d0444e8bd4fe94a7621a99a2d3d9298100bcb60b3144677234
   languageName: node
   linkType: hard
 

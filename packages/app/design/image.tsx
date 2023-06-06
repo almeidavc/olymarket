@@ -1,4 +1,4 @@
-import { Image as ReactNativeImage } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { styled } from 'nativewind'
 
-export const Image = styled(ReactNativeImage)
+export const Image = styled(FastImage)
