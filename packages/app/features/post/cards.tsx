@@ -12,14 +12,16 @@ interface PostCardProps {
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
   return (
     <Link href={`/post/${post.id}`}>
-      <View className="rounded-lg border border-gray-300 bg-white shadow">
-        <Image
-          className="h-[25vh] w-full rounded-t-lg"
-          resizeMode="cover"
-          source={{
-            uri: post.images![0]?.url,
-          }}
-        />
+      <View className="flex h-full flex-col rounded-lg border border-gray-300 bg-white shadow">
+        <View className="flex-1">
+          <Image
+            className="h-full w-full rounded-t-lg"
+            resizeMode="cover"
+            source={{
+              uri: post.images![0]?.url,
+            }}
+          />
+        </View>
         <View className="p-2">
           <Text
             className="text-lg tracking-tight text-gray-600"
@@ -27,7 +29,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           >
             {post.title}
           </Text>
-          <Text className="mb-1 font-bold text-sky-900">
+          <Text className="font-bold text-sky-900">
             {post.price.toLocaleString('en-US', {
               style: 'currency',
               currency: 'EUR',
@@ -41,33 +43,34 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
 interface HorizontalPostCardProps extends PostCardProps {
   href: string
+  height: number
 }
 
 export const HorizontalPostCard: React.FC<HorizontalPostCardProps> = ({
   post,
   href,
+  height,
 }) => {
   return (
     <Link href={href}>
-      <View className="flex flex-row justify-between border-b border-gray-300">
-        <View className="flex flex-row gap-2">
-          <Image
-            className="h-[12vh] w-[15vh] bg-gray-300"
-            source={{
-              uri: post.images![0]?.url,
-            }}
-          />
-          <View className="flex flex-col items-start">
-            <Text className="text-lg tracking-tight text-gray-600">
-              {post.title}
-            </Text>
-            <Text className="mb-1 font-bold text-sky-900">
-              {post.price.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'EUR',
-              })}
-            </Text>
-          </View>
+      <View className="flex flex-row border-b border-gray-300">
+        <Image
+          style={{ height, width: height }}
+          className="mr-2 bg-gray-300"
+          source={{
+            uri: post.images![0]?.url,
+          }}
+        />
+        <View className="flex flex-col items-start">
+          <Text className="text-lg tracking-tight text-gray-600">
+            {post.title}
+          </Text>
+          <Text className="font-bold text-sky-900">
+            {post.price.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'EUR',
+            })}
+          </Text>
         </View>
       </View>
     </Link>

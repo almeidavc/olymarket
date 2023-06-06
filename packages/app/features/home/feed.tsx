@@ -1,32 +1,41 @@
 import { H1 } from 'app/design/typography'
 import { View } from 'app/design/core'
-import { FlatList, SafeAreaView } from 'react-native'
+import { SafeAreaView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
-import { PostCard } from '../post/cards'
 import { RefreshControl } from 'react-native'
+import { FlashList } from '@shopify/flash-list'
+import { PostCard } from '../post/cards'
+import { useWindowDimensions } from 'react-native'
 
 export function FeedScreen() {
+  const { height } = useWindowDimensions()
+
   const { data: posts, refetch, isRefetching } = trpc.post.list.useQuery()
+
+  const renderItem = ({ item: post, index }) => {
+    const paddingBetween = index % 2 === 0 ? 'pr-1' : 'pl-1'
+
+    return (
+      <View className={`h-[35vh] w-full py-1.5 ${paddingBetween}`}>
+        <PostCard post={post} />
+      </View>
+    )
+  }
 
   return (
     <SafeAreaView>
-      <View className="px-4">
-        <FlatList
+      <View className="h-full w-full px-4">
+        <FlashList
+          data={posts}
+          keyExtractor={(post) => post.id}
+          numColumns={2}
+          estimatedItemSize={0.35 * height}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
           ListHeaderComponent={<H1>Olymarket</H1>}
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
           }
-          showsVerticalScrollIndicator={false}
-          data={posts}
-          keyExtractor={(post) => post.id}
-          numColumns={2}
-          renderItem={({ item: post, index }) => (
-            <View
-              className={`w-1/2 py-1.5 ${index % 2 === 0 ? 'pr-1' : 'pl-1'}`}
-            >
-              <PostCard post={post} />
-            </View>
-          )}
         />
       </View>
     </SafeAreaView>

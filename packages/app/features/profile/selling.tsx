@@ -1,22 +1,38 @@
 import { trpc } from 'app/utils/trpc'
-import { FlatList, SafeAreaView } from 'react-native'
+import { SafeAreaView, useWindowDimensions } from 'react-native'
 import { HorizontalPostCard } from '../post/cards'
+import { FlashList } from '@shopify/flash-list'
+import { View } from 'app/design/core'
+import { RefreshControl } from 'react-native'
 
 export function SellingScreen() {
-  const { data: posts } = trpc.post.listMine.useQuery()
+  const { height } = useWindowDimensions()
+
+  const { data: posts, refetch, isRefetching } = trpc.post.listMine.useQuery()
+
+  const postCardHeight = 0.15 * height
+
+  const renderItem = ({ item: post }) => (
+    <HorizontalPostCard
+      post={post}
+      href={`/profile/selling/post/${post.id}`}
+      height={postCardHeight}
+    />
+  )
 
   return (
     <SafeAreaView>
-      <FlatList
-        data={posts}
-        keyExtractor={(post) => post.id}
-        renderItem={({ item: post }) => (
-          <HorizontalPostCard
-            post={post}
-            href={`/profile/selling/post/${post.id}`}
-          />
-        )}
-      />
+      <View className="h-full w-full">
+        <FlashList
+          data={posts}
+          keyExtractor={(post) => post.id}
+          estimatedItemSize={postCardHeight}
+          renderItem={renderItem}
+          refreshControl={
+            <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+          }
+        />
+      </View>
     </SafeAreaView>
   )
 }
