@@ -2,7 +2,7 @@ import { H1 } from 'app/design/typography'
 import { View } from 'app/design/core'
 import { FlatList, SafeAreaView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
-import { PostCard } from '../post/post'
+import { PostCard } from '../post/cards'
 import { RefreshControl } from 'react-native'
 
 export function FeedScreen() {

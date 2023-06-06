@@ -34,11 +34,12 @@ export function NavigationProvider({
                   },
                   profile: {
                     screens: {
-                      post: 'profile/selling/post/:postId',
+                      post: 'profile/:context/post/:postId',
+                      moderate: 'profile/account/moderate',
                       'profile-tabs': {
                         screens: {
                           selling: 'profile/selling',
-                          settings: 'profile/settings',
+                          account: 'profile/account',
                         },
                       },
                     },

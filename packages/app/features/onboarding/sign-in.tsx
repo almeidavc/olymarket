@@ -81,14 +81,21 @@ export function SignInScreen() {
             message: 'The username or email you provided is invalid.',
           })
           break
-        case 'strategy_for_user_invalid':
-          setError('usernameOrEmail', {
-            message: 'Please sign in with Google.',
-          })
-          break
         case 'form_password_incorrect':
           setError('password', {
             message: 'The password is incorrect.',
+          })
+          break
+        case 'strategy_for_user_invalid':
+          setError('usernameOrEmail', {})
+          setError('password', {
+            message: 'Please sign in with Google.',
+          })
+          break
+        default:
+          setError('usernameOrEmail', {})
+          setError('password', {
+            message: error.errors[0].longMessage,
           })
       }
     }

@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { Zone, PostStatus } from '@prisma/client'
 import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../s3'
 import { TRPCError } from '@trpc/server'
+import { assertIsModerator, isModerator } from '../utils/roles'
 
 const getImageUploadUrls = publicProcedure
   .input(z.number().int().positive())
@@ -59,6 +60,28 @@ const listMine = protectedProcedure.query(({ ctx }) => {
   })
 })
 
+const listReported = protectedProcedure.query(async ({ ctx }) => {
+  await assertIsModerator(ctx.auth.userId)
+
+  return ctx.prisma.post.findMany({
+    where: {
+      status: {
+        not: PostStatus.REMOVED,
+      },
+      reports: {
+        some: {},
+      },
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+    include: {
+      images: true,
+      reports: true,
+    },
+  })
+})
+
 const create = protectedProcedure
   .input(
     z.object({
@@ -109,7 +132,10 @@ const remove = protectedProcedure
       throw new TRPCError({ code: 'NOT_FOUND' })
     }
 
-    if (post.authorId !== ctx.auth.userId) {
+    if (
+      post.authorId !== ctx.auth.userId &&
+      !(await isModerator(ctx.auth.userId))
+    ) {
       throw new TRPCError({ code: 'UNAUTHORIZED' })
     }
 
@@ -185,6 +211,7 @@ export const postRouter = router({
   getById,
   list,
   listMine,
+  listReported,
   create,
   remove,
   markAsSold,

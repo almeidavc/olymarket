@@ -1,8 +1,9 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import { SettingsScreen } from './settings'
+import { AccountScreen } from './account'
 import { SellingScreen } from './selling'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { PostScreen } from '../post/post'
+import { ModeratorScreen } from '../moderate'
 
 const Tab = createMaterialTopTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -22,9 +23,9 @@ export function ProfileTabs() {
         options={{ tabBarLabel: 'Selling' }}
       />
       <Tab.Screen
-        name="settings"
-        component={SettingsScreen}
-        options={{ tabBarLabel: 'Settings' }}
+        name="account"
+        component={AccountScreen}
+        options={{ tabBarLabel: 'Account' }}
       />
     </Tab.Navigator>
   )
@@ -49,6 +50,11 @@ export function Profile() {
           headerTintColor: 'white',
           headerTitle: '',
         }}
+      />
+      <Stack.Screen
+        name="moderate"
+        component={ModeratorScreen}
+        options={{ headerTitle: 'Moderate' }}
       />
     </Stack.Navigator>
   )

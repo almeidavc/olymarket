@@ -1,9 +1,14 @@
 import { trpc } from 'app/utils/trpc'
 import { FlatList, SafeAreaView } from 'react-native'
+import { RefreshControl } from 'react-native'
 import { HorizontalPostCard } from '../post/cards'
 
-export function SellingScreen() {
-  const { data: posts } = trpc.post.listMine.useQuery()
+export function ModeratorScreen() {
+  const {
+    data: posts,
+    refetch,
+    isRefetching,
+  } = trpc.post.listReported.useQuery()
 
   return (
     <SafeAreaView>
@@ -13,9 +18,12 @@ export function SellingScreen() {
         renderItem={({ item: post }) => (
           <HorizontalPostCard
             post={post}
-            href={`/profile/selling/post/${post.id}`}
+            href={`/profile/moderate/post/${post.id}`}
           />
         )}
+        refreshControl={
+          <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
+        }
       />
     </SafeAreaView>
   )

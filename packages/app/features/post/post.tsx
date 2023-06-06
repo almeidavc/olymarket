@@ -7,81 +7,16 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { PostStatus, ZoneTitles } from 'app/utils/enums'
 import { useRouter } from 'solito/router'
 import { useAuth } from '@clerk/clerk-expo'
-import { inferProcedureOutput } from '@trpc/server'
-import { AppRouter } from 'server/api/routers'
-import { Link } from 'solito/link'
 import dayjs from 'app/utils/dayjs'
 import { ImageSlider } from 'app/components/image-slider'
 import { Button } from 'app/components/button'
-
-interface PostCardProps {
-  post: inferProcedureOutput<AppRouter['post']['list']>[number]
-}
-
-export const PostCard: React.FC<PostCardProps> = ({ post }) => {
-  return (
-    <Link href={`/post/${post.id}`}>
-      <View className="rounded-lg border border-gray-300 bg-white shadow">
-        <Image
-          className="h-[25vh] w-full rounded-t-lg"
-          resizeMode="cover"
-          source={{
-            uri: post.images![0]?.url,
-          }}
-        />
-        <View className="p-2">
-          <Text
-            className="text-lg tracking-tight text-gray-600"
-            numberOfLines={1}
-          >
-            {post.title}
-          </Text>
-          <Text className="mb-1 font-bold text-sky-900">
-            {post.price.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'EUR',
-            })}
-          </Text>
-        </View>
-      </View>
-    </Link>
-  )
-}
-
-export const DetailedPostCard: React.FC<PostCardProps> = ({ post }) => {
-  return (
-    <Link href={`/profile/selling/post/${post.id}`}>
-      <View className="flex flex-row justify-between border-b border-gray-300">
-        <View className="flex flex-row gap-2">
-          <Image
-            className="h-[12vh] w-[15vh] bg-gray-300"
-            source={{
-              uri: post.images![0]?.url,
-            }}
-          />
-          <View className="flex flex-col items-start">
-            <Text className="text-lg tracking-tight text-gray-600">
-              {post.title}
-            </Text>
-            <Text className="mb-1 font-bold text-sky-900">
-              {post.price.toLocaleString('en-US', {
-                style: 'currency',
-                currency: 'EUR',
-              })}
-            </Text>
-          </View>
-        </View>
-      </View>
-    </Link>
-  )
-}
 
 export function PostScreen({ route }) {
   const router = useRouter()
 
   const { userId } = useAuth()
 
-  const { postId } = route.params
+  const { context: ctx, postId } = route.params
 
   const { data: post } = trpc.post.getById.useQuery(postId)
 
@@ -89,6 +24,8 @@ export function PostScreen({ route }) {
     trpc.chat.findOrCreate.useMutation()
 
   const context = trpc.useContext()
+
+  const { mutate: banUserMutation } = trpc.user.ban.useMutation()
 
   const { mutate: removePostMutation, isLoading: isRemovePostLoading } =
     trpc.post.remove.useMutation({
@@ -211,7 +148,7 @@ export function PostScreen({ route }) {
             <Text>{post.description}</Text>
           </View>
         )}
-        {userId === post.authorId && (
+        {(userId === post.authorId || ctx === 'moderate') && (
           <View className="p-4">
             <Button
               loading={isRemovePostLoading}
@@ -221,12 +158,23 @@ export function PostScreen({ route }) {
             />
           </View>
         )}
-        {userId !== post.authorId && (
+        {userId !== post.authorId && ctx !== 'moderate' && (
           <View className="p-4">
             <Button
               variant="secondary"
               title="Report post"
               onPress={onReportPostPress}
+            />
+          </View>
+        )}
+        {ctx === 'moderate' && (
+          <View className="p-4">
+            <Button
+              variant="danger"
+              title="Ban user"
+              onPress={() => {
+                banUserMutation({ userId: post.authorId })
+              }}
             />
           </View>
         )}

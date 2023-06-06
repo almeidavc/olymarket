@@ -10,16 +10,19 @@ const buttonVariants = {
     'inline-flex flex-row justify-center items-center text-white bg-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
   secondary:
     'text-sky-700 border border-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
+  danger:
+    'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5',
 }
 
 const textVariants = {
   primary: 'text-white font-medium text-sm text-center',
   secondary: 'text-sky-700 font-medium text-sm text-center ',
+  danger: 'text-white font-medium text-sm text-center',
 }
 
 interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   title: string
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'danger'
   loading?: boolean
   className?: string
 }
