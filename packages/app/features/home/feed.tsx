@@ -32,7 +32,14 @@ export function FeedScreen() {
           estimatedItemSize={0.35 * height}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
-          ListHeaderComponent={<H1>Olymarket</H1>}
+          ListHeaderComponent={
+            <H1
+              className="text-5xl text-sky-700"
+              style={{ fontFamily: 'Cormorant_700Bold' }}
+            >
+              Olymarket
+            </H1>
+          }
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
           }

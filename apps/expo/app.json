@@ -4,10 +4,13 @@
     "slug": "olymarket",
     "version": "1.0.0",
     "scheme": "olymarket",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "platforms": ["ios", "android"],
     "ios": {
       "bundleIdentifier": "com.almeidavc.olymarket"
     },

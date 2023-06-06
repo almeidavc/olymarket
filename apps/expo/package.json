@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@expo-google-fonts/cormorant": "^0.2.3",
     "@react-native-picker/picker": "2.4.8",
     "@shopify/flash-list": "1.4.0",
     "app": "*",
@@ -8,6 +9,7 @@
     "expo-auth-session": "~4.0.3",
     "expo-constants": "^14.2.1",
     "expo-dev-client": "~2.2.1",
+    "expo-font": "~11.1.1",
     "expo-image-picker": "^14.1.1",
     "expo-linking": "~4.0.1",
     "expo-secure-store": "~12.1.1",
