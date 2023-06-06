@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "@expo-google-fonts/cormorant": "^0.2.3",
     "@react-native-picker/picker": "2.4.8",
     "@shopify/flash-list": "1.4.0",
     "app": "*",

@@ -1,4 +1,4 @@
-import { H1 } from 'app/design/typography'
+import { Text } from 'app/design/typography'
 import { View } from 'app/design/core'
 import { SafeAreaView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
@@ -33,12 +33,12 @@ export function FeedScreen() {
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
           ListHeaderComponent={
-            <H1
-              className="text-5xl text-sky-700"
-              style={{ fontFamily: 'Cormorant_700Bold' }}
+            <Text
+              className="my-4 text-5xl font-bold text-sky-700"
+              style={{ fontFamily: 'Cormorant-Bold' }}
             >
               Olymarket
-            </H1>
+            </Text>
           }
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} />

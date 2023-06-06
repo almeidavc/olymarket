@@ -3004,13 +3004,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@expo-google-fonts/cormorant@npm:^0.2.3":
-  version: 0.2.3
-  resolution: "@expo-google-fonts/cormorant@npm:0.2.3"
-  checksum: 2b85a3a8c485c9c602da8973094ec0bd3de51c2d31df681658d832ed11d0dd5342b7a090ee214eb404dfb216cef378e5e33bccc9de304d7a8b0e4521ff298ff6
-  languageName: node
-  linkType: hard
-
 "@expo/bunyan@npm:4.0.0, @expo/bunyan@npm:^4.0.0":
   version: 4.0.0
   resolution: "@expo/bunyan@npm:4.0.0"
@@ -7696,7 +7689,6 @@ __metadata:
   resolution: "expo-app@workspace:apps/expo"
   dependencies:
     "@babel/core": ^7.20.0
-    "@expo-google-fonts/cormorant": ^0.2.3
     "@react-native-picker/picker": 2.4.8
     "@shopify/flash-list": 1.4.0
     "@types/react": ~18.0.27
