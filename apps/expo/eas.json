@@ -17,6 +17,10 @@
       }
     },
     "production": {
+      "env": {
+        "SERVER_URL": "http://18.184.170.137",
+        "CLERK_PUBLISHABLE_KEY": "pk_test_Z3JlYXQtb3Jpb2xlLTkyLmNsZXJrLmFjY291bnRzLmRldiQ"
+      },
       "ios": {
         "resourceClass": "m-medium"
       }
