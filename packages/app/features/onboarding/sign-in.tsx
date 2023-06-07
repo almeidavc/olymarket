@@ -108,7 +108,10 @@ export function SignInScreen() {
   return (
     <SafeAreaView>
       <View className="p-4">
-        <Text className="m-10 text-center text-3xl font-extrabold">
+        <Text
+          className="my-10 text-center text-5xl font-bold text-sky-700"
+          style={{ fontFamily: 'Cormorant-Bold' }}
+        >
           Olymarket
         </Text>
         <View className="divide-y divide-gray-300">
