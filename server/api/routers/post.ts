@@ -1,7 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { Zone, PostStatus } from '@prisma/client'
-import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../s3'
+import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
 import { TRPCError } from '@trpc/server'
 import { assertIsModerator, isModerator } from '../utils/roles'
 
