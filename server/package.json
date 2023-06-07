@@ -21,6 +21,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "http-inspector": "^0.1.11"
+    "http-inspector": "^0.1.11",
+    "typescript": "^5.1.3"
   }
 }
