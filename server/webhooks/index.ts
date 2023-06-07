@@ -1,6 +1,6 @@
 import { app } from '../app'
 import bodyParser from 'body-parser'
-import { prisma } from 'db'
+import { prisma } from '../prisma'
 
 app.use(bodyParser.json())
 app.post('/hook', async (req) => {

@@ -7,7 +7,7 @@ import {
 } from './connections'
 import jwt from 'jsonwebtoken'
 import { Message } from '@prisma/client'
-import { prisma } from 'db'
+import { prisma } from '../prisma'
 
 type MessageInput = Pick<
   Message,
