@@ -1,7 +1,15 @@
 import { inferAsyncReturnType } from '@trpc/server'
+import { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import { prisma } from 'db'
+import { Request } from 'express'
+import { LooseAuthProp } from '@clerk/clerk-sdk-node'
 
-export function createContext({ req }) {
+type RequestWithAuth = Request & Partial<LooseAuthProp>
+
+type CreateContextOptions = Omit<CreateExpressContextOptions, 'req'> & {
+  req: RequestWithAuth
+}
+export function createContext({ req }: CreateContextOptions) {
   return {
     prisma: prisma,
     auth: req.auth,

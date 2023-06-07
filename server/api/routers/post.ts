@@ -61,7 +61,7 @@ const listMine = protectedProcedure.query(({ ctx }) => {
 })
 
 const listReported = protectedProcedure.query(async ({ ctx }) => {
-  await assertIsModerator(ctx.auth.userId)
+  await assertIsModerator(ctx.auth.userId!)
 
   return ctx.prisma.post.findMany({
     where: {
@@ -98,7 +98,7 @@ const create = protectedProcedure
         ...input,
         author: {
           connect: {
-            id: ctx.auth.userId,
+            id: ctx.auth.userId!,
           },
         },
         images: {

@@ -1,17 +1,17 @@
-const userIdToSocketId = new Map([])
-const socketIdToUserId = new Map([])
+const userIdToSocketId = new Map<string, string>([])
+const socketIdToUserId = new Map<string, string>([])
 
 export function registerConnection(socketId: string, userId: string) {
-  userIdToSocketId[userId] = socketId
-  socketIdToUserId[socketId] = userId
+  userIdToSocketId.set(userId, socketId)
+  socketIdToUserId.set(socketId, userId)
 }
 
 export function removeConnection(socketId: string) {
-  const userId = socketIdToUserId[socketId]
-  delete userIdToSocketId[userId]
-  delete socketIdToUserId[socketId]
+  const userId = socketIdToUserId.get(socketId)!
+  userIdToSocketId.delete(userId)
+  socketIdToUserId.delete(socketId)
 }
 
 export function getSocketIdByUserId(userId: string) {
-  return userIdToSocketId[userId]
+  return userIdToSocketId.get(userId)
 }

@@ -69,7 +69,7 @@ const list = protectedProcedure.query(async ({ ctx }) => {
     where: {
       participants: {
         some: {
-          id: ctx.auth.userId,
+          id: ctx.auth.userId!,
         },
       },
       messages: {
@@ -91,7 +91,7 @@ const list = protectedProcedure.query(async ({ ctx }) => {
     },
   })
   return conversations.map((conversation) =>
-    parseChat(conversation, ctx.auth.userId)
+    parseChat(conversation, ctx.auth.userId!)
   )
 })
 
@@ -103,7 +103,7 @@ const find = protectedProcedure
         postId: input.postId,
         participants: {
           every: {
-            id: { in: [ctx.auth.userId, input.partnerId] },
+            id: { in: [ctx.auth.userId!, input.partnerId] },
           },
         },
       },
@@ -130,7 +130,7 @@ const findOrCreate = protectedProcedure
         postId: input.postId,
         participants: {
           every: {
-            id: { in: [ctx.auth.userId, input.partnerId] },
+            id: { in: [ctx.auth.userId!, input.partnerId] },
           },
         },
       },
@@ -139,7 +139,7 @@ const findOrCreate = protectedProcedure
       conversation = await ctx.prisma.conversation.create({
         data: {
           participants: {
-            connect: [{ id: ctx.auth.userId }, { id: input.partnerId }],
+            connect: [{ id: ctx.auth.userId! }, { id: input.partnerId }],
           },
           post: {
             connect: {
