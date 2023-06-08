@@ -37,7 +37,9 @@
   },
   "scripts": {
     "start": "expo start --dev-client",
-    "build": "eas build --profile development --platform ios",
+    "build": "eas build --platform ios",
+    "build:dev": "eas build --profile development --platform ios",
+    "submit": "eas submit -p ios",
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web"
