@@ -24,5 +24,26 @@ app.post('/hook', async (req) => {
           profileImageUrl: user.profile_image_url,
         },
       })
+      break
+    case 'user.deleted':
+      if (!event.data.deleted) {
+        return
+      }
+
+      const userId = event.data.id
+
+      try {
+        await prisma.user.delete({
+          where: {
+            id: userId,
+          },
+        })
+      } catch (error) {
+        // catch error thrown when user does not exist
+        if (error.code === 'P2025') {
+          return
+        }
+        throw error
+      }
   }
 })

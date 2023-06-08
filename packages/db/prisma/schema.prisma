@@ -34,7 +34,7 @@ model User {
 }
 
 model Post {
-  author        User           @relation(fields: [authorId], references: [id])
+  author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId      String
   createdAt     DateTime       @default(now())
   conversations Conversation[]
@@ -55,7 +55,7 @@ model PostReport {
   post       Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId     String
   reason     String @db.Text
-  reporter   User   @relation(fields: [reporterId], references: [id])
+  reporter   User   @relation(fields: [reporterId], references: [id], onDelete: Cascade)
   reporterId String
 
   @@index([postId])

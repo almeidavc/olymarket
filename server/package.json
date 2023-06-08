@@ -3,7 +3,7 @@
   "packageManager": "yarn@3.4.1",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node index.ts",
+    "dev": "ts-node --transpileOnly index.ts",
     "start": "node dist/index.js"
   },
   "dependencies": {
