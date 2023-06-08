@@ -1,5 +1,3 @@
-## Privacy Policy
-
 **Privacy Policy**
 
 Vicente Almeida built the Olymarket app as a Free app. This SERVICE is provided by Vicente Almeida at no cost and is intended for use as is.
