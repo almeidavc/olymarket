@@ -35,11 +35,11 @@
 
 ## App Screenshots
 
-<div style="display: flex; justify-content: center; gap: 10px;">
-    <img src="assets/screenshots/app-screenshot-1.png" alt="Feed" width="200">
-    <img src="assets/screenshots/app-screenshot-2.png" alt="Creating a post" width="200">
-    <img src="assets/screenshots/app-screenshot-3.png" alt="Post view" width="200">
-</div>
+<p float="left">
+    <img src="assets/screenshots/app-screenshot-1.png" alt="Feed" width="33%">
+    <img src="assets/screenshots/app-screenshot-2.png" alt="Creating a post" width="33%">
+    <img src="assets/screenshots/app-screenshot-3.png" alt="Post view" width="33%">
+</p>
 
 ## System Design
 
