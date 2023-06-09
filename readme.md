@@ -1,3 +1,46 @@
+<!-- App Icon -->
+<div align="center">
+  <a href="#">
+    <img src="apps/expo/assets/images/icon.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">Olymarket</h3>
+
+  <p align="center">
+    Your student marketplace in Olydorf. Buy, sell, and save with ease.
+    <br />
+    <br />
+    <a href="https://github.com/othneildrew/Best-README-Template">App Screenshots</a>
+    ·
+    <a href="https://github.com/almeidavc/olymarket#system-design">System Design</a>
+    ·
+    <a href="https://github.com/almeidavc/olymarket#contact">Contact</a>
+  </p>
+</div>
+
+## Table of contents
+
+- [About the Project](#about-the-project)
+- [App Screenshots](#app-screenshots)
+- [System Design](#system-design)
+- [Contact](#contact)
+
+## About the Project
+
+**Olymarket** is a second-hand marketplace for students living in Olympiadorf.
+
+- Create and manage posts: Create, manage and showcase your items with ease.
+
+- Real-time chat: Connect with buyers and sellers to discuss item details, negotiate prices, and arrange meet-ups.
+
+## App Screenshots
+
+<div style="display: flex; justify-content: center; gap: 10px;">
+    <img src="assets/screenshots/app-screenshot-1.png" alt="Feed" width="200">
+    <img src="assets/screenshots/app-screenshot-2.png" alt="Creating a post" width="200">
+    <img src="assets/screenshots/app-screenshot-3.png" alt="Post view" width="200">
+</div>
+
 ## System Design
 
 ![Architecture overview](/assets/architecture.png)
