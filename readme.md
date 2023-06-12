@@ -10,19 +10,13 @@
     Your student marketplace in Olydorf. Buy, sell, and save with ease.
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">App Screenshots</a>
+    <a href="https://github.com/almeidavc/olymarket#about-the-project">About</a>
     ·
     <a href="https://github.com/almeidavc/olymarket#system-design">System Design</a>
     ·
     <a href="https://github.com/almeidavc/olymarket#contact">Contact</a>
   </p>
 </div>
-
-## Table of contents
-
-- [About the Project](#about-the-project)
-- [System Design](#system-design)
-- [Contact](#contact)
 
 ## About the Project
 
