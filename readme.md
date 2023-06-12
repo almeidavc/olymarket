@@ -33,14 +33,6 @@
 
 - Real-time chat: Connect with buyers and sellers to discuss item details, negotiate prices, and arrange meet-ups.
 
-## App Screenshots
-
-<p float="left">
-    <img src="assets/screenshots/app-screenshot-1.png" alt="Feed" width="33%">
-    <img src="assets/screenshots/app-screenshot-2.png" alt="Creating a post" width="33%">
-    <img src="assets/screenshots/app-screenshot-3.png" alt="Post view" width="33%">
-</p>
-
 ## System Design
 
 ![Architecture overview](/assets/architecture.png)
