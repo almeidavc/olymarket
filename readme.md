@@ -21,7 +21,6 @@
 ## Table of contents
 
 - [About the Project](#about-the-project)
-- [App Screenshots](#app-screenshots)
 - [System Design](#system-design)
 - [Contact](#contact)
 
@@ -32,6 +31,25 @@
 - Create and manage posts: Create, manage and showcase your items with ease.
 
 - Real-time chat: Connect with buyers and sellers to discuss item details, negotiate prices, and arrange meet-ups.
+
+### Built with
+
+- Expo
+- React Native
+- Tailwind CSS
+- Typescript
+- Nodejs
+- Express
+- tRPC
+- socket.io
+- prisma
+
+### Infrastructure
+
+- Nodejs server deployed to AWS EC2 Instance
+- AWS S3 compatible bucket to store images
+- Planetscale for DB
+- Clerk as the Auth Provider
 
 ## System Design
 
