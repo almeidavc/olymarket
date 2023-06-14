@@ -1,14 +1,11 @@
 import { useSignUp } from '@clerk/clerk-expo'
 import { View } from 'app/design/core'
-import { useRouter } from 'solito/router'
 import { FormInput } from 'app/components/form'
 import { useForm } from 'react-hook-form'
 import { SafeAreaView } from 'react-native'
 import { Button } from 'app/components/button'
 
-export function SignUpScreen() {
-  const router = useRouter()
-
+export function SignUpScreen({ navigation }) {
   const { signUp } = useSignUp()
 
   const { control, handleSubmit, setError } = useForm()
@@ -26,9 +23,9 @@ export function SignUpScreen() {
 
       if (signUpResult.unverifiedFields.includes('email_address')) {
         await signUpResult.prepareEmailAddressVerification()
-        router.push('/sign-up/verify-email')
+        navigation.navigate('verify-email')
       } else {
-        router.push('sign-up/username')
+        navigation.navigate('choose-username')
       }
     } catch (e) {
       const error = e.errors[0]

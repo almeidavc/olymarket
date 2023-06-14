@@ -15,8 +15,7 @@ export function NavigationProvider({
           config: {
             initialRouteName: 'home',
             screens: {
-              // signed in
-              'main-tabs': {
+              tabs: {
                 screens: {
                   home: {
                     screens: {
@@ -46,13 +45,17 @@ export function NavigationProvider({
                   },
                 },
               },
+
               chat: 'chat/:chatId',
 
-              // signed out
-              'sign-in': 'sign-in',
-              'sign-up': 'sign-up',
-              'verify-email': 'sign-up/verify-email',
-              'choose-username': 'sign-up/username',
+              onboarding: {
+                screens: {
+                  'sign-in': 'sign-in',
+                  'sign-up': 'sign-up',
+                  'verify-email': 'sign-up/verify-email',
+                  'choose-username': 'sign-up/username',
+                },
+              },
             },
           },
         }),

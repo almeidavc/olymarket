@@ -3,7 +3,6 @@ import { View } from 'app/design/core'
 import { Button } from 'app/components/button'
 import { Text } from 'app/design/typography'
 import { useState } from 'react'
-import { useRouter } from 'solito/router'
 import { SafeAreaView } from 'react-native'
 import { useEffect } from 'react'
 import {
@@ -63,9 +62,7 @@ const VerificationCodeInput = ({ code, setCode, invalid }) => {
   )
 }
 
-export function VerifyEmailScreen() {
-  const router = useRouter()
-
+export function VerifyEmailScreen({ navigation }) {
   const { signUp } = useSignUp()
 
   const [verificationCode, setVerificationCode] = useState('')
@@ -88,7 +85,7 @@ export function VerifyEmailScreen() {
         emailVerificationResult &&
         emailVerificationResult.unverifiedFields.length === 0
       ) {
-        router.push('/sign-up/username')
+        navigation.navigate('choose-username')
       }
     } catch (error) {
       setErrorMessage(error.errors[0].longMessage)

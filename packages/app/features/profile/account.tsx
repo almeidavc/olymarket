@@ -1,14 +1,14 @@
 import { useAuth, useUser } from '@clerk/clerk-expo'
 import { TouchableOpacity } from 'app/design/core'
-import { useQueryClient } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native'
 import { Text } from 'app/design/typography'
 import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'solito/router'
 import { Button } from 'app/components/button'
 import { trpc } from 'app/utils/trpc'
+import { CommonActions } from '@react-navigation/native'
 
-export function AccountScreen() {
+export function AccountScreen({ navigation }) {
   const router = useRouter()
 
   const { signOut } = useAuth()
@@ -17,19 +17,30 @@ export function AccountScreen() {
 
   const isModerator = !!user?.publicMetadata?.isModerator
 
-  const { mutate: deleteUserMutation } = trpc.user.delete.useMutation({
-    onSuccess: () => onSignOut(),
-  })
+  const { mutate: deleteUserMutation, isLoading: isDeleteUserLoading } =
+    trpc.user.delete.useMutation()
 
-  const queryClient = useQueryClient()
+  const context = trpc.useContext()
 
-  const onSignOut = () => {
-    signOut()
-    queryClient.clear()
+  const resetRootNavigator = () => {
+    navigation
+      .getParent('root')
+      .dispatch(CommonActions.reset({ index: 0, routes: [{ name: 'tabs' }] }))
+  }
+
+  const invalidateProtectedQueries = () => {
+    context.chat.list.setData(undefined, [])
+    context.post.listMine.setData(undefined, [])
+  }
+
+  const onSignOut = async () => {
+    await signOut()
+    resetRootNavigator()
+    invalidateProtectedQueries()
   }
 
   const onDeleteAccountPress = () => {
-    deleteUserMutation()
+    deleteUserMutation(undefined, { onSuccess: onSignOut })
   }
 
   return (
@@ -47,6 +58,7 @@ export function AccountScreen() {
       )}
       <Button title="Log out" onPress={onSignOut} shape="square" />
       <Button
+        loading={isDeleteUserLoading}
         title="Delete account"
         variant="danger"
         onPress={onDeleteAccountPress}

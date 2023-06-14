@@ -14,7 +14,7 @@ import { Image } from 'app/design/image'
 export function PostScreen({ route }) {
   const router = useRouter()
 
-  const { userId } = useAuth()
+  const { userId, isSignedIn } = useAuth()
 
   const { context: ctx, postId } = route.params
 
@@ -77,6 +77,11 @@ export function PostScreen({ route }) {
   // })
 
   const onContactButtonPress = () => {
+    if (!isSignedIn) {
+      router.push('/sign-in')
+      return
+    }
+
     findOrCreateChatMutation(
       {
         postId,
@@ -99,6 +104,11 @@ export function PostScreen({ route }) {
   // }
 
   const onReportPostPress = () => {
+    if (!isSignedIn) {
+      router.push('/sign-in')
+      return
+    }
+
     router.push(`/post/${postId}/report`)
   }
 

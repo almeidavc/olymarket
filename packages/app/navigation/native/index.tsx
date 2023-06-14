@@ -1,24 +1,41 @@
-import { SignedIn, SignedOut } from '@clerk/clerk-expo'
-import { SignedInNavigator } from './signed-in'
-import { SignedOutNavigator } from './signed-out'
-import { useEffect } from 'react'
-import { trpc } from 'app/utils/trpc'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { ChatScreen } from 'app/features/chat'
+import { ChatScreenHeader } from 'app/features/chat/header'
+import { Onboarding } from 'app/features/onboarding'
+import { Tabs } from './tabs'
+
+const Stack = createNativeStackNavigator()
 
 export function RootNavigator() {
-  const context = trpc.useContext()
-
-  useEffect(() => {
-    context.post.list.prefetch()
-  }, [])
-
   return (
-    <>
-      <SignedIn>
-        <SignedInNavigator />
-      </SignedIn>
-      <SignedOut>
-        <SignedOutNavigator />
-      </SignedOut>
-    </>
+    <Stack.Navigator
+      id="root"
+      initialRouteName="tabs"
+      screenOptions={{ headerTintColor: 'black' }}
+    >
+      <Stack.Group>
+        <Stack.Screen
+          name="tabs"
+          component={Tabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="chat"
+          component={ChatScreen}
+          options={({ route }) => ({
+            headerTitle: () => (
+              <ChatScreenHeader chatId={route.params.chatId} />
+            ),
+          })}
+        />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen
+          name="onboarding"
+          component={Onboarding}
+          options={{ headerShown: false }}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
   )
 }

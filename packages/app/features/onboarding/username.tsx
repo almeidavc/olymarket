@@ -4,8 +4,12 @@ import { Button } from 'app/components/button'
 import { SafeAreaView } from 'react-native'
 import { FormInput } from 'app/components/form'
 import { useForm } from 'react-hook-form'
+import { useContext } from 'react'
+import { OnboardingContext } from './context'
 
 export function ChooseUsernameScreen() {
+  const { onOnboard } = useContext(OnboardingContext)
+
   const { signUp, setActive } = useSignUp()
 
   const { control, handleSubmit, setError } = useForm()
@@ -18,6 +22,7 @@ export function ChooseUsernameScreen() {
 
       if (updateUsernameResult?.status === 'complete') {
         setActive?.({ session: signUp?.createdSessionId })
+        onOnboard()
       }
     } catch (error) {
       setError('username', {

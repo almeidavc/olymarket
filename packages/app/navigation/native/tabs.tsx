@@ -4,14 +4,10 @@ import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
 import { Profile } from 'app/features/profile'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
-import { useEffect } from 'react'
-import { CommonActions } from '@react-navigation/native'
-import { useNavigation } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { ChatScreen } from 'app/features/chat'
-import { ChatScreenHeader } from 'app/features/chat/header'
 import { InboxScreen } from 'app/features/inbox'
-import { trpc } from 'app/utils/trpc'
+import { useAuth } from '@clerk/clerk-expo'
+
+const protectedRoutes = ['post', 'chats', 'profile']
 
 const tabIcons = {
   home: 'home',
@@ -22,7 +18,13 @@ const tabIcons = {
 
 const Tab = createBottomTabNavigator()
 
-export function MainTabs() {
+export function Tabs({ navigation }) {
+  const { isSignedIn } = useAuth()
+
+  const openModal = (redirectTo: string) => {
+    navigation.getParent('root').navigate('onboarding', { redirectTo })
+  }
+
   return (
     <Tab.Navigator
       initialRouteName="home"
@@ -32,6 +34,18 @@ export function MainTabs() {
           <FontAwesome5 name={tabIcons[route.name]} size={size} color={color} />
         ),
       })}
+      screenListeners={({ route }) => {
+        const isProtectedRoute = protectedRoutes.includes(route.name)
+
+        return {
+          tabPress: (e) => {
+            if (isProtectedRoute && !isSignedIn) {
+              e.preventDefault()
+              openModal(route.name)
+            }
+          },
+        }
+      }}
     >
       <Tab.Screen
         name="home"
@@ -60,47 +74,5 @@ export function MainTabs() {
         options={{ headerShown: false, tabBarLabel: 'Profile' }}
       />
     </Tab.Navigator>
-  )
-}
-
-const Stack = createNativeStackNavigator()
-
-export function SignedInNavigator() {
-  const context = trpc.useContext()
-
-  useEffect(() => {
-    context.post.listMine.prefetch()
-    context.chat.list.prefetch()
-  }, [])
-
-  const navigation = useNavigation()
-
-  useEffect(() => {
-    navigation.dispatch(
-      CommonActions.reset({
-        index: 0,
-        routes: [{ name: 'main-tabs' }],
-      })
-    )
-  }, [])
-
-  return (
-    <Stack.Navigator
-      initialRouteName="main-tabs"
-      screenOptions={{ headerTintColor: 'black' }}
-    >
-      <Stack.Screen
-        name="main-tabs"
-        component={MainTabs}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="chat"
-        component={ChatScreen}
-        options={({ route }) => ({
-          headerTitle: () => <ChatScreenHeader chatId={route.params.chatId} />,
-        })}
-      />
-    </Stack.Navigator>
   )
 }
