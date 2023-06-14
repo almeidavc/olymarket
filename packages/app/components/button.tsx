@@ -9,9 +9,9 @@ const buttonVariants = {
   primary:
     'inline-flex flex-row justify-center items-center text-white bg-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
   secondary:
-    'text-sky-700 border border-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
+    'inline-flex flex-row justify-center items-center text-sky-700 border border-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
   danger:
-    'focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5',
+    'inline-flex flex-row justify-center items-center text-white bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5',
 }
 
 const textVariants = {
