@@ -1,6 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { assertIsModerator } from '../utils/roles'
+import clerk from '@clerk/clerk-sdk-node'
 import axios from 'axios'
 
 const getById = publicProcedure
@@ -12,6 +13,18 @@ const getById = publicProcedure
       },
     })
   })
+
+const _delete = protectedProcedure.mutation(async ({ ctx }) => {
+  const res = await clerk.users.deleteUser(ctx.auth.userId)
+
+  if (res.deleted) {
+    return {
+      userId: res.id,
+    }
+  }
+
+  return null
+})
 
 const ban = protectedProcedure
   .input(z.object({ userId: z.string() }))
@@ -36,6 +49,7 @@ const ban = protectedProcedure
   })
 
 export const userRouter = router({
+  delete: _delete,
   getById,
   ban,
 })

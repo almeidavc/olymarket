@@ -20,9 +20,15 @@ const textVariants = {
   danger: 'text-white font-medium text-sm text-center',
 }
 
+const shapeVariants = {
+  rounded: 'rounded-lg',
+  square: 'rounded-none',
+}
+
 interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   title: string
   variant?: 'primary' | 'secondary' | 'danger'
+  shape?: 'rounded' | 'square'
   loading?: boolean
   className?: string
 }
@@ -30,6 +36,7 @@ interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
 export const Button: React.FC<ButtonProps> = ({
   title,
   variant = 'primary',
+  shape = 'rounded',
   loading = false,
   disabled,
   className,
@@ -37,7 +44,9 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity disabled={disabled || loading} {...props}>
-      <View className={`${buttonVariants[variant]} ${className}`}>
+      <View
+        className={`${buttonVariants[variant]} ${shapeVariants[shape]} ${className}`}
+      >
         {loading && (
           <View className="mr-3">
             <LoadingSpinner />

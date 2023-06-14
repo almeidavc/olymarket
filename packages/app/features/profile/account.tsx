@@ -5,6 +5,8 @@ import { SafeAreaView } from 'react-native'
 import { Text } from 'app/design/typography'
 import { AntDesign } from '@expo/vector-icons'
 import { useRouter } from 'solito/router'
+import { Button } from 'app/components/button'
+import { trpc } from 'app/utils/trpc'
 
 export function AccountScreen() {
   const router = useRouter()
@@ -15,11 +17,19 @@ export function AccountScreen() {
 
   const isModerator = !!user?.publicMetadata?.isModerator
 
+  const { mutate: deleteUserMutation } = trpc.user.delete.useMutation({
+    onSuccess: () => onSignOut(),
+  })
+
   const queryClient = useQueryClient()
 
-  const onSignOutPress = () => {
+  const onSignOut = () => {
     signOut()
     queryClient.clear()
+  }
+
+  const onDeleteAccountPress = () => {
+    deleteUserMutation()
   }
 
   return (
@@ -35,14 +45,13 @@ export function AccountScreen() {
           <AntDesign name="right" size={16} color="#6b7280" />
         </TouchableOpacity>
       )}
-      <TouchableOpacity
-        className="bg-sky-700 px-5 py-2.5"
-        onPress={onSignOutPress}
-      >
-        <Text className="text-center text-sm font-medium text-white">
-          Log out
-        </Text>
-      </TouchableOpacity>
+      <Button title="Log out" onPress={onSignOut} shape="square" />
+      <Button
+        title="Delete account"
+        variant="danger"
+        onPress={onDeleteAccountPress}
+        shape="square"
+      />
     </SafeAreaView>
   )
 }
