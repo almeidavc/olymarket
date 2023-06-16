@@ -5,7 +5,7 @@ import { TouchableOpacity, TouchableOpacityProps } from 'react-native'
 import { Icon } from '@expo/vector-icons/build/createIconSet'
 import { LoadingSpinner } from 'app/components/spinner'
 
-const buttonVariants = {
+export const buttonVariants = {
   primary:
     'inline-flex flex-row justify-center items-center text-white bg-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
   secondary:
@@ -14,13 +14,13 @@ const buttonVariants = {
     'inline-flex flex-row justify-center items-center text-white bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5',
 }
 
-const textVariants = {
+export const textVariants = {
   primary: 'text-white font-medium text-sm text-center',
   secondary: 'text-sky-700 font-medium text-sm text-center ',
   danger: 'text-white font-medium text-sm text-center',
 }
 
-const shapeVariants = {
+export const shapeVariants = {
   rounded: 'rounded-lg',
   square: 'rounded-none',
 }
@@ -65,7 +65,7 @@ const iconButtonVariants = {
     'text-sky-700 border border-sky-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 p-2.5',
 }
 
-const iconColorVariants = {
+export const iconColorVariants = {
   primary: 'white',
   secondary: '#0369a1',
 }

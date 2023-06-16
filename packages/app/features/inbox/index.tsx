@@ -10,6 +10,7 @@ import { Tag } from 'app/components/tag'
 import { PostStatus } from 'app/utils/enums'
 import { FlashList } from '@shopify/flash-list'
 import { Image } from 'app/design/image'
+import { FontAwesome5 } from '@expo/vector-icons'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
@@ -63,6 +64,21 @@ export function InboxScreen() {
       >
         <ChatCard chat={chat} />
       </TouchableOpacity>
+    )
+  }
+
+  if (!chats?.length) {
+    return (
+      <SafeAreaView>
+        <View className="mt-14 flex flex-col items-center p-4">
+          <FontAwesome5 name="comments" size={40} />
+          <Text className="mt-2 text-lg font-semibold">No chats yet</Text>
+          <Text className="mt-2 text-center text-gray-600">
+            You don't currently have any chats. Once you start a conversation,
+            your chat will appear here.
+          </Text>
+        </View>
+      </SafeAreaView>
     )
   }
 
