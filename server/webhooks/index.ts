@@ -1,6 +1,7 @@
 import { app } from '../app'
 import bodyParser from 'body-parser'
 import { prisma } from '../prisma'
+import { logger } from '../logger'
 
 app.use(bodyParser.json())
 app.post('/hook', async (req) => {
@@ -8,6 +9,7 @@ app.post('/hook', async (req) => {
   switch (event.type) {
     case 'user.created':
     case 'user.updated':
+      logger.info(`Received clerk event ${event.type}`)
       const user = event.data
       await prisma.user.upsert({
         where: {
@@ -26,6 +28,7 @@ app.post('/hook', async (req) => {
       })
       break
     case 'user.deleted':
+      logger.info(`Received clerk event ${event.type}`)
       if (!event.data.deleted) {
         return
       }
