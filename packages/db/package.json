@@ -2,7 +2,10 @@
   "name": "db",
   "packageManager": "yarn@3.4.1",
   "scripts": {
-    "reset": "prisma migrate reset && prisma db push"
+    "generate": "prisma generate",
+    "push": "prisma db push",
+    "reset": "prisma migrate reset && prisma db push",
+    "studio": "prisma studio"
   },
   "devDependencies": {
     "prisma": "^4.13.0"

@@ -24,6 +24,14 @@ enum PostStatus {
   SOLD
 }
 
+enum PostCategory {
+  CLOTHING_AND_ACCESSORIES
+  ELETRONICS
+  ENTERTAINMENT
+  HOBBIES
+  HOME
+}
+
 model User {
   id              String         @id
   username        String
@@ -36,6 +44,7 @@ model User {
 model Post {
   author        User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId      String
+  category      PostCategory
   createdAt     DateTime       @default(now())
   conversations Conversation[]
   description   String         @default("") @db.Text

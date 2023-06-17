@@ -1,6 +1,6 @@
 import { router, publicProcedure, protectedProcedure } from '../trpc'
 import { z } from 'zod'
-import { Zone, PostStatus } from '@prisma/client'
+import { Zone, PostStatus, PostCategory } from '@prisma/client'
 import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
 import { TRPCError } from '@trpc/server'
 import { assertIsModerator, isModerator } from '../utils/roles'
@@ -85,6 +85,7 @@ const listReported = protectedProcedure.query(async ({ ctx }) => {
 const create = protectedProcedure
   .input(
     z.object({
+      category: z.nativeEnum(PostCategory),
       images: z.string().array(),
       price: z.number().int(),
       title: z.string(),

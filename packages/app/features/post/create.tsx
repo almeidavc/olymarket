@@ -4,10 +4,9 @@ import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import * as ImagePicker from 'expo-image-picker'
 import { Modal, ScrollView } from 'react-native'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { trpc } from 'app/utils/trpc'
 import { uploadImages } from './upload-image'
-import { Zone, ZoneTitles } from 'app/utils/enums'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm } from 'react-hook-form'
 import { FormInput } from 'app/components/form'
@@ -17,6 +16,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { AntDesign } from '@expo/vector-icons'
 import { RadioButton } from 'app/components/radio'
 import { Image } from 'app/design/image'
+import {
+  Zone,
+  ZoneTitles,
+  PostCategory,
+  PostCategoryTitles,
+} from 'app/utils/enums'
 
 interface ImageSelectProps {
   imageUris: string[]
@@ -135,10 +140,18 @@ export function CreatePostScreen({ navigation, route }) {
 
   const { getValues, control, handleSubmit, setFocus, reset } = useForm()
 
-  const { zone } = route.params
+  const { category, zone } = route.params
+
+  useEffect(() => {
+    setShowCategoryMissingError(false)
+  }, [category])
+
   const [imageUris, setImageUris] = useState<string[]>([])
 
   const [showImagesHelperText, setShowImagesHelperText] = useState(false)
+  const [showCategoryMissingError, setShowCategoryMissingError] =
+    useState(false)
+
   const [isCreatePostLoading, setIsCreatePostLoading] = useState(false)
   const [showSuccessMessageModal, setShowSuccessMessageModal] = useState(false)
 
@@ -185,6 +198,7 @@ export function CreatePostScreen({ navigation, route }) {
         const { title, description, price } = getValues()
 
         createPostMutation({
+          category,
           title,
           description,
           zone,
@@ -205,11 +219,19 @@ export function CreatePostScreen({ navigation, route }) {
   }
 
   const onCreatePostPress = () => {
+    if (imageUris.length > 0 && category) {
+      setShowImagesHelperText(false)
+      setShowCategoryMissingError(false)
+      handleSubmit(onCreatePost)()
+      return
+    }
+
     if (imageUris.length === 0) {
       setShowImagesHelperText(true)
-    } else {
-      setShowImagesHelperText(false)
-      handleSubmit(onCreatePost)()
+    }
+
+    if (!category) {
+      setShowCategoryMissingError(true)
     }
   }
 
@@ -287,7 +309,30 @@ export function CreatePostScreen({ navigation, route }) {
           <View className="p-4">
             <TouchableOpacity
               className="flex h-8 flex-row items-center justify-between"
-              onPress={() => navigation.navigate('choose-zone', { zone })}
+              onPress={() => navigation.navigate('category', route.params)}
+            >
+              <Text className="text-sm font-medium text-gray-900">
+                Category
+              </Text>
+              <View className="flex flex-row items-center">
+                {showCategoryMissingError && (
+                  <Text className="mr-2 text-sm font-medium text-red-600">
+                    Choose a category
+                  </Text>
+                )}
+                {category && (
+                  <Text className="mr-2 text-sm font-medium text-gray-500">
+                    {PostCategoryTitles.get(category)}
+                  </Text>
+                )}
+                <AntDesign name="right" size={16} color="#6b7280" />
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View className="p-4">
+            <TouchableOpacity
+              className="flex h-8 flex-row items-center justify-between"
+              onPress={() => navigation.navigate('zone', route.params)}
             >
               <Text className="text-sm font-medium text-gray-900">
                 Location
@@ -340,6 +385,13 @@ export function CreatePostScreen({ navigation, route }) {
 const ChooseZoneModal = ({ navigation, route }) => {
   const { zone } = route.params
 
+  const onSelectZone = (zone: string) => {
+    navigation.navigate('create-post', {
+      ...route.params,
+      zone,
+    })
+  }
+
   return (
     <View className="px-4 py-2">
       {Object.keys(Zone).map((zoneKey) => (
@@ -347,7 +399,32 @@ const ChooseZoneModal = ({ navigation, route }) => {
           <RadioButton
             label={ZoneTitles.get(zoneKey as Zone)!}
             isSelected={zone === zoneKey}
-            select={() => navigation.navigate('create-post', { zone: zoneKey })}
+            select={() => onSelectZone(zoneKey)}
+          />
+        </View>
+      ))}
+    </View>
+  )
+}
+
+const ChooseCategoryModal = ({ navigation, route }) => {
+  const { category } = route.params
+
+  const onSelectCategory = (category: string) => {
+    navigation.navigate('create-post', {
+      ...route.params,
+      category,
+    })
+  }
+
+  return (
+    <View className="px-4 py-2">
+      {Object.keys(PostCategory).map((categoryKey) => (
+        <View key={categoryKey} className="w-full border-b border-gray-200">
+          <RadioButton
+            label={PostCategoryTitles.get(categoryKey as PostCategory)!}
+            isSelected={category === categoryKey}
+            select={() => onSelectCategory(categoryKey)}
           />
         </View>
       ))}
@@ -365,12 +442,17 @@ export function Post() {
         name="create-post"
         component={CreatePostScreen}
         options={{ headerShown: false }}
-        initialParams={{ zone: undefined }}
+        initialParams={{ category: undefined, zone: undefined }}
       />
       <Stack.Screen
-        name="choose-zone"
+        name="zone"
         component={ChooseZoneModal}
         options={{ presentation: 'modal', headerTitle: 'Location' }}
+      />
+      <Stack.Screen
+        name="category"
+        component={ChooseCategoryModal}
+        options={{ presentation: 'modal', headerTitle: 'Category' }}
       />
     </Stack.Navigator>
   )
