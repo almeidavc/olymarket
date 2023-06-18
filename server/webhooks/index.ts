@@ -6,29 +6,38 @@ import { logger } from '../logger'
 app.use(bodyParser.json())
 app.post('/hook', async (req) => {
   const event = req.body
+
+  logger.info('Received clerk event', event)
+
   switch (event.type) {
     case 'user.created':
     case 'user.updated':
-      logger.info(`Received clerk event ${event.type}`)
       const user = event.data
-      await prisma.user.upsert({
-        where: {
-          id: user.id,
-        },
-        create: {
-          id: user.id,
-          username: user.username,
-          profileImageUrl: user.profile_image_url,
-        },
-        update: {
-          id: user.id,
-          username: user.username,
-          profileImageUrl: user.profile_image_url,
-        },
-      })
+
+      try {
+        const res = await prisma.user.upsert({
+          where: {
+            id: user.id,
+          },
+          create: {
+            id: user.id,
+            username: user.username,
+            profileImageUrl: user.profile_image_url,
+          },
+          update: {
+            id: user.id,
+            username: user.username,
+            profileImageUrl: user.profile_image_url,
+          },
+        })
+        logger.info('Created or updated user in database', { id: res.id })
+        logger.debug('Created or updated user', res)
+      } catch (error) {
+        logger.error('Error while creating or updating user in database', error)
+      }
+
       break
     case 'user.deleted':
-      logger.info(`Received clerk event ${event.type}`)
       if (!event.data.deleted) {
         return
       }
@@ -36,17 +45,23 @@ app.post('/hook', async (req) => {
       const userId = event.data.id
 
       try {
-        await prisma.user.delete({
+        const res = await prisma.user.delete({
           where: {
             id: userId,
           },
         })
+        logger.info('Deleted user in database', { id: res.id })
+        logger.debug('Deleted user', res)
       } catch (error) {
         // catch error thrown when user does not exist
         if (error.code === 'P2025') {
+          logger.warn(
+            'Trying to delete an user that does not exist in database'
+          )
           return
         }
-        throw error
+
+        logger.warn('Could not delete user in database', error)
       }
   }
 })
