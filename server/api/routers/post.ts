@@ -83,27 +83,51 @@ const listReported = protectedProcedure.query(async ({ ctx }) => {
 })
 
 const search = publicProcedure
-  .input(z.object({ query: z.string() }))
+  .input(
+    z.object({
+      query: z.string().optional(),
+      categories: z.array(z.nativeEnum(PostCategory)).optional(),
+    })
+  )
   .query(async ({ ctx, input }) => {
+    let query
+
+    if (input.query) {
+      query = {
+        multi_match: {
+          query: input.query,
+          fields: ['title^2', 'description', 'author.username'],
+          fuzziness: 'auto',
+          operator: 'or',
+        },
+      }
+    } else {
+      query = {
+        match_all: {},
+      }
+    }
+
+    const filters = []
+
+    if (input.categories?.length) {
+      filters.push({
+        terms: {
+          'category.keyword': input.categories,
+        },
+      })
+    }
+
     const res = await ctx.elastic.search({
       index: 'posts_idx',
       body: {
         query: {
           bool: {
-            must: [
-              {
-                multi_match: {
-                  query: input.query,
-                  fields: ['title^2', 'description', 'author.username'],
-                  fuzziness: 'auto',
-                  operator: 'or',
-                },
-              },
-            ],
+            must: [query],
             filter: [
+              ...filters,
               {
-                match: {
-                  status: PostStatus.CREATED,
+                term: {
+                  'status.keyword': PostStatus.CREATED,
                 },
               },
             ],

@@ -49,7 +49,7 @@ export const Button: React.FC<ButtonProps> = ({
       >
         {loading && (
           <View className="mr-3">
-            <LoadingSpinner />
+            <LoadingSpinner color="white" />
           </View>
         )}
         <Text className={textVariants[variant]}>{title}</Text>
