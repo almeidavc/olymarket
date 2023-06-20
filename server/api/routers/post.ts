@@ -82,6 +82,39 @@ const listReported = protectedProcedure.query(async ({ ctx }) => {
   })
 })
 
+const search = publicProcedure
+  .input(z.object({ query: z.string() }))
+  .query(async ({ ctx, input }) => {
+    const res = await ctx.elastic.search({
+      index: 'posts_idx',
+      body: {
+        query: {
+          bool: {
+            must: [
+              {
+                multi_match: {
+                  query: input.query,
+                  fields: ['title^2', 'description', 'author.username'],
+                  fuzziness: 'auto',
+                  operator: 'or',
+                },
+              },
+            ],
+            filter: [
+              {
+                match: {
+                  status: PostStatus.CREATED,
+                },
+              },
+            ],
+          },
+        },
+      },
+    })
+
+    return res.body.hits.hits.map((doc) => doc._source)
+  })
+
 const create = protectedProcedure
   .input(
     z.object({
@@ -213,6 +246,7 @@ export const postRouter = router({
   list,
   listMine,
   listReported,
+  search,
   create,
   remove,
   markAsSold,

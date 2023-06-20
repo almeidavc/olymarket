@@ -16,7 +16,7 @@ export function PostScreen({ route }) {
 
   const { userId, isSignedIn } = useAuth()
 
-  const { context: ctx, postId } = route.params
+  const { postId } = route.params
 
   const { data: post } = trpc.post.getById.useQuery(postId)
 
@@ -30,6 +30,8 @@ export function PostScreen({ route }) {
   const { mutate: removePostMutation, isLoading: isRemovePostLoading } =
     trpc.post.remove.useMutation({
       onSuccess: (removedPost) => {
+        context.post.search.invalidate()
+
         context.post.list.invalidate()
         context.post.listMine.setData(undefined, (oldPosts) => {
           if (oldPosts) {
@@ -109,7 +111,7 @@ export function PostScreen({ route }) {
       return
     }
 
-    router.push(`/post/${postId}/report`)
+    router.push(`/report/${postId}`)
   }
 
   if (!post) {
@@ -158,7 +160,7 @@ export function PostScreen({ route }) {
             <Text>{post.description}</Text>
           </View>
         )}
-        {(userId === post.authorId || ctx === 'moderate') && (
+        {userId === post.authorId && (
           <View className="p-4">
             <Button
               loading={isRemovePostLoading}
@@ -168,7 +170,7 @@ export function PostScreen({ route }) {
             />
           </View>
         )}
-        {userId !== post.authorId && ctx !== 'moderate' && (
+        {userId !== post.authorId && (
           <View className="p-4">
             <Button
               variant="secondary"
@@ -177,7 +179,7 @@ export function PostScreen({ route }) {
             />
           </View>
         )}
-        {ctx === 'moderate' && (
+        {/* {ctx === 'moderate' && (
           <View className="p-4">
             <Button
               variant="danger"
@@ -187,7 +189,7 @@ export function PostScreen({ route }) {
               }}
             />
           </View>
-        )}
+        )} */}
       </View>
     </ScrollView>
   )

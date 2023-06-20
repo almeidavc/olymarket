@@ -3,6 +3,7 @@ import { ChatScreen } from 'app/features/chat'
 import { ChatScreenHeader } from 'app/features/chat/header'
 import { Onboarding } from 'app/features/onboarding'
 import { Tabs } from './tabs'
+import { ReportPostScreen } from 'app/features/post/report'
 
 const Stack = createNativeStackNavigator()
 
@@ -27,6 +28,11 @@ export function RootNavigator() {
               <ChatScreenHeader chatId={route.params.chatId} />
             ),
           })}
+        />
+        <Stack.Screen
+          name="report"
+          component={ReportPostScreen}
+          options={{ headerTitle: 'Report post' }}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>

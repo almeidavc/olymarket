@@ -1,10 +1,10 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { FeedScreen } from './feed'
 import { PostScreen } from '../post/post'
+import { SearchScreen } from './search'
 
 const Stack = createNativeStackNavigator()
 
-export function Home() {
+export function Search() {
   return (
     <Stack.Navigator
       initialRouteName="feed"
@@ -12,7 +12,7 @@ export function Home() {
     >
       <Stack.Screen
         name="feed"
-        component={FeedScreen}
+        component={SearchScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

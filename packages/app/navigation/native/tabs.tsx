@@ -3,14 +3,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
 import { Profile } from 'app/features/profile'
-import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import { InboxScreen } from 'app/features/inbox'
 import { useAuth } from '@clerk/clerk-expo'
+import { Search } from 'app/features/search'
 
 const protectedRoutes = ['post', 'chats', 'profile']
 
 const tabIcons = {
   home: 'home',
+  search: 'search',
   post: 'plus',
   profile: 'user',
   chats: 'comments',
@@ -50,13 +51,12 @@ export function Tabs({ navigation }) {
       <Tab.Screen
         name="home"
         component={Home}
-        options={({ route }) => {
-          const routeName = getFocusedRouteNameFromRoute(route) ?? 'feed'
-          return {
-            headerShown: false,
-            tabBarLabel: 'Home',
-          }
-        }}
+        options={{ headerShown: false, tabBarLabel: 'Home' }}
+      />
+      <Tab.Screen
+        name="search"
+        component={Search}
+        options={{ headerShown: false, tabBarLabel: 'Search' }}
       />
       <Tab.Screen
         name="post"

@@ -21,9 +21,9 @@ export function NavigationProvider({
                     screens: {
                       feed: '',
                       post: 'post/:postId',
-                      report: 'post/:postId/report',
                     },
                   },
+                  search: 'search',
                   post: 'post',
                   chats: {
                     path: 'chats',
@@ -47,6 +47,8 @@ export function NavigationProvider({
               },
 
               chat: 'chat/:chatId',
+
+              report: 'report/:postId',
 
               onboarding: {
                 screens: {

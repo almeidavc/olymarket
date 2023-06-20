@@ -46,6 +46,7 @@ model Post {
   authorId      String
   category      PostCategory
   createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   conversations Conversation[]
   description   String         @default("") @db.Text
   id            String         @id @default(cuid())

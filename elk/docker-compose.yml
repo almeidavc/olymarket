@@ -1,0 +1,47 @@
+version: '3.0'
+
+services:
+  elasticsearch:
+    container_name: es01-node
+    image: elasticsearch:7.17.10
+    environment:
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - 'discovery.type=single-node'
+    networks:
+      - es-net
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kibana
+    image: kibana:7.17.10
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01-node:9200
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+  logstash:
+    container_name: logstash
+    image: logstash:7.17.10
+    environment:
+      - xpack.monitoring.enabled=false
+      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - ELASTICSEARCH_HOSTS=http://es01-node:9200
+    volumes:
+      - './pipeline/:/usr/share/logstash/pipeline/'
+      - '${MYSQL_CONNECTOR_PATH}:/usr/share/logstash/logstash-core/lib/jars/mysql-connector.jar'
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch
+      - kibana
+
+networks:
+  es-net:
+    driver: bridge

@@ -4,14 +4,20 @@ import { Image } from 'app/design/image'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 import { Link } from 'solito/link'
+import { TouchableWithoutFeedback } from 'react-native'
+import { useNavigation } from '@react-navigation/native'
 
 interface PostCardProps {
   post: inferProcedureOutput<AppRouter['post']['list']>[number]
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const navigation = useNavigation()
+
   return (
-    <Link href={`/post/${post.id}`}>
+    <TouchableWithoutFeedback
+      onPress={() => navigation.navigate('post', { postId: post.id })}
+    >
       <View className="flex h-full flex-col rounded-lg border border-gray-300 bg-white shadow">
         <View className="flex-1">
           <Image
@@ -37,7 +43,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           </Text>
         </View>
       </View>
-    </Link>
+    </TouchableWithoutFeedback>
   )
 }
 
