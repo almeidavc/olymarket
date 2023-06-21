@@ -20,7 +20,7 @@ export function ProfileTabs() {
       <Tab.Screen
         name="selling"
         component={SellingScreen}
-        options={{ tabBarLabel: 'Selling' }}
+        options={{ tabBarLabel: 'My posts' }}
       />
       <Tab.Screen
         name="account"
@@ -35,7 +35,10 @@ export function Profile() {
   return (
     <Stack.Navigator
       initialRouteName="selling"
-      screenOptions={{ headerTintColor: 'black' }}
+      screenOptions={{
+        headerTintColor: 'black',
+        contentStyle: { backgroundColor: 'white' },
+      }}
     >
       <Stack.Screen
         name="profile-tabs"

@@ -10,10 +10,9 @@ import { uploadImages } from './upload-image'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { useForm } from 'react-hook-form'
 import { FormInput } from 'app/components/form'
-import ContextMenu from 'react-native-context-menu-view'
+import { AntDesign } from '@expo/vector-icons'
 import { Button, IconButton } from 'app/components/button'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { AntDesign } from '@expo/vector-icons'
 import { RadioButton } from 'app/components/radio'
 import { Image } from 'app/design/image'
 import {
@@ -64,7 +63,9 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
   }
 
   return (
-    <View className="h-[260px] bg-gray-200">
+    <View
+      className={`${showHelperText ? 'bg-red-50' : 'bg-background'} h-[260px]`}
+    >
       {imageUris.length ? (
         <View className="space-between flex h-full flex-col">
           <Text className="mt-4 w-full text-center text-xs font-semibold text-gray-500">
@@ -78,19 +79,10 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
                   index === selectionLimit - 1 ? 'mr-4' : ''
                 }`}
               >
-                <ContextMenu
-                  actions={[
-                    {
-                      title: 'Set as main photo',
-                    },
-                  ]}
-                  onPress={() => setAsMainImage(imageUri, index)}
-                >
-                  <Image
-                    className="h-[180px] w-[180px] rounded-lg"
-                    source={{ uri: imageUri }}
-                  />
-                </ContextMenu>
+                <Image
+                  className="h-[180px] w-[180px] rounded-lg"
+                  source={{ uri: imageUri }}
+                />
                 <View className="absolute right-0 top-0 -mr-[10px] -mt-[10px]">
                   <IconButton
                     size={16}
@@ -118,8 +110,24 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
           className="relative flex h-full items-center justify-center"
           onPress={pickImages}
         >
-          <MaterialCommunityIcons name="image-plus" size={60} color="#6b7280" />
-          <Text className="mt-2 text-sm font-semibold text-gray-500">
+          {showHelperText ? (
+            <AntDesign
+              name={'exclamationcircleo'}
+              size={60}
+              color={'#dc2626'}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name={'image-plus'}
+              size={60}
+              color={'#6b7280'}
+            />
+          )}
+          <Text
+            className={`mt-2 text-sm font-semibold ${
+              showHelperText ? 'text-red-600' : 'text-gray-500'
+            }`}
+          >
             Add images
           </Text>
           {showHelperText && (
@@ -142,10 +150,6 @@ export function CreatePostScreen({ navigation, route }) {
 
   const { category, zone } = route.params
 
-  useEffect(() => {
-    setShowCategoryMissingError(false)
-  }, [category])
-
   const [imageUris, setImageUris] = useState<string[]>([])
 
   const [showImagesHelperText, setShowImagesHelperText] = useState(false)
@@ -154,6 +158,16 @@ export function CreatePostScreen({ navigation, route }) {
 
   const [isCreatePostLoading, setIsCreatePostLoading] = useState(false)
   const [showSuccessMessageModal, setShowSuccessMessageModal] = useState(false)
+
+  useEffect(() => {
+    setShowCategoryMissingError(false)
+  }, [category])
+
+  useEffect(() => {
+    if (imageUris.length) {
+      setShowImagesHelperText(false)
+    }
+  }, [imageUris])
 
   const context = trpc.useContext()
 
@@ -219,16 +233,12 @@ export function CreatePostScreen({ navigation, route }) {
   }
 
   const onCreatePostPress = () => {
-    if (imageUris.length > 0 && category) {
-      setShowImagesHelperText(false)
-      setShowCategoryMissingError(false)
-      handleSubmit(onCreatePost)()
+    if (imageUris.length === 0) {
+      setShowImagesHelperText(true)
       return
     }
 
-    if (imageUris.length === 0) {
-      setShowImagesHelperText(true)
-    }
+    handleSubmit(onCreatePost)()
 
     if (!category) {
       setShowCategoryMissingError(true)
@@ -264,7 +274,7 @@ export function CreatePostScreen({ navigation, route }) {
           selectionLimit={10}
           showHelperText={showImagesHelperText}
         />
-        <View className="flex flex-col divide-y divide-gray-300">
+        <View className="divide-background flex flex-col divide-y">
           <View className="flex flex-col p-4">
             <View>
               <FormInput
@@ -305,8 +315,31 @@ export function CreatePostScreen({ navigation, route }) {
                 }}
               />
             </View>
+            <View>
+              <FormInput
+                name="price"
+                label="Price"
+                control={control}
+                rules={{
+                  required: 'A price is required.',
+                  pattern: {
+                    value: /^[0-9]+$/,
+                    message: 'Price can only consist of digits.',
+                  },
+                  maxLength: {
+                    value: 4,
+                    message: 'The maximum price is 9999.',
+                  },
+                }}
+                textInput={{
+                  placeholder: '0',
+                  inputMode: 'numeric',
+                  returnKeyType: 'done',
+                }}
+              />
+            </View>
           </View>
-          <View className="p-4">
+          <View className="mx-4 py-4">
             <TouchableOpacity
               className="flex h-8 flex-row items-center justify-between"
               onPress={() => navigation.navigate('category', route.params)}
@@ -316,7 +349,7 @@ export function CreatePostScreen({ navigation, route }) {
               </Text>
               <View className="flex flex-row items-center">
                 {showCategoryMissingError && (
-                  <Text className="mr-2 text-sm font-medium text-red-600">
+                  <Text className="mr-2 text-sm text-red-600">
                     Choose a category
                   </Text>
                 )}
@@ -329,7 +362,7 @@ export function CreatePostScreen({ navigation, route }) {
               </View>
             </TouchableOpacity>
           </View>
-          <View className="p-4">
+          <View className="mx-4 py-4">
             <TouchableOpacity
               className="flex h-8 flex-row items-center justify-between"
               onPress={() => navigation.navigate('zone', route.params)}
@@ -346,29 +379,6 @@ export function CreatePostScreen({ navigation, route }) {
                 <AntDesign name="right" size={16} color="#6b7280" />
               </View>
             </TouchableOpacity>
-          </View>
-          <View className="p-4">
-            <FormInput
-              name="price"
-              label="Price"
-              control={control}
-              rules={{
-                required: 'A price is required.',
-                pattern: {
-                  value: /^[0-9]+$/,
-                  message: 'Price can only consist of digits.',
-                },
-                maxLength: {
-                  value: 4,
-                  message: 'The maximum price is 9999.',
-                },
-              }}
-              textInput={{
-                placeholder: '0',
-                inputMode: 'numeric',
-                returnKeyType: 'done',
-              }}
-            />
           </View>
         </View>
         <Button
@@ -393,9 +403,9 @@ const ChooseZoneModal = ({ navigation, route }) => {
   }
 
   return (
-    <View className="px-4 py-2">
+    <View>
       {Object.keys(Zone).map((zoneKey) => (
-        <View key={zoneKey} className="w-full border-b border-gray-200">
+        <View key={zoneKey} className="w-full border-b border-gray-300 px-4">
           <RadioButton
             label={ZoneTitles.get(zoneKey as Zone)!}
             isSelected={zone === zoneKey}
@@ -418,9 +428,12 @@ const ChooseCategoryModal = ({ navigation, route }) => {
   }
 
   return (
-    <View className="px-4 py-2">
+    <View>
       {Object.keys(PostCategory).map((categoryKey) => (
-        <View key={categoryKey} className="w-full border-b border-gray-200">
+        <View
+          key={categoryKey}
+          className="w-full border-b border-gray-300 px-4"
+        >
           <RadioButton
             label={PostCategoryTitles.get(categoryKey as PostCategory)!}
             isSelected={category === categoryKey}
@@ -436,7 +449,10 @@ export function Post() {
   return (
     <Stack.Navigator
       initialRouteName="create-post"
-      screenOptions={{ headerTintColor: 'black' }}
+      screenOptions={{
+        headerTintColor: 'black',
+        contentStyle: { backgroundColor: 'white' },
+      }}
     >
       <Stack.Screen
         name="create-post"

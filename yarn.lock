@@ -5143,6 +5143,7 @@ __metadata:
     nativewind: 2.0.9
     react-hook-form: ^7.43.9
     react-native-confirmation-code-field: ^7.3.1
+    react-native-heroicons: ^3.2.0
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-pager-view: ^6.2.0
     react-native-root-siblings: ^4.1.1
@@ -7799,6 +7800,7 @@ __metadata:
     expo-secure-store: ~12.1.1
     expo-splash-screen: ~0.18.2
     expo-status-bar: ~1.4.4
+    expo-system-ui: ~2.2.1
     expo-web-browser: ~12.1.1
     react: 18.2.0
     react-dom: 18.2.0
@@ -8057,6 +8059,18 @@ __metadata:
   version: 1.4.4
   resolution: "expo-status-bar@npm:1.4.4"
   checksum: 8d36b821ff2804aed3158f339cc396f0525f365763913881b9b11e6e85e83f21ddbc3a2ede660ae8ce6d6df1a6cda825ad996c3c45f195cbc89091da7605f7e0
+  languageName: node
+  linkType: hard
+
+"expo-system-ui@npm:~2.2.1":
+  version: 2.2.1
+  resolution: "expo-system-ui@npm:2.2.1"
+  dependencies:
+    "@react-native/normalize-color": ^2.0.0
+    debug: ^4.3.2
+  peerDependencies:
+    expo: "*"
+  checksum: 5ea05eac2468944459072b41cbe60675d8803dfe6617045a4e516dc5158665d40eb023c19e19fb593c7c4d4140ca3bd11790b357682ec61280ccddfc7d53dbf0
   languageName: node
   linkType: hard
 
@@ -12958,6 +12972,16 @@ __metadata:
   version: 0.71.18
   resolution: "react-native-gradle-plugin@npm:0.71.18"
   checksum: 19f0a41e29c9210ff495010aaa612f2c2f4f5f937b6c20266c8dc62f4ccedc65bb7576de59b2f3fd2bb8044ce9785e56673879f2eb452f948e6659a5e1fa5894
+  languageName: node
+  linkType: hard
+
+"react-native-heroicons@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "react-native-heroicons@npm:3.2.0"
+  peerDependencies:
+    react: ">=16.8"
+    react-native-svg: ">=9"
+  checksum: 3d361548ce5ca62569312350adf0a5c957f33152aa05412971fdc60648a31cbc250f1be07376cee8c2535643ec107933f9c54dab44cf4649f91a089b0b737179
   languageName: node
   linkType: hard
 

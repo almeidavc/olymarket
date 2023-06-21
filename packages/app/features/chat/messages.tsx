@@ -1,5 +1,5 @@
 import { View } from 'app/design/core'
-import { Text } from 'app/design/typography'
+import { Text, Caption } from 'app/design/typography'
 import { FlatList } from 'react-native'
 import { useAuth } from '@clerk/clerk-expo'
 import dayjs from 'dayjs'
@@ -34,19 +34,17 @@ export const ChatMessages = React.forwardRef<FlatList, ChatMessagesProps>(
           <View
             className={`flex max-w-[80%] flex-col rounded-xl p-2 ${backgroundColor} ${crossAxisAlignment}`}
           >
-            <Text className={`flex-1 text-base ${textColor}`}>
-              {message.content}
-            </Text>
-            <Text className={`text-xs ${textColor}`}>
+            <Text className={`flex-1 ${textColor}`}>{message.content}</Text>
+            <Caption className={`${textColor}`}>
               {dayjs(message.createdAt).format('HH:mm')}
-            </Text>
+            </Caption>
           </View>
         </View>
       )
     }
 
     return (
-      <View className="flex-1 bg-stone-200">
+      <View className="bg-background flex-1">
         <FlatList
           ref={ref}
           inverted={true}

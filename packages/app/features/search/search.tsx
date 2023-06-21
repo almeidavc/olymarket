@@ -1,6 +1,6 @@
-import { FlatList, SafeAreaView } from 'react-native'
 import { PostList } from '../post/post-list'
 import { View, TextInput, TouchableOpacity } from 'app/design/core'
+import { SafeAreaView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
 import Svg, { Path } from 'react-native-svg'
 import { useState } from 'react'
@@ -8,9 +8,9 @@ import { Placeholder } from 'app/components/placeholder'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Text } from 'app/design/typography'
 import { Keyboard } from 'react-native'
-import { PostCategory, PostCategoryTitles } from 'app/utils/enums'
+import { PostCategory } from 'app/utils/enums'
 import { LoadingSpinner } from 'app/components/spinner'
-import { Tag } from 'app/components/tag'
+import { CategoriesList } from './categories'
 
 export function SearchScreen() {
   const [searchInput, setSearchInput] = useState<string>()
@@ -47,74 +47,63 @@ export function SearchScreen() {
 
   return (
     <SafeAreaView>
-      <View className="border-b border-gray-300 p-4 pb-3">
-        <View className="mb-3 flex flex-row items-center">
-          <View className="relative grow">
-            <View className="absolute inset-y-0 left-0 z-10 flex flex-row items-center pl-4">
-              <Svg
-                width={20}
-                height={20}
-                fill="none"
-                stroke="black"
-                viewBox="0 0 24 24"
-              >
-                <Path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </Svg>
-            </View>
-            <TextInput
-              value={searchInput}
-              onChangeText={setSearchInput}
-              className="block w-full rounded-full border border-gray-300 bg-gray-50 p-2.5 pl-10 text-[17px] text-gray-900"
-              placeholder="Search posts"
-              returnKeyType="search"
-              onFocus={() => setIsSearchInputFocused(true)}
-              onBlur={() => setIsSearchInputFocused(false)}
-              onSubmitEditing={onSearch}
-            />
+      <View className="mx-4 my-6 flex flex-row items-center">
+        <View className="relative grow">
+          <View className="absolute inset-y-0 left-0 z-10 flex flex-row items-center pl-4">
+            <Svg
+              width={20}
+              height={20}
+              fill="none"
+              stroke="black"
+              viewBox="0 0 24 24"
+            >
+              <Path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </Svg>
           </View>
-          {isSearchInputFocused && (
-            <TouchableOpacity className="ml-2" onPress={onCancel}>
-              <Text>Cancel</Text>
-            </TouchableOpacity>
-          )}
+          <TextInput
+            value={searchInput}
+            onChangeText={setSearchInput}
+            className="bg-background rounded-full p-2.5 pl-11 text-[17px]"
+            placeholder="Search posts"
+            returnKeyType="search"
+            onFocus={() => setIsSearchInputFocused(true)}
+            onBlur={() => setIsSearchInputFocused(false)}
+            onSubmitEditing={onSearch}
+          />
         </View>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={Object.keys(PostCategory)}
-          keyExtractor={(category) => category}
-          renderItem={({ item: category }) => {
-            const isSelected = selectedCategories.includes(category)
-            return (
-              <TouchableOpacity onPress={() => onPressCategory(category)}>
-                <Tag
-                  textClassName="mr-2 rounded px-3 py-2"
-                  label={PostCategoryTitles.get(category)}
-                  color={isSelected ? 'blue' : 'neutral'}
-                />
-              </TouchableOpacity>
-            )
-          }}
+        {isSearchInputFocused && (
+          <TouchableOpacity className="ml-2" onPress={onCancel}>
+            <Text>Cancel</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+      <View className="mb-4 ml-4">
+        <CategoriesList
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
         />
       </View>
-      {isLoading && (
+      {isLoading ? (
         <View className="mt-32 flex items-center">
           <LoadingSpinner size={40} />
         </View>
-      )}
-      {!isLoading && posts?.length ? <PostList posts={posts} /> : null}
-      {!isLoading && !posts?.length ? (
-        <Placeholder
-          icon={<MaterialIcons name="search-off" size={40} color="black" />}
-          title="No posts found"
-          description="We couldn't find any posts that match your search."
+      ) : (
+        <PostList
+          posts={posts}
+          ListEmptyComponent={
+            <Placeholder
+              icon={<MaterialIcons name="search-off" color="black" />}
+              title="No posts found"
+              description="We couldn't find any posts that match your search."
+            />
+          }
         />
-      ) : null}
+      )}
     </SafeAreaView>
   )
 }

@@ -18,24 +18,21 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <TouchableWithoutFeedback
       onPress={() => navigation.navigate('post', { postId: post.id })}
     >
-      <View className="flex h-full flex-col rounded-lg border border-gray-300 bg-white shadow">
+      <View className="flex h-full flex-col rounded-t-md">
         <View className="flex-1">
           <Image
-            className="h-full w-full rounded-t-lg"
+            className="h-full w-full rounded-md"
             resizeMode="cover"
             source={{
               uri: post.images![0]?.url,
             }}
           />
         </View>
-        <View className="p-2">
-          <Text
-            className="text-lg tracking-tight text-gray-600"
-            numberOfLines={1}
-          >
+        <View>
+          <Text className="mt-2" numberOfLines={1}>
             {post.title}
           </Text>
-          <Text className="font-bold text-sky-900">
+          <Text className="mt-1">
             {post.price.toLocaleString('en-US', {
               style: 'currency',
               currency: 'EUR',

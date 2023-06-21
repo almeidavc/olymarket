@@ -27,21 +27,36 @@ const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
   })
 })
 
-const list = publicProcedure.query(({ ctx }) => {
-  return ctx.prisma.post.findMany({
-    where: {
-      status: {
-        notIn: [PostStatus.REMOVED, PostStatus.SOLD],
+const list = publicProcedure
+  .input(
+    z
+      .object({
+        categories: z.array(z.nativeEnum(PostCategory)),
+      })
+      .optional()
+  )
+  .query(({ ctx, input }) => {
+    const categories = input?.categories.length
+      ? input.categories
+      : Object.keys(PostCategory)
+
+    return ctx.prisma.post.findMany({
+      where: {
+        category: {
+          in: categories,
+        },
+        status: {
+          notIn: [PostStatus.REMOVED, PostStatus.SOLD],
+        },
       },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    include: {
-      images: true,
-    },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        images: true,
+      },
+    })
   })
-})
 
 const listMine = protectedProcedure.query(({ ctx }) => {
   return ctx.prisma.post.findMany({

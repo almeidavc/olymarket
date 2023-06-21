@@ -43,7 +43,7 @@ export function SendFeedbackScreen() {
             multiline: true,
             style: { height: 300 },
             placeholder:
-              'Are you enjoying the app? We would love to hear what you think.',
+              'Are you enjoying Olymarket? We would love to hear what you think.',
           }}
         />
         <Button

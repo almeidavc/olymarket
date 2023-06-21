@@ -10,7 +10,7 @@ import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 import { useHeaderHeight } from '@react-navigation/elements'
 import { IconButton } from 'app/components/button'
-import { SafeAreaView } from 'app/design/core'
+import { SafeAreaView } from 'react-native'
 import { ChatMessages, MessageBasic } from './messages'
 import { FlatList } from 'react-native'
 
@@ -136,22 +136,22 @@ export function ChatScreen({ route }) {
             messages={[...pendingMessages, ...(messages ?? [])]}
           />
           <View className="flex flex-row items-end border-t-[0.5px] border-gray-300 px-4 py-2">
-            <View className="mr-3 flex-1">
+            <View className="mr-2 flex-1">
               <TextInput
                 value={input}
                 onChangeText={setInput}
                 maxLength={2 ** 16 - 1}
                 multiline={true}
                 enablesReturnKeyAutomatically={true}
-                className="rounded-lg border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                className="bg-background rounded-lg px-4 py-2.5 text-lg leading-[20px] text-gray-900 focus:border-blue-500 focus:ring-blue-500"
+                placeholder="Send a message..."
               />
             </View>
             <IconButton
-              size={16}
+              size={17}
               disabled={!input}
-              variant={input ? 'primary' : 'secondary'}
+              variant={input ? 'primary' : 'disabled'}
               onPress={onSendMessagePress}
-              textClassName="p-2"
               icon={<FontAwesome5 name="paper-plane" />}
             />
           </View>

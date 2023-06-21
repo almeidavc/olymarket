@@ -1,5 +1,6 @@
-import { View, TouchableOpacity, SafeAreaView } from 'app/design/core'
-import { Text } from 'app/design/typography'
+import { View, TouchableOpacity } from 'app/design/core'
+import { SafeAreaView } from 'react-native'
+import { Text, Title, Caption } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
 import { useRouter } from 'solito/router'
 import { AppRouter } from 'server/api/routers'
@@ -17,7 +18,7 @@ type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
 const ChatCard = ({ chat }: { chat: Chat }) => {
   return (
-    <View className="flex h-24 flex-row items-center border-b border-gray-300 p-4">
+    <View className="border-b-0.5 flex h-24 flex-row items-center border-[#d8d8d8] p-4">
       <Image
         className="mr-4 h-12 w-12 rounded-full"
         source={{ uri: chat.partner?.profileImageUrl }}
@@ -25,14 +26,14 @@ const ChatCard = ({ chat }: { chat: Chat }) => {
       <View className="flex h-full flex-1 flex-col justify-start">
         <View className="mb-0.5 flex flex-row justify-between">
           <Text>{chat.partner?.username}</Text>
-          <Text className="text-gray-600">
+          <Caption className="text-gray-600">
             {dayjs().to(dayjs(chat.conversation.messages[0]?.createdAt))}
-          </Text>
+          </Caption>
         </View>
         <View className="mb-0.5 flex flex-row items-center justify-between">
-          <Text className="w-9/12 text-lg" numberOfLines={1}>
+          <Title className="w-9/12" numberOfLines={1}>
             {chat?.post?.title}
-          </Text>
+          </Title>
           {chat.post.status === PostStatus.REMOVED && (
             <View>
               <Tag label="Deleted" color="red" />
@@ -73,7 +74,7 @@ export function InboxScreen() {
       <SafeAreaView>
         <Placeholder
           title="No chats yet"
-          icon={<FontAwesome5 name="comments" size={40} />}
+          icon={<FontAwesome5 name="comments" />}
           description="You don't currently have any chats. Once you start a conversation, your chat will appear here."
         />
       </SafeAreaView>
@@ -81,7 +82,7 @@ export function InboxScreen() {
   }
 
   return (
-    <SafeAreaView>
+    <SafeAreaView className="bg-white">
       <View className="h-full">
         <FlashList
           data={chats}

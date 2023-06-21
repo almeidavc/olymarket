@@ -8,7 +8,10 @@ export function Home() {
   return (
     <Stack.Navigator
       initialRouteName="feed"
-      screenOptions={{ headerTintColor: 'black' }}
+      screenOptions={{
+        headerTintColor: 'black',
+        contentStyle: { backgroundColor: 'white' },
+      }}
     >
       <Stack.Screen
         name="feed"

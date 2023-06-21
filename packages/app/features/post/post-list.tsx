@@ -5,13 +5,14 @@ import { useWindowDimensions } from 'react-native'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
 
-interface PostListProps {
-  posts: inferProcedureOutput<AppRouter['post']['list']> | undefined
-  header?: FlashListProps<any>['ListHeaderComponent']
-  refreshControl?: FlashListProps<any>['refreshControl']
+type Post = inferProcedureOutput<AppRouter['post']['list']>[number]
+
+interface PostListProps
+  extends Omit<FlashListProps<Post>, 'data' | 'renderItem'> {
+  posts: Post[] | undefined
 }
 
-export function PostList({ posts, header, refreshControl }: PostListProps) {
+export function PostList({ posts, ...props }: PostListProps) {
   const { height } = useWindowDimensions()
 
   const renderItem = ({ item: post, index }) => {
@@ -33,8 +34,7 @@ export function PostList({ posts, header, refreshControl }: PostListProps) {
         estimatedItemSize={0.35 * height}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={header}
-        refreshControl={refreshControl}
+        {...props}
       />
     </View>
   )

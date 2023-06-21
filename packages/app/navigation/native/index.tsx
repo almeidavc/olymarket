@@ -13,7 +13,10 @@ export function RootNavigator() {
     <Stack.Navigator
       id="root"
       initialRouteName="tabs"
-      screenOptions={{ headerTintColor: 'black' }}
+      screenOptions={{
+        headerTintColor: 'black',
+        contentStyle: { backgroundColor: 'white' },
+      }}
     >
       <Stack.Group>
         <Stack.Screen

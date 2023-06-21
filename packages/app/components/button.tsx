@@ -60,14 +60,17 @@ export const Button: React.FC<ButtonProps> = ({
 
 const iconButtonVariants = {
   primary:
-    'text-white bg-sky-700 border border-transparent font-medium text-sm text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 p-2.5',
+    'bg-sky-700 border border-transparent font-medium text-sm text-center inline-flex items-center p-2.5',
   secondary:
-    'text-sky-700 border border-sky-700 font-medium text-sm text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500 p-2.5',
+    'border border-sky-700 font-medium text-sm text-center inline-flex items-center p-2.5',
+  disabled:
+    'bg-background border border-transparent font-medium text-sm text-center inline-flex items-center p-2.5',
 }
 
 export const iconColorVariants = {
   primary: 'white',
   secondary: '#0369a1',
+  disabled: '#9ca3af',
 }
 
 const iconButtonShapes = {
@@ -79,7 +82,7 @@ interface IconButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   icon: Icon<any, any>
   size?: number
   shape?: 'circle' | 'square'
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'disabled'
   textClassName?: string
 }
 

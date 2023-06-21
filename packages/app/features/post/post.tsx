@@ -1,9 +1,9 @@
 import { View } from 'app/design/core'
-import { Text } from 'app/design/typography'
+import { Text, Title, Caption } from 'app/design/typography'
 import { ScrollView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
 import { FontAwesome5 } from '@expo/vector-icons'
-import { PostStatus, ZoneTitles } from 'app/utils/enums'
+import { PostCategoryTitles, PostStatus, ZoneTitles } from 'app/utils/enums'
 import { useRouter } from 'solito/router'
 import { useAuth } from '@clerk/clerk-expo'
 import dayjs from 'app/utils/dayjs'
@@ -121,8 +121,8 @@ export function PostScreen({ route }) {
   return (
     <ScrollView>
       <ImageSlider imageUris={post.images.map((img) => img.url)} />
-      <View className="divide-y divide-gray-300">
-        <View className="flex flex-row items-center justify-between p-4">
+      <View className="px-4">
+        <View className="border-background flex flex-row items-center justify-between border-b py-4">
           <View className="flex flex-row items-center">
             <Image
               className="mr-3 h-12 w-12 rounded-full"
@@ -130,30 +130,32 @@ export function PostScreen({ route }) {
             />
             <View>
               <Text className="mb-1">{post.author.username}</Text>
-              <Text className="text-gray-600">
-                {dayjs().to(dayjs(post?.createdAt))}
-              </Text>
+              <Caption>{dayjs().to(dayjs(post?.createdAt))}</Caption>
             </View>
           </View>
           {userId !== post.authorId && (
             <Button title="Contact seller" onPress={onContactButtonPress} />
           )}
         </View>
-        <View className="p-4">
-          <Text className="mb-1 text-xl">{post.title}</Text>
-          <Text className="mb-1 text-lg font-bold text-sky-900">
+        <View className="my-4">
+          <Caption className="mb-1">
+            {PostCategoryTitles.get(post.category)}
+          </Caption>
+          <Title className="mb-2">{post.title}</Title>
+          <Text>
             {new Intl.NumberFormat('de-DE', {
               style: 'currency',
               currency: 'EUR',
             }).format(post.price)}
           </Text>
-          {post.zone !== 'NONE' && (
-            <Text className="text-gray-600">
-              <FontAwesome5 name="map-marker-alt" color="#4b5563" />{' '}
-              {ZoneTitles.get(post.zone)}
-            </Text>
-          )}
         </View>
+        {post.zone !== 'NONE' && (
+          <View className="my-4">
+            <Text>
+              <FontAwesome5 name="map-marker-alt" /> {ZoneTitles.get(post.zone)}
+            </Text>
+          </View>
+        )}
         {post.description && (
           <View className="p-4">
             <Text className="mb-2 text-gray-600">Description</Text>
@@ -161,7 +163,7 @@ export function PostScreen({ route }) {
           </View>
         )}
         {userId === post.authorId && (
-          <View className="p-4">
+          <View className="py-4">
             <Button
               loading={isRemovePostLoading}
               className="w-full"
@@ -171,7 +173,7 @@ export function PostScreen({ route }) {
           </View>
         )}
         {userId !== post.authorId && (
-          <View className="p-4">
+          <View className="py-4">
             <Button
               variant="secondary"
               title="Report post"
