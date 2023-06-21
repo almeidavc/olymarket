@@ -4,6 +4,7 @@ import { ChatScreenHeader } from 'app/features/chat/header'
 import { Onboarding } from 'app/features/onboarding'
 import { Tabs } from './tabs'
 import { ReportPostScreen } from 'app/features/post/report'
+import { SendFeedbackScreen } from 'app/features/feedback'
 
 const Stack = createNativeStackNavigator()
 
@@ -33,6 +34,11 @@ export function RootNavigator() {
           name="report"
           component={ReportPostScreen}
           options={{ headerTitle: 'Report post' }}
+        />
+        <Stack.Screen
+          name="feedback"
+          component={SendFeedbackScreen}
+          options={{ headerTitle: 'Send us feedback' }}
         />
       </Stack.Group>
       <Stack.Group screenOptions={{ presentation: 'modal' }}>

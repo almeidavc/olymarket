@@ -64,6 +64,12 @@ export function AccountScreen({ navigation }) {
         onPress={onDeleteAccountPress}
         shape="square"
       />
+      <Button
+        title="Send us feedback"
+        variant="secondary"
+        onPress={() => router.push('/feedback')}
+        shape="square"
+      />
     </SafeAreaView>
   )
 }

@@ -16,7 +16,7 @@ const backgroundColors: { [color in Color]: string } = {
   green: 'bg-green-100',
   gray: 'bg-gray-200',
   blue: 'bg-sky-100',
-  neutral: '',
+  neutral: 'bg-white',
 }
 
 const textColors: { [color in Color]: string } = {

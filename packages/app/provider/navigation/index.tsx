@@ -50,6 +50,8 @@ export function NavigationProvider({
 
               report: 'report/:postId',
 
+              feedback: 'feedback',
+
               onboarding: {
                 screens: {
                   'sign-in': 'sign-in',
