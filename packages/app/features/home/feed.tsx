@@ -7,20 +7,53 @@ import { trpc } from 'app/utils/trpc'
 import { RefreshControl } from 'react-native'
 import { View } from 'app/design/core'
 import { CategoriesList } from '../search/categories'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PostCategory } from 'app/utils/enums'
+import { useIsFocused } from '@react-navigation/native'
+import { LoadingSpinner } from 'app/components/spinner'
 
-export function FeedScreen() {
+export function FeedScreen({ navigation }) {
+  const ref = useRef(null)
+
+  const isFocused = useIsFocused()
+
   const [categories, setCategories] = useState<PostCategory[]>([])
 
-  const { data: posts, refetch } = trpc.post.list.useQuery({
-    categories,
-  })
+  const { data, fetchNextPage, hasNextPage, refetch } =
+    trpc.post.list.useInfiniteQuery(
+      { categories },
+      {
+        getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
+      }
+    )
+
+  const posts = data?.pages.flatMap((page) => page.posts)
+
+  useEffect(() => {
+    const unsubscribe = navigation
+      .getParent('tabs')
+      .addListener('tabPress', () => {
+        if (isFocused && ref.current) {
+          ref.current.scrollToOffset({ animated: false, offset: 0 })
+        }
+      })
+    return unsubscribe
+  }, [isFocused])
 
   return (
     <SafeAreaView>
       <PostList
+        ref={ref}
         posts={posts}
+        onEndReached={() => fetchNextPage()}
+        onEndReachedThreshold={0.2}
+        ListFooterComponent={
+          posts?.length && hasNextPage ? (
+            <View className="mt-4 flex items-center justify-center">
+              <LoadingSpinner size={24} />
+            </View>
+          ) : null
+        }
         refreshControl={
           <RefreshControl refreshing={false} onRefresh={refetch} />
         }

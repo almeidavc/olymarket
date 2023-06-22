@@ -157,8 +157,8 @@ export function PostScreen({ route }) {
           </View>
         )}
         {post.description && (
-          <View className="p-4">
-            <Text className="mb-2 text-gray-600">Description</Text>
+          <View className="py-4">
+            <Title className="mb-2">Description</Title>
             <Text>{post.description}</Text>
           </View>
         )}

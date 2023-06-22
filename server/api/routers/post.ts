@@ -32,21 +32,26 @@ const list = publicProcedure
     z
       .object({
         categories: z.array(z.nativeEnum(PostCategory)),
+        limit: z.number().optional(),
+        cursor: z.string().optional(),
       })
       .optional()
   )
-  .query(({ ctx, input }) => {
+  .query(async ({ ctx, input }) => {
     const categories = input?.categories.length
       ? input.categories
       : Object.keys(PostCategory)
 
-    return ctx.prisma.post.findMany({
+    const limit = input?.limit ?? 50
+    const cursor = input?.cursor ? { id: input.cursor } : undefined
+
+    const posts = await ctx.prisma.post.findMany({
+      take: limit + 1,
+      cursor: cursor,
       where: {
+        status: PostStatus.CREATED,
         category: {
           in: categories,
-        },
-        status: {
-          notIn: [PostStatus.REMOVED, PostStatus.SOLD],
         },
       },
       orderBy: {
@@ -56,6 +61,18 @@ const list = publicProcedure
         images: true,
       },
     })
+
+    let nextCursor = undefined
+    if (posts.length > limit) {
+      nextCursor = posts.pop().id
+    }
+
+    return {
+      posts,
+      pagination: {
+        nextCursor,
+      },
+    }
   })
 
 const listMine = protectedProcedure.query(({ ctx }) => {
@@ -102,11 +119,19 @@ const search = publicProcedure
     z.object({
       query: z.string().optional(),
       categories: z.array(z.nativeEnum(PostCategory)).optional(),
+      limit: z.number().optional(),
+      cursor: z.any().array().optional(),
     })
   )
   .query(async ({ ctx, input }) => {
-    let query
+    const categories = input.categories?.length
+      ? input.categories
+      : Object.keys(PostCategory)
 
+    const limit = input?.limit ?? 50
+    const cursor = input?.cursor
+
+    let query
     if (input.query) {
       query = {
         multi_match: {
@@ -122,16 +147,6 @@ const search = publicProcedure
       }
     }
 
-    const filters = []
-
-    if (input.categories?.length) {
-      filters.push({
-        terms: {
-          'category.keyword': input.categories,
-        },
-      })
-    }
-
     const res = await ctx.elastic.search({
       index: 'posts_idx',
       body: {
@@ -139,19 +154,45 @@ const search = publicProcedure
           bool: {
             must: [query],
             filter: [
-              ...filters,
               {
                 term: {
                   'status.keyword': PostStatus.CREATED,
                 },
               },
+              {
+                terms: {
+                  'category.keyword': categories,
+                },
+              },
             ],
           },
         },
+        size: limit,
+        sort: [
+          {
+            _score: 'desc',
+          },
+          {
+            'id.keyword': 'desc',
+          },
+        ],
+        search_after: cursor,
       },
     })
 
-    return res.body.hits.hits.map((doc) => doc._source)
+    const hits = res.body.hits.hits
+
+    let nextCursor = undefined
+    if (hits.length === limit) {
+      nextCursor = hits[hits.length - 1].sort
+    }
+
+    return {
+      posts: hits.map((hit) => hit._source),
+      pagination: {
+        nextCursor,
+      },
+    }
   })
 
 const create = protectedProcedure

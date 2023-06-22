@@ -175,7 +175,7 @@ export function CreatePostScreen({ navigation, route }) {
     reset()
     setImageUris([])
     navigation.setParams({ zone: undefined })
-    setShowImagesHelperText(false)
+    navigation.setParams({ category: undefined })
   }
 
   const { mutate: createPostMutation } = trpc.post.create.useMutation({
@@ -185,6 +185,8 @@ export function CreatePostScreen({ navigation, route }) {
       setShowSuccessMessageModal(true)
 
       resetForm()
+
+      context.post.search.invalidate()
 
       context.post.list.invalidate()
       context.post.listMine.setData(undefined, (oldPosts) => {

@@ -1,9 +1,9 @@
 import { PostList } from '../post/post-list'
 import { View, TextInput, TouchableOpacity } from 'app/design/core'
-import { SafeAreaView } from 'react-native'
+import { SafeAreaView, RefreshControl } from 'react-native'
 import { trpc } from 'app/utils/trpc'
 import Svg, { Path } from 'react-native-svg'
-import { useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Placeholder } from 'app/components/placeholder'
 import { MaterialIcons } from '@expo/vector-icons'
 import { Text } from 'app/design/typography'
@@ -11,8 +11,13 @@ import { Keyboard } from 'react-native'
 import { PostCategory } from 'app/utils/enums'
 import { LoadingSpinner } from 'app/components/spinner'
 import { CategoriesList } from './categories'
+import { useIsFocused } from '@react-navigation/native'
 
-export function SearchScreen() {
+export function SearchScreen({ navigation }) {
+  const ref = useRef(null)
+
+  const isFocused = useIsFocused()
+
   const [searchInput, setSearchInput] = useState<string>()
   const [searchQuery, setSearchQuery] = useState<string>()
 
@@ -22,10 +27,18 @@ export function SearchScreen() {
     []
   )
 
-  const { data: posts, isLoading } = trpc.post.search.useQuery({
-    query: searchQuery,
-    categories: selectedCategories,
-  })
+  const { data, fetchNextPage, hasNextPage, refetch, isLoading } =
+    trpc.post.search.useInfiniteQuery(
+      {
+        query: searchQuery,
+        categories: selectedCategories,
+      },
+      {
+        getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
+      }
+    )
+
+  const posts = data?.pages.flatMap((page) => page.posts)
 
   const onSearch = () => {
     setSearchQuery(searchInput)
@@ -37,16 +50,19 @@ export function SearchScreen() {
     setSearchQuery(undefined)
   }
 
-  const onPressCategory = (category) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories(selectedCategories.filter((c) => c !== category))
-    } else {
-      setSelectedCategories([...selectedCategories, category])
-    }
-  }
+  useEffect(() => {
+    const unsubscribe = navigation
+      .getParent('tabs')
+      .addListener('tabPress', () => {
+        if (isFocused && ref.current) {
+          ref.current.scrollToOffset({ animated: false, offset: 0 })
+        }
+      })
+    return unsubscribe
+  }, [isFocused])
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <View className="mx-4 my-6 flex flex-row items-center">
         <View className="relative grow">
           <View className="absolute inset-y-0 left-0 z-10 flex flex-row items-center pl-4">
@@ -82,7 +98,7 @@ export function SearchScreen() {
           </TouchableOpacity>
         )}
       </View>
-      <View className="mb-4 ml-4">
+      <View className="mb-6 ml-4">
         <CategoriesList
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
@@ -93,16 +109,31 @@ export function SearchScreen() {
           <LoadingSpinner size={40} />
         </View>
       ) : (
-        <PostList
-          posts={posts}
-          ListEmptyComponent={
-            <Placeholder
-              icon={<MaterialIcons name="search-off" color="black" />}
-              title="No posts found"
-              description="We couldn't find any posts that match your search."
-            />
-          }
-        />
+        <View className="flex-1">
+          <PostList
+            ref={ref}
+            posts={posts}
+            onEndReached={() => fetchNextPage()}
+            onEndReachedThreshold={0.2}
+            ListFooterComponent={
+              posts?.length && hasNextPage ? (
+                <View className="mt-4 flex items-center justify-center">
+                  <LoadingSpinner size={24} />
+                </View>
+              ) : null
+            }
+            refreshControl={
+              <RefreshControl refreshing={false} onRefresh={refetch} />
+            }
+            ListEmptyComponent={
+              <Placeholder
+                icon={<MaterialIcons name="search-off" color="black" />}
+                title="No posts found"
+                description="We couldn't find any posts that match your search."
+              />
+            }
+          />
+        </View>
       )}
     </SafeAreaView>
   )

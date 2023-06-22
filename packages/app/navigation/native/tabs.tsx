@@ -28,6 +28,7 @@ export function Tabs({ navigation }) {
 
   return (
     <Tab.Navigator
+      id="tabs"
       initialRouteName="home"
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: '#0369a1',
