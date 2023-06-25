@@ -1,4 +1,4 @@
-import { Post } from '../../features/post/create'
+import { CreatePost } from '../../features/post/create'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { FontAwesome5 } from '@expo/vector-icons'
 import { Home } from 'app/features/home'
@@ -61,7 +61,7 @@ export function Tabs({ navigation }) {
       />
       <Tab.Screen
         name="post"
-        component={Post}
+        component={CreatePost}
         options={{ headerTitle: 'Sell an item', tabBarLabel: 'Post' }}
       />
       <Tab.Screen

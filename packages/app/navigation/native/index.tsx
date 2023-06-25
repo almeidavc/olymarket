@@ -5,6 +5,7 @@ import { Onboarding } from 'app/features/onboarding'
 import { Tabs } from './tabs'
 import { ReportPostScreen } from 'app/features/post/report'
 import { SendFeedbackScreen } from 'app/features/feedback'
+import { EditPost } from 'app/features/post/edit'
 
 const Stack = createNativeStackNavigator()
 
@@ -32,6 +33,11 @@ export function RootNavigator() {
               <ChatScreenHeader chatId={route.params.chatId} />
             ),
           })}
+        />
+        <Stack.Screen
+          name="edit"
+          component={EditPost}
+          options={{ headerTitle: 'Edit post' }}
         />
         <Stack.Screen
           name="report"

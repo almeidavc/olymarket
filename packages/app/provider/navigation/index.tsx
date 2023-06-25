@@ -46,11 +46,15 @@ export function NavigationProvider({
                 },
               },
 
-              chat: 'chat/:chatId',
+              chat: 'chat/chatId',
+
+              edit: 'edit/post/:postId',
 
               report: 'report/:postId',
 
               feedback: 'feedback',
+
+              // modals
 
               onboarding: {
                 screens: {

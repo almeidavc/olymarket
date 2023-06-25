@@ -1,31 +1,20 @@
-import { router, publicProcedure, protectedProcedure } from '../trpc'
+import { router, publicProcedure, protectedProcedure } from '../../trpc'
 import { z } from 'zod'
 import { Zone, PostStatus, PostCategory } from '@prisma/client'
-import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
+import {
+  deleteImage,
+  getImageDownloadUrl,
+  getSignedUploadUrl,
+} from '../../../s3'
 import { TRPCError } from '@trpc/server'
-import { assertIsModerator, isModerator } from '../utils/roles'
+import { assertIsModerator, isModerator } from '../../utils/roles'
+import { assertIsAuthor, assertPostExists, findPostById } from './utils'
 
-const getImageUploadUrls = publicProcedure
-  .input(z.number().int().positive())
-  .query(async ({ input }) => {
-    const urls: Promise<{ url: string; key: string }>[] = []
-    for (let i = 0; i < input; i++) {
-      urls.push(getSignedUploadUrl())
-    }
-    return await Promise.all(urls)
+const getById = publicProcedure
+  .input(z.object({ id: z.string() }))
+  .query(async ({ ctx, input }) => {
+    return await findPostById(input.id)
   })
-
-const getById = publicProcedure.input(z.string()).query(({ ctx, input }) => {
-  return ctx.prisma.post.findUnique({
-    where: {
-      id: input,
-    },
-    include: {
-      author: true,
-      images: true,
-    },
-  })
-})
 
 const list = publicProcedure
   .input(
@@ -195,6 +184,16 @@ const search = publicProcedure
     }
   })
 
+const generateImageUploadUrls = protectedProcedure
+  .input(z.object({ count: z.number().int().positive() }))
+  .mutation(async ({ input }) => {
+    const urls: Promise<{ url: string; key: string }>[] = []
+    for (let i = 0; i < input.count; i++) {
+      urls.push(getSignedUploadUrl())
+    }
+    return await Promise.all(urls)
+  })
+
 const create = protectedProcedure
   .input(
     z.object({
@@ -225,6 +224,91 @@ const create = protectedProcedure
         },
       },
       include: {
+        images: true,
+      },
+    })
+  })
+
+const update = protectedProcedure
+  .input(
+    z.object({
+      id: z.string(),
+      category: z.nativeEnum(PostCategory),
+      price: z.number().int(),
+      title: z.string(),
+      description: z.string().optional(),
+      zone: z.nativeEnum(Zone).optional(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const post = await findPostById(input.id)
+    assertPostExists(post)
+    assertIsAuthor(post, ctx.auth?.userId)
+
+    return await ctx.prisma.post.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        title: input.title,
+        description: input.description,
+        price: input.price,
+        category: input.category,
+        zone: input.zone,
+      },
+      include: {
+        author: true,
+        images: true,
+      },
+    })
+  })
+
+const updateImages = protectedProcedure
+  .input(
+    z.object({
+      id: z.string(),
+      images: z
+        .object({
+          id: z.string().optional(),
+          externalKey: z.string(),
+        })
+        .array(),
+    })
+  )
+  .mutation(async ({ ctx, input }) => {
+    const post = await findPostById(input.id)
+    assertPostExists(post)
+    assertIsAuthor(post, ctx.auth?.userId)
+
+    const oldImages = post.images
+    const removedImages = oldImages.filter(
+      (oldImg) => !input.images.some((img) => img.id === oldImg.id)
+    )
+    const addedImages = input.images.filter(
+      (img) => !oldImages.some((oldImg) => oldImg.id === img.id)
+    )
+
+    return await ctx.prisma.post.update({
+      where: {
+        id: input.id,
+      },
+      data: {
+        images: {
+          createMany: {
+            data: addedImages.map((img) => ({
+              externalKey: img.externalKey,
+              url: getImageDownloadUrl(img.externalKey),
+            })),
+          },
+          deleteMany: {
+            id: {
+              in: removedImages.map((img) => img.id),
+            },
+          },
+        },
+      },
+      include: {
+        author: true,
         images: true,
       },
     })
@@ -321,13 +405,15 @@ const report = protectedProcedure
   })
 
 export const postRouter = router({
-  getImageUploadUrls,
   getById,
   list,
   listMine,
   listReported,
   search,
+  generateImageUploadUrls,
   create,
+  update,
+  updateImages,
   remove,
   markAsSold,
   report,

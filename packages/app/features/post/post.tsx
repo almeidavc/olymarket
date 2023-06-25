@@ -19,12 +19,14 @@ export function PostScreen({ route }) {
 
   const { postId } = route.params
 
-  const { data: post } = trpc.post.getById.useQuery(postId)
+  const { data: post } = trpc.post.getById.useQuery({
+    id: postId,
+  })
+
+  const context = trpc.useContext()
 
   const { mutate: findOrCreateChatMutation } =
     trpc.chat.findOrCreate.useMutation()
-
-  const context = trpc.useContext()
 
   const { mutate: banUserMutation } = trpc.user.ban.useMutation()
 
@@ -34,6 +36,7 @@ export function PostScreen({ route }) {
         context.post.search.invalidate()
 
         context.post.list.invalidate()
+
         context.post.listMine.setData(undefined, (oldPosts) => {
           if (oldPosts) {
             return oldPosts.filter((post) => post.id !== removedPost.id)
@@ -61,24 +64,6 @@ export function PostScreen({ route }) {
       },
     })
 
-  // const { mutate: markAsSold } = trpc.post.markAsSold.useMutation({
-  //   onSuccess: (soldPost) => {
-  //     context.post.list.invalidate()
-  //     context.post.listMine.setData(undefined, (oldPosts) => {
-  //       if (oldPosts) {
-  //         return oldPosts.map((post) =>
-  //           post.id === soldPost.id
-  //             ? {
-  //                 ...post,
-  //                 status: PostStatus.SOLD,
-  //               }
-  //             : post
-  //         )
-  //       }
-  //     })
-  //   },
-  // })
-
   const onContactButtonPress = () => {
     if (!isSignedIn) {
       router.push('/sign-in')
@@ -98,13 +83,13 @@ export function PostScreen({ route }) {
     )
   }
 
+  const onEditPostPress = () => {
+    router.push(`/edit/post/${post!.id}`)
+  }
+
   const onRemovePostPress = () => {
     removePostMutation({ postId: post!.id })
   }
-
-  // const onMarkPostAsSoldPress = () => {
-  //   markAsSold({ postId: post!.id })
-  // }
 
   const onReportPostPress = () => {
     if (!isSignedIn) {
@@ -160,6 +145,12 @@ export function PostScreen({ route }) {
         )}
         {userId === post.authorId && (
           <View className="py-4">
+            <Button
+              className="mb-4 w-full"
+              variant={'secondary'}
+              title="Edit post"
+              onPress={onEditPostPress}
+            />
             <Button
               loading={isRemovePostLoading}
               className="w-full"
