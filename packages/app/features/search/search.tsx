@@ -5,13 +5,13 @@ import { trpc } from 'app/utils/trpc'
 import Svg, { Path } from 'react-native-svg'
 import { useEffect, useState, useRef } from 'react'
 import { Placeholder } from 'app/components/placeholder'
-import { MaterialIcons } from '@expo/vector-icons'
 import { Text } from 'app/design/typography'
 import { Keyboard } from 'react-native'
 import { PostCategory } from 'app/utils/enums'
 import { LoadingSpinner } from 'app/components/spinner'
 import { CategoriesList } from './categories'
 import { useIsFocused } from '@react-navigation/native'
+import { MagnifyingGlassIcon } from 'react-native-heroicons/outline'
 
 export function SearchScreen({ navigation }) {
   const ref = useRef(null)
@@ -127,7 +127,7 @@ export function SearchScreen({ navigation }) {
             }
             ListEmptyComponent={
               <Placeholder
-                icon={<MaterialIcons name="search-off" color="black" />}
+                icon={<MagnifyingGlassIcon color="black" />}
                 title="No posts found"
                 description="We couldn't find any posts that match your search."
               />

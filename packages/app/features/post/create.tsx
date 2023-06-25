@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { FormInput } from 'app/components/form'
 import { AntDesign } from '@expo/vector-icons'
 import { Button, IconButton } from 'app/components/button'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { PhotoIcon } from 'react-native-heroicons/outline'
 import { RadioButton } from 'app/components/radio'
 import { Image } from 'app/design/image'
 import {
@@ -118,11 +118,7 @@ const ImageSelect: React.FC<ImageSelectProps> = ({
               color={'#dc2626'}
             />
           ) : (
-            <MaterialCommunityIcons
-              name={'image-plus'}
-              size={60}
-              color={'#6b7280'}
-            />
+            <PhotoIcon size={60} color={'#6b7280'} />
           )}
           <Text
             className={`mt-2 text-sm font-semibold ${

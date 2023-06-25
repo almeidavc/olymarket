@@ -1,7 +1,7 @@
 import { trpc } from 'app/utils/trpc'
 import { SafeAreaView } from 'react-native'
 import { View, TouchableOpacity } from 'app/design/core'
-import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
+import { AntDesign } from '@expo/vector-icons'
 import { Text } from 'app/design/typography'
 import { useRouter } from 'solito/router'
 import {
@@ -10,6 +10,7 @@ import {
   shapeVariants,
   iconColorVariants,
 } from 'app/components/button'
+import { InboxIcon } from 'react-native-heroicons/outline'
 import { Placeholder } from 'app/components/placeholder'
 import { PostList } from '../post/post-list'
 
@@ -25,7 +26,7 @@ export function SellingScreen() {
           posts={posts}
           ListEmptyComponent={
             <Placeholder
-              icon={<MaterialCommunityIcons name="inbox" />}
+              icon={<InboxIcon color={'black'} />}
               title="No posts yet"
               description="It seems like you haven't created any posts. Create posts to sell your old items."
               extra={

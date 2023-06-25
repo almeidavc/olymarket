@@ -11,8 +11,8 @@ import { Tag } from 'app/components/tag'
 import { PostStatus } from 'app/utils/enums'
 import { FlashList } from '@shopify/flash-list'
 import { Image } from 'app/design/image'
-import { FontAwesome5 } from '@expo/vector-icons'
 import { Placeholder } from 'app/components/placeholder'
+import { ChatBubbleLeftRightIcon } from 'react-native-heroicons/outline'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 
@@ -74,7 +74,7 @@ export function InboxScreen() {
       <SafeAreaView>
         <Placeholder
           title="No chats yet"
-          icon={<FontAwesome5 name="comments" />}
+          icon={<ChatBubbleLeftRightIcon color="black" />}
           description="You don't currently have any chats. Once you start a conversation, your chat will appear here."
         />
       </SafeAreaView>
