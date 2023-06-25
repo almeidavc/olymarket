@@ -1,8 +1,7 @@
 import { View } from 'app/design/core'
-import { Text, Title, Caption } from 'app/design/typography'
+import { Text, Caption } from 'app/design/typography'
 import { ScrollView } from 'react-native'
 import { trpc } from 'app/utils/trpc'
-import { FontAwesome5 } from '@expo/vector-icons'
 import { PostCategoryTitles, PostStatus, ZoneTitles } from 'app/utils/enums'
 import { useRouter } from 'solito/router'
 import { useAuth } from '@clerk/clerk-expo'
@@ -11,6 +10,7 @@ import { ImageSlider } from 'app/components/image-slider'
 import { Button } from 'app/components/button'
 import { Image } from 'app/design/image'
 import { formatPrice } from './utils'
+import { MapPinIcon, TagIcon } from 'react-native-heroicons/outline'
 
 export function PostScreen({ route }) {
   const router = useRouter()
@@ -27,8 +27,6 @@ export function PostScreen({ route }) {
 
   const { mutate: findOrCreateChatMutation } =
     trpc.chat.findOrCreate.useMutation()
-
-  const { mutate: banUserMutation } = trpc.user.ban.useMutation()
 
   const { mutate: removePostMutation, isLoading: isRemovePostLoading } =
     trpc.post.remove.useMutation({
@@ -107,8 +105,8 @@ export function PostScreen({ route }) {
   return (
     <ScrollView>
       <ImageSlider imageUris={post.images.map((img) => img.url)} />
-      <View className="px-4">
-        <View className="border-background flex flex-row items-center justify-between border-b py-4">
+      <View className="p-4">
+        <View className="border-background flex flex-row items-center justify-between border-b pb-4">
           <View className="flex flex-row items-center">
             <Image
               className="mr-3 h-12 w-12 rounded-full"
@@ -123,23 +121,28 @@ export function PostScreen({ route }) {
             <Button title="Contact seller" onPress={onContactButtonPress} />
           )}
         </View>
-        <View className="my-4">
-          <Caption className="mb-1">
-            {PostCategoryTitles.get(post.category)}
-          </Caption>
-          <Title className="mb-2">{post.title}</Title>
-          <Text>{formatPrice(post.price)}</Text>
-        </View>
-        {post.zone !== 'NONE' && (
-          <View className="my-4">
-            <Text>
-              <FontAwesome5 name="map-marker-alt" /> {ZoneTitles.get(post.zone)}
+        <View className="border-background border-b py-4">
+          <Text className="mb-2 text-2xl font-bold">{post.title}</Text>
+          <Text className="mb-1.5 text-xl font-bold text-sky-700">
+            {formatPrice(post.price)}
+          </Text>
+          <View className="mb-1 flex flex-row items-center">
+            <TagIcon color="black" size={17} />
+            <Text className="ml-1.5 text-base text-gray-500">
+              {PostCategoryTitles.get(post.category)}
             </Text>
           </View>
-        )}
+          {post.zone !== 'NONE' && (
+            <View className="flex flex-row items-center">
+              <MapPinIcon color="black" size={17} />
+              <Text className="ml-1.5 text-base text-gray-500">
+                {ZoneTitles.get(post.zone)}
+              </Text>
+            </View>
+          )}
+        </View>
         {post.description && (
-          <View className="py-4">
-            <Title className="mb-2">Description</Title>
+          <View className="border-background border-b py-4">
             <Text>{post.description}</Text>
           </View>
         )}
@@ -168,17 +171,6 @@ export function PostScreen({ route }) {
             />
           </View>
         )}
-        {/* {ctx === 'moderate' && (
-          <View className="p-4">
-            <Button
-              variant="danger"
-              title="Ban user"
-              onPress={() => {
-                banUserMutation({ userId: post.authorId })
-              }}
-            />
-          </View>
-        )} */}
       </View>
     </ScrollView>
   )
