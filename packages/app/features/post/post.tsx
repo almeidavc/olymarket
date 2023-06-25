@@ -23,6 +23,8 @@ export function PostScreen({ route }) {
     id: postId,
   })
 
+  const removed = post?.status === PostStatus.REMOVED
+
   const context = trpc.useContext()
 
   const { mutate: findOrCreateChatMutation } =
@@ -118,7 +120,12 @@ export function PostScreen({ route }) {
             </View>
           </View>
           {userId !== post.authorId && (
-            <Button title="Contact seller" onPress={onContactButtonPress} />
+            <Button
+              title="Contact seller"
+              variant={removed ? 'disabled' : 'primary'}
+              disabled={removed}
+              onPress={onContactButtonPress}
+            />
           )}
         </View>
         <View className="border-background border-b py-4">
@@ -126,14 +133,14 @@ export function PostScreen({ route }) {
           <Text className="mb-1.5 text-xl font-bold text-sky-700">
             {formatPrice(post.price)}
           </Text>
-          <View className="mb-1 flex flex-row items-center">
+          <View className="flex flex-row items-center">
             <TagIcon color="black" size={17} />
             <Text className="ml-1.5 text-base text-gray-500">
               {PostCategoryTitles.get(post.category)}
             </Text>
           </View>
           {post.zone !== 'NONE' && (
-            <View className="flex flex-row items-center">
+            <View className="mt-1 flex flex-row items-center">
               <MapPinIcon color="black" size={17} />
               <Text className="ml-1.5 text-base text-gray-500">
                 {ZoneTitles.get(post.zone)}
@@ -150,7 +157,8 @@ export function PostScreen({ route }) {
           <View className="py-4">
             <Button
               className="mb-4 w-full"
-              variant={'secondary'}
+              variant={removed ? 'disabled' : 'secondary'}
+              disabled={removed}
               title="Edit post"
               onPress={onEditPostPress}
             />
@@ -158,14 +166,17 @@ export function PostScreen({ route }) {
               loading={isRemovePostLoading}
               className="w-full"
               title="Remove post"
+              variant={removed ? 'disabled' : 'primary'}
               onPress={onRemovePostPress}
+              disabled={removed}
             />
           </View>
         )}
         {userId !== post.authorId && (
           <View className="py-4">
             <Button
-              variant="secondary"
+              variant={removed ? 'disabled' : 'secondary'}
+              disabled={removed}
               title="Report post"
               onPress={onReportPostPress}
             />
