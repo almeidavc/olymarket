@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { trpc } from 'app/utils/trpc'
 import { uploadImages } from './upload-image'
-import { PostForm } from './post-form'
+import { PostFormScreen } from './post-form'
 import { Modal } from 'react-native'
 import { View } from 'app/design/core'
 import { Text } from 'app/design/typography'
@@ -149,7 +149,7 @@ export function EditPost({ route, navigation }) {
           />
         </View>
       </Modal>
-      <PostForm
+      <PostFormScreen
         submit={editPost}
         submitLabel="Edit post"
         isSubmitLoading={isEditPostLoading}

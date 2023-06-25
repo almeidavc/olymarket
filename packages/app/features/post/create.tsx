@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { trpc } from 'app/utils/trpc'
 import { uploadImages } from './upload-image'
-import { PostForm } from './post-form'
-import { Modal } from 'react-native'
+import { PostFormScreen } from './post-form'
+import { Modal, SafeAreaView } from 'react-native'
 import { View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { AntDesign } from '@expo/vector-icons'
@@ -65,7 +65,7 @@ export function CreatePost({ navigation }) {
   }
 
   return (
-    <>
+    <SafeAreaView style={{ backgroundColor: 'white' }}>
       <Modal
         visible={showPostCreatedModal}
         animationType="slide"
@@ -87,11 +87,11 @@ export function CreatePost({ navigation }) {
           />
         </View>
       </Modal>
-      <PostForm
+      <PostFormScreen
         submit={createPost}
         submitLabel="Create post"
         isSubmitLoading={isCreatePostLoading}
       />
-    </>
+    </SafeAreaView>
   )
 }

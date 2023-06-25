@@ -12,12 +12,15 @@ export const buttonVariants = {
     'inline-flex flex-row justify-center items-center text-sky-700 border border-sky-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center',
   danger:
     'inline-flex flex-row justify-center items-center text-white bg-red-700 font-medium rounded-lg text-sm px-5 py-2.5',
+  disabled:
+    'inline-flex flex-row justify-center items-center text-white bg-background font-medium rounded-lg text-sm px-5 py-2.5 text-center',
 }
 
 export const textVariants = {
   primary: 'text-white font-medium text-sm text-center',
   secondary: 'text-sky-700 font-medium text-sm text-center ',
   danger: 'text-white font-medium text-sm text-center',
+  disabled: 'font-medium text-sm text-center text-gray-400',
 }
 
 export const shapeVariants = {
@@ -27,7 +30,7 @@ export const shapeVariants = {
 
 interface ButtonProps extends Omit<TouchableOpacityProps, 'children'> {
   title: string
-  variant?: 'primary' | 'secondary' | 'danger'
+  variant?: 'primary' | 'secondary' | 'danger' | 'disabled'
   shape?: 'rounded' | 'square'
   loading?: boolean
   className?: string
