@@ -42,7 +42,7 @@ const VerificationCodeInput = ({ code, setCode, invalid }) => {
           const borderStyle = invalid
             ? 'border-red-500'
             : isFocused
-            ? 'border-blue-500'
+            ? 'border-sky-700'
             : 'border-gray-300'
 
           return (

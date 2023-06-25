@@ -23,7 +23,10 @@ export function Onboarding({ route, navigation }) {
     <OnboardingContext.Provider value={{ onOnboard }}>
       <Stack.Navigator
         initialRouteName="Sign In"
-        screenOptions={{ contentStyle: { backgroundColor: 'white' } }}
+        screenOptions={{
+          headerTintColor: 'black',
+          contentStyle: { backgroundColor: 'white' },
+        }}
       >
         <Stack.Screen
           name="sign-in"

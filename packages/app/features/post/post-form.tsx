@@ -106,11 +106,11 @@ export const PostFormScreen = ({
         presentationStyle="pageSheet"
         animationType="slide"
       >
-        <View>
+        <View className="p-4">
           {Object.keys(PostCategory).map((categoryKey) => (
             <View
               key={categoryKey}
-              className="w-full border-b border-gray-300 px-4"
+              className="border-background w-full border-b"
             >
               <RadioButton
                 label={PostCategoryTitles.get(categoryKey as PostCategory)!}
@@ -130,12 +130,9 @@ export const PostFormScreen = ({
         presentationStyle="pageSheet"
         animationType="slide"
       >
-        <View>
+        <View className="p-4">
           {Object.keys(Zone).map((zoneKey) => (
-            <View
-              key={zoneKey}
-              className="w-full border-b border-gray-300 px-4"
-            >
+            <View key={zoneKey} className="border-background w-full border-b">
               <RadioButton
                 label={ZoneTitles.get(zoneKey as Zone)!}
                 isSelected={zone === zoneKey}
@@ -246,15 +243,16 @@ export const PostFormScreen = ({
               </View>
             </TouchableOpacity>
           </View>
+          <View className="mx-4 py-4">
+            <Button
+              disabled={!isAnyFieldDirty || isSubmitLoading}
+              loading={isSubmitLoading}
+              variant={isAnyFieldDirty ? 'primary' : 'disabled'}
+              title={submitLabel}
+              onPress={onSubmit}
+            />
+          </View>
         </View>
-        <Button
-          disabled={!isAnyFieldDirty || isSubmitLoading}
-          className="m-4"
-          loading={isSubmitLoading}
-          variant={isAnyFieldDirty ? 'primary' : 'disabled'}
-          title={submitLabel}
-          onPress={onSubmit}
-        />
       </KeyboardAwareScrollView>
     </SafeAreaView>
   )

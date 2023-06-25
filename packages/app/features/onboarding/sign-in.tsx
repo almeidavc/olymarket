@@ -65,7 +65,7 @@ export function SignInScreen({ navigation }) {
         >
           Olymarket
         </Text>
-        <View className="divide-y divide-gray-300">
+        <View className="divide-background divide-y">
           <View className="pb-4">
             <FormInput
               name="usernameOrEmail"

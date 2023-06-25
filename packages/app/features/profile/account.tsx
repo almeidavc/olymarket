@@ -93,7 +93,7 @@ export function AccountScreen({ navigation }) {
           <Title className="font-bold">{user?.username}</Title>
         </View>
         <TouchableOpacity
-          className="flex flex-row items-center border-b border-gray-300 py-4"
+          className="border-background flex flex-row items-center border-b py-4"
           onPress={onSignOut}
         >
           <ArrowRightOnRectangleIcon color="black" size={30} />
@@ -101,7 +101,7 @@ export function AccountScreen({ navigation }) {
           <ChevronRightIcon color="black" size={17} />
         </TouchableOpacity>
         <TouchableOpacity
-          className="flex flex-row items-center border-b border-gray-300 py-4"
+          className="border-background flex flex-row items-center border-b py-4"
           onPress={onDeleteAccountPress}
         >
           <TrashIcon color="black" size={30} />
@@ -117,17 +117,6 @@ export function AccountScreen({ navigation }) {
           <ChevronRightIcon color="black" size={17} />
         </TouchableOpacity>
       </View>
-      {/* {isModerator && (
-        <TouchableOpacity
-          className="flex h-10 flex-row items-center justify-between px-2"
-          onPress={() => router.push('/profile/account/moderate')}
-        >
-          <Text className="text-sm font-medium text-gray-900">
-            Moderator View
-          </Text>
-          <AntDesign name="right" size={16} color="#6b7280" />
-        </TouchableOpacity>
-      )} */}
     </SafeAreaView>
   )
 }

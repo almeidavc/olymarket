@@ -14,10 +14,10 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
 }) => {
   return (
     <TouchableOpacity
-      className="flex flex-row items-center justify-between"
+      className="flex flex-row items-center justify-between py-4"
       onPress={select}
     >
-      <Text className="py-3 text-base font-medium">{label}</Text>
+      <Text className="text-base font-medium">{label}</Text>
       <View
         className={`flex h-6 w-6 items-center justify-center rounded-full border  ${
           isSelected ? 'border-sky-700 bg-sky-700' : 'border-gray-300'
