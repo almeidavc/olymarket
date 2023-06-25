@@ -3,14 +3,22 @@ import { Text } from 'app/design/typography'
 import { Controller, ControllerProps } from 'react-hook-form'
 import { TextInputProps } from 'react-native'
 
-const sizeVariants = {
+interface FormLabelProps {
+  title: string
+}
+
+export const FormLabel: React.FC<FormLabelProps> = ({ title }) => {
+  return <Text className="mb-2 block text-sm font-medium">{title}</Text>
+}
+
+export const sizeVariants = {
   medium: 16,
   large: 18,
 }
 
-const labelVariants = {
-  default: 'block mb-2 text-sm font-medium text-gray-900 dark:text-white',
-  invalid: 'block mb-2 text-sm font-medium text-red-700 dark:text-red-500',
+export const colorVariants = {
+  default: '',
+  invalid: 'text-red-700',
 }
 
 export const inputVariants = {
@@ -18,19 +26,7 @@ export const inputVariants = {
   invalid: 'bg-red-50 placeholder-red-700 rounded-lg p-2.5',
 }
 
-interface FormLabelProps {
-  title: string
-  variant?: string
-}
-
-export const FormLabel: React.FC<FormLabelProps> = ({
-  title,
-  variant = 'default',
-}) => {
-  return <Text className={labelVariants[variant]}>{title}</Text>
-}
-
-interface FormInputProps extends Omit<ControllerProps, 'render'> {
+export interface FormInputProps extends Omit<ControllerProps, 'render'> {
   label: string
   size?: 'medium' | 'large'
   textInput?: TextInputProps

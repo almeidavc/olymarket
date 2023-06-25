@@ -10,6 +10,7 @@ import dayjs from 'app/utils/dayjs'
 import { ImageSlider } from 'app/components/image-slider'
 import { Button } from 'app/components/button'
 import { Image } from 'app/design/image'
+import { formatPrice } from './utils'
 
 export function PostScreen({ route }) {
   const router = useRouter()
@@ -142,12 +143,7 @@ export function PostScreen({ route }) {
             {PostCategoryTitles.get(post.category)}
           </Caption>
           <Title className="mb-2">{post.title}</Title>
-          <Text>
-            {new Intl.NumberFormat('de-DE', {
-              style: 'currency',
-              currency: 'EUR',
-            }).format(post.price)}
-          </Text>
+          <Text>{formatPrice(post.price)}</Text>
         </View>
         {post.zone !== 'NONE' && (
           <View className="my-4">

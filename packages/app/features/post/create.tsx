@@ -21,6 +21,7 @@ import {
   PostCategory,
   PostCategoryTitles,
 } from 'app/utils/enums'
+import { PriceInput } from './price-input'
 
 interface ImageSelectProps {
   imageUris: string[]
@@ -318,27 +319,7 @@ export function CreatePostScreen({ navigation, route }) {
               />
             </View>
             <View>
-              <FormInput
-                name="price"
-                label="Price"
-                control={control}
-                rules={{
-                  required: 'A price is required.',
-                  pattern: {
-                    value: /^[0-9]+$/,
-                    message: 'Price can only consist of digits.',
-                  },
-                  maxLength: {
-                    value: 4,
-                    message: 'The maximum price is 9999.',
-                  },
-                }}
-                textInput={{
-                  placeholder: '0',
-                  inputMode: 'numeric',
-                  returnKeyType: 'done',
-                }}
-              />
+              <PriceInput name="price" label="Price" control={control} />
             </View>
           </View>
           <View className="mx-4 py-4">

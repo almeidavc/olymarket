@@ -6,6 +6,7 @@ import { AppRouter } from 'server/api/routers'
 import { Link } from 'solito/link'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
+import { formatPrice } from './utils'
 
 interface PostCardProps {
   post: inferProcedureOutput<AppRouter['post']['list']>[number]
@@ -32,12 +33,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <Text className="mt-2" numberOfLines={1}>
             {post.title}
           </Text>
-          <Text className="mt-1">
-            {post.price.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'EUR',
-            })}
-          </Text>
+          <Text className="mt-1">{formatPrice(post.price)}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -69,10 +65,7 @@ export const HorizontalPostCard: React.FC<HorizontalPostCardProps> = ({
             {post.title}
           </Text>
           <Text className="font-bold text-sky-900">
-            {post.price.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'EUR',
-            })}
+            {formatPrice(post.price)}
           </Text>
         </View>
       </View>
