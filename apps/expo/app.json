@@ -12,7 +12,10 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "ios": {
       "bundleIdentifier": "com.almeidavc.olymarket"
     },
@@ -23,6 +26,12 @@
       "eas": {
         "projectId": "d4cac5ce-e0b5-4873-88c6-02dfb9cf5d6e"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/d4cac5ce-e0b5-4873-88c6-02dfb9cf5d6e"
     }
   }
 }
