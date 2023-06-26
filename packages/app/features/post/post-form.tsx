@@ -117,6 +117,7 @@ export const PostFormScreen = ({
                 isSelected={category === categoryKey}
                 select={() => {
                   setCategory(categoryKey)
+                  setShowCategoryMissingError(false)
                   setShowCategoryModal(false)
                   setIsFormDirty(true)
                 }}
@@ -151,6 +152,7 @@ export const PostFormScreen = ({
           imageUris={imageUris}
           setImageUris={(imageUris) => {
             setImageUris(imageUris)
+            setShowImagesHelperText(false)
             setIsFormDirty(true)
           }}
           selectionLimit={10}
@@ -227,7 +229,6 @@ export const PostFormScreen = ({
           <View className="mx-4 py-4">
             <TouchableOpacity
               className="flex h-8 flex-row items-center justify-between"
-              // onPress={() => navigation.navigate('zone', route.params)}
               onPress={() => setShowZoneModal(true)}
             >
               <Text className="text-sm font-medium text-gray-900">
