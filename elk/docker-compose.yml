@@ -1,8 +1,6 @@
 version: '3.0'
 
 services:
-  setup:
-    image: elasticsearch:7.17.10
   elasticsearch:
     container_name: es01-node
     image: elasticsearch:7.17.10
