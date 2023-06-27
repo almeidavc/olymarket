@@ -22,12 +22,12 @@ app.post('/hook', async (req) => {
           create: {
             id: user.id,
             username: user.username,
-            profileImageUrl: user.profile_image_url,
+            profileImageUrl: user.image_url,
           },
           update: {
             id: user.id,
             username: user.username,
-            profileImageUrl: user.profile_image_url,
+            profileImageUrl: user.image_url,
           },
         })
         logger.info('Created or updated user in database', { id: res.id })
