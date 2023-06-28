@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { View } from 'app/design/core'
 import { trpc } from 'app/utils/trpc'
-import {
-  FontAwesome5,
-  AntDesign,
-  MaterialCommunityIcons,
-} from '@expo/vector-icons'
+import { FontAwesome5, AntDesign } from '@expo/vector-icons'
 import * as SplashScreen from 'expo-splash-screen'
 import * as Font from 'expo-font'
 
@@ -13,11 +9,7 @@ const customFonts = {
   'Cormorant-Bold': require('./assets/fonts/Cormorant-Bold.ttf'),
 }
 
-const iconFonts = [
-  FontAwesome5.font,
-  AntDesign.font,
-  MaterialCommunityIcons.font,
-]
+const iconFonts = [FontAwesome5.font, AntDesign.font]
 
 function loadCustomFonts() {
   Font.loadAsync(customFonts)
