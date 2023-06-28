@@ -14,7 +14,7 @@ export const ZoneTitles = new Map<Zone, string>([
 
 export enum PostCategory {
   CLOTHING_AND_ACCESSORIES = 'CLOTHING_AND_ACCESSORIES',
-  ELETRONICS = 'ELETRONICS',
+  ELECTRONICS = 'ELECTRONICS',
   ENTERTAINMENT = 'ENTERTAINMENT',
   HOBBIES = 'HOBBIES',
   HOME = 'HOME',
@@ -22,7 +22,7 @@ export enum PostCategory {
 
 export const PostCategoryTitles = new Map<PostCategory, string>([
   [PostCategory.CLOTHING_AND_ACCESSORIES, 'Clothing & Accessories'],
-  [PostCategory.ELETRONICS, 'Eletronics'],
+  [PostCategory.ELECTRONICS, 'Electronics'],
   [PostCategory.ENTERTAINMENT, 'Entertainment'],
   [PostCategory.HOBBIES, 'Hobbies'],
   [PostCategory.HOME, 'Home'],
