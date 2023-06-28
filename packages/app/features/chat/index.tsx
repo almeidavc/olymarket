@@ -1,7 +1,7 @@
 import { TextInput, View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
-import { FontAwesome5 } from '@expo/vector-icons'
+import { PaperAirplaneIcon } from 'react-native-heroicons/outline'
 import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import { useRef, useState, useEffect } from 'react'
 import { useAuthSocket } from '../../utils/websocket'
@@ -148,11 +148,12 @@ export function ChatScreen({ route }) {
               />
             </View>
             <IconButton
-              size={17}
+              size={21}
               disabled={!input}
               variant={input ? 'primary' : 'disabled'}
               onPress={onSendMessagePress}
-              icon={<FontAwesome5 name="paper-plane" />}
+              textClassName="p-2"
+              icon={<PaperAirplaneIcon />}
             />
           </View>
         </View>

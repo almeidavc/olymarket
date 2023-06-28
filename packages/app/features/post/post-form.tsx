@@ -2,7 +2,6 @@ import { View, TouchableOpacity } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { FormInput } from 'app/components/form'
-import { AntDesign } from '@expo/vector-icons'
 import { Button } from 'app/components/button'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
@@ -10,6 +9,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { RadioButton } from 'app/components/radio'
 import { ImageSelect } from './image-select'
+import { ChevronRightIcon } from 'react-native-heroicons/outline'
 import {
   Zone,
   ZoneTitles,
@@ -222,7 +222,7 @@ export const PostFormScreen = ({
                     {PostCategoryTitles.get(category)}
                   </Text>
                 )}
-                <AntDesign name="right" size={16} color="#6b7280" />
+                <ChevronRightIcon color="#6b7280" size={16} />
               </View>
             </TouchableOpacity>
           </View>
@@ -240,7 +240,7 @@ export const PostFormScreen = ({
                     {ZoneTitles.get(zone)}
                   </Text>
                 )}
-                <AntDesign name="right" size={16} color="#6b7280" />
+                <ChevronRightIcon color="#6b7280" size={16} />
               </View>
             </TouchableOpacity>
           </View>

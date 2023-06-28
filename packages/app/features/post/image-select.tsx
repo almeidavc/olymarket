@@ -6,6 +6,7 @@ import * as ImagePicker from 'expo-image-picker'
 import { PhotoIcon } from 'react-native-heroicons/outline'
 import { IconButton } from 'app/components/button'
 import { ScrollView } from 'react-native'
+import { ExclamationCircleIcon } from 'react-native-heroicons/outline'
 
 interface ImageSelectProps {
   imageUris: string[]
@@ -96,11 +97,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
           onPress={pickImages}
         >
           {showHelperText ? (
-            <AntDesign
-              name={'exclamationcircleo'}
-              size={60}
-              color={'#dc2626'}
-            />
+            <ExclamationCircleIcon size={60} color={'#dc2626'} />
           ) : (
             <PhotoIcon size={60} color={'#6b7280'} />
           )}
