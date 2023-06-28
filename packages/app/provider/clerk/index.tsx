@@ -1,4 +1,5 @@
 import { ClerkProvider as _ClerkProvider } from '@clerk/clerk-expo'
+import Constants from 'expo-constants'
 import * as SecureStore from 'expo-secure-store'
 
 const getToken = async (key: string) => {
@@ -16,7 +17,7 @@ const saveToken = async (key: string, value: string) => {
 export function ClerkProvider({ children }: { children: React.ReactNode }) {
   return (
     <_ClerkProvider
-      publishableKey={process.env.CLERK_PUBLISHABLE_KEY}
+      publishableKey={Constants.expoConfig?.extra?.CLERK_PUBLISHABLE_KEY}
       tokenCache={{ getToken, saveToken }}
     >
       {children}

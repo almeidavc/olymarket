@@ -1,8 +1,9 @@
 import { io, Socket } from 'socket.io-client'
 import { useRef, useEffect } from 'react'
 import { useAuth } from '@clerk/clerk-expo'
+import Constants from 'expo-constants'
 
-const url = process.env.SERVER_URL
+const url = Constants.expoConfig?.extra?.SERVER_URL
 if (!url) {
   throw new Error('Server url is not set, please configure it manually')
 }

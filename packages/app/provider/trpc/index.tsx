@@ -3,10 +3,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchLink } from '@trpc/client'
 import { trpc } from 'app/utils/trpc'
 import { useAuth } from '@clerk/clerk-expo'
+import Constants from 'expo-constants'
 import superjson from 'superjson'
 
 function getApiUrl() {
-  const serverUrl = process.env.SERVER_URL
+  const serverUrl = Constants.expoConfig?.extra?.SERVER_URL
   if (!serverUrl) {
     throw new Error('Server url is not set, please configure it manually')
   }
