@@ -19,7 +19,7 @@ export function FeedScreen({ navigation }) {
 
   const [categories, setCategories] = useState<PostCategory[]>([])
 
-  const { data, fetchNextPage, hasNextPage, refetch } =
+  const { data, fetchNextPage, hasNextPage, refetch, isLoading } =
     trpc.post.list.useInfiniteQuery(
       { categories },
       {
@@ -45,6 +45,7 @@ export function FeedScreen({ navigation }) {
       <PostList
         ref={ref}
         posts={posts}
+        isLoading={isLoading}
         onEndReached={() => fetchNextPage()}
         onEndReachedThreshold={0.2}
         ListFooterComponent={

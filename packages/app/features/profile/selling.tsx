@@ -17,13 +17,14 @@ import { PostList } from '../post/post-list'
 export function SellingScreen() {
   const router = useRouter()
 
-  const { data: posts } = trpc.post.listMine.useQuery()
+  const { data: posts, isLoading } = trpc.post.listMine.useQuery()
 
   return (
     <SafeAreaView style={{ backgroundColor: 'white' }}>
       <View className="h-full w-full">
         <PostList
           posts={posts}
+          isLoading={isLoading}
           ListEmptyComponent={
             <Placeholder
               icon={<InboxIcon color={'black'} />}

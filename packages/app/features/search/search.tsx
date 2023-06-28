@@ -104,37 +104,32 @@ export function SearchScreen({ navigation }) {
           setSelectedCategories={setSelectedCategories}
         />
       </View>
-      {isLoading ? (
-        <View className="mt-32 flex items-center">
-          <LoadingSpinner size={40} />
-        </View>
-      ) : (
-        <View className="flex-1">
-          <PostList
-            ref={ref}
-            posts={posts}
-            onEndReached={() => fetchNextPage()}
-            onEndReachedThreshold={0.2}
-            ListFooterComponent={
-              posts?.length && hasNextPage ? (
-                <View className="mt-4 flex items-center justify-center">
-                  <LoadingSpinner size={24} />
-                </View>
-              ) : null
-            }
-            refreshControl={
-              <RefreshControl refreshing={false} onRefresh={refetch} />
-            }
-            ListEmptyComponent={
-              <Placeholder
-                icon={<MagnifyingGlassIcon color="black" />}
-                title="No posts found"
-                description="We couldn't find any posts that match your search."
-              />
-            }
-          />
-        </View>
-      )}
+      <View className="flex-1">
+        <PostList
+          ref={ref}
+          posts={posts}
+          isLoading={isLoading}
+          onEndReached={() => fetchNextPage()}
+          onEndReachedThreshold={0.2}
+          ListFooterComponent={
+            posts?.length && hasNextPage ? (
+              <View className="mt-4 flex items-center justify-center">
+                <LoadingSpinner size={24} />
+              </View>
+            ) : null
+          }
+          refreshControl={
+            <RefreshControl refreshing={false} onRefresh={refetch} />
+          }
+          ListEmptyComponent={
+            <Placeholder
+              icon={<MagnifyingGlassIcon color="black" />}
+              title="No posts found"
+              description="We couldn't find any posts that match your search."
+            />
+          }
+        />
+      </View>
     </SafeAreaView>
   )
 }
