@@ -74,7 +74,10 @@ export function AccountScreen({ navigation }) {
             <Button
               title="Yes, delete my account"
               className="mb-4"
-              onPress={deleteAccount}
+              onPress={() => {
+                setIsDeleteConfirmationModalOpen(false)
+                deleteAccount()
+              }}
             />
             <Button
               title="No"
