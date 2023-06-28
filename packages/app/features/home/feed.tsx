@@ -61,7 +61,7 @@ export function FeedScreen({ navigation }) {
         ListHeaderComponent={
           <View>
             <Header className="my-6">Olymarket</Header>
-            <View className="mb-6">
+            <View className="mb-4">
               <CategoriesList
                 selectedCategories={categories}
                 setSelectedCategories={setCategories}

@@ -63,7 +63,7 @@ export function SearchScreen({ navigation }) {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <View className="mx-4 my-6 flex flex-row items-center">
+      <View className="mx-4 my-3 flex flex-row items-center">
         <View className="relative grow">
           <View className="absolute inset-y-0 left-0 z-10 flex flex-row items-center pl-4">
             <Svg
@@ -98,7 +98,7 @@ export function SearchScreen({ navigation }) {
           </TouchableOpacity>
         )}
       </View>
-      <View className="mb-6 ml-4">
+      <View className="mb-3 ml-4">
         <CategoriesList
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}

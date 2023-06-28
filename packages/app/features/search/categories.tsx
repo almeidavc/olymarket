@@ -15,10 +15,12 @@ const Category = ({ selected, category, onPress }: CategoryProps) => {
 
   return (
     <TouchableOpacity
-      className={`mr-4 rounded-full px-[16px] py-[14px] ${containerStyles}`}
+      className={`mr-2 rounded-full px-[14px] py-[10px] ${containerStyles}`}
       onPress={onPress}
     >
-      <Text className={textStyles}>{PostCategoryTitles.get(category)}</Text>
+      <Text className={`text-sm ${textStyles}`}>
+        {PostCategoryTitles.get(category)}
+      </Text>
     </TouchableOpacity>
   )
 }

@@ -25,6 +25,7 @@ export function SellingScreen() {
         <PostList
           posts={posts}
           isLoading={isLoading}
+          firstRowPadding={true}
           ListEmptyComponent={
             <Placeholder
               icon={<InboxIcon color={'black'} />}

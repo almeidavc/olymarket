@@ -12,28 +12,20 @@ interface PostListProps
   extends Omit<FlashListProps<Post>, 'data' | 'renderItem'> {
   posts: Post[] | undefined
   isLoading: boolean
+  firstRowPadding?: boolean
 }
 
 export const PostList = React.forwardRef<any, PostListProps>(
-  ({ posts, isLoading, ...props }, ref) => {
+  ({ posts, isLoading, firstRowPadding = false, ...props }, ref) => {
     const { height } = useWindowDimensions()
 
     const renderItem = ({ item: post, index }) => {
-      const paddingBetween = index % 2 === 0 ? 'pr-1' : 'pl-1'
+      const paddingX = index % 2 === 0 ? 'pr-2' : 'pl-2'
+      const paddingTop = firstRowPadding && index < 2 ? 'pt-4' : ''
 
       return (
-        <View className={`h-[35vh] w-full py-1.5 ${paddingBetween}`}>
-          <PostCard post={post} />
-        </View>
-      )
-    }
-
-    const renderSkeletonItem = ({ index }) => {
-      const paddingBetween = index % 2 === 0 ? 'pr-1' : 'pl-1'
-
-      return (
-        <View className={`h-[35vh] w-full py-1.5 ${paddingBetween}`}>
-          <SkeletonPostCard />
+        <View className={`h-[35vh] w-full pb-4 ${paddingX} ${paddingTop}`}>
+          {isLoading ? <SkeletonPostCard /> : <PostCard post={post} />}
         </View>
       )
     }
@@ -46,7 +38,7 @@ export const PostList = React.forwardRef<any, PostListProps>(
             data={Array(6)}
             numColumns={2}
             estimatedItemSize={0.35 * height}
-            renderItem={renderSkeletonItem}
+            renderItem={renderItem}
             scrollEnabled={false}
             showsVerticalScrollIndicator={false}
             {...props}
