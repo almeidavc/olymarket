@@ -10,6 +10,7 @@ services:
       - xpack.security.http.ssl.enabled=false
       - 'discovery.type=single-node'
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
     networks:
       - es-net
     ports:
