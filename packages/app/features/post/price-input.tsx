@@ -42,9 +42,7 @@ export const PriceInput: React.FC<FormInputProps> = ({
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
-                className={`${
-                  inputVariants[invalid ? 'invalid' : 'default']
-                } pl-6`}
+                className={inputVariants[invalid ? 'invalid' : 'default']}
                 placeholderTextColor={invalid ? '#b91c1c' : undefined}
                 style={{ fontSize: sizeVariants[size] }}
                 placeholder="0"
@@ -52,9 +50,9 @@ export const PriceInput: React.FC<FormInputProps> = ({
                 returnKeyType={'done'}
                 {...textInput}
               />
-              <View className="absolute inset-y-0 flex justify-center">
+              <View className="absolute inset-y-0 right-0 flex justify-center">
                 <Text
-                  className={`ml-2 ${
+                  className={`mr-3 ${
                     colorVariants[invalid ? 'invalid' : 'default']
                   }`}
                 >
