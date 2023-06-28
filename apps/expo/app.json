@@ -2,7 +2,7 @@
   "expo": {
     "name": "Olymarket",
     "slug": "olymarket",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "scheme": "olymarket",
     "orientation": "portrait",
     "backgroundColor": "#ffffff",
@@ -12,10 +12,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "ios": {
       "bundleIdentifier": "com.almeidavc.olymarket"
     },
