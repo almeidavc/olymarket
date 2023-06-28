@@ -1,6 +1,5 @@
 import { Header } from 'app/design/typography'
 import { Placeholder } from 'app/components/placeholder'
-import { AntDesign } from '@expo/vector-icons'
 import { SafeAreaView } from 'react-native'
 import { PostList } from '../post/post-list'
 import { trpc } from 'app/utils/trpc'
@@ -11,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PostCategory } from 'app/utils/enums'
 import { useIsFocused } from '@react-navigation/native'
 import { LoadingSpinner } from 'app/components/spinner'
+import { FaceFrownIcon } from 'react-native-heroicons/outline'
 
 export function FeedScreen({ navigation }) {
   const ref = useRef(null)
@@ -71,7 +71,7 @@ export function FeedScreen({ navigation }) {
         }
         ListEmptyComponent={
           <Placeholder
-            icon={<AntDesign name="frowno" color="black" />}
+            icon={<FaceFrownIcon color="black" />}
             title="No posts"
             description="We couldn't find any posts."
           />
