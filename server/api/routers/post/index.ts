@@ -346,8 +346,6 @@ const remove = protectedProcedure
       },
     })
 
-    post?.images?.forEach((img) => deleteImage(img.externalKey))
-
     return post
   })
 
