@@ -9,7 +9,7 @@ import { AntDesign } from '@expo/vector-icons'
 import { Button } from 'app/components/button'
 import { useRouter } from 'solito/router'
 
-export function CreatePost({ navigation }) {
+export function CreatePost() {
   const router = useRouter()
 
   const [isCreatePostLoading, setIsCreatePostLoading] = useState(false)
@@ -20,47 +20,56 @@ export function CreatePost({ navigation }) {
   const { mutate: generateUploadUrlsMutation } =
     trpc.post.generateImageUploadUrls.useMutation()
 
-  const { mutate: createPostMutation } = trpc.post.create.useMutation({
-    onSuccess: (createdPost) => {
-      context.post.search.invalidate()
+  const { mutate: createPostMutation } = trpc.post.create.useMutation()
 
-      context.post.list.invalidate()
-
-      context.post.listMine.setData(undefined, (oldPosts) => {
-        if (oldPosts) {
-          return [createdPost, ...oldPosts]
-        }
-      })
+  const { mutate: updateImagesMutation } = trpc.post.updateImages.useMutation({
+    onSuccess: () => {
+      context.post.list?.invalidate()
+      context.post.listMine?.invalidate()
     },
   })
 
   const createPost = (post, images) => {
     setIsCreatePostLoading(true)
-    return new Promise<void>((resolve, reject) => {
-      generateUploadUrlsMutation(
-        { count: images.length },
+    return new Promise<void>((resolve) => {
+      createPostMutation(
+        { ...post },
         {
-          onSuccess: async (uploadUrls) => {
-            try {
-              await uploadImages(
-                images,
-                uploadUrls.map((img) => img.url)
-              )
-            } catch (error) {
-              throw new Error(
-                'Something went wrong while uploading the images',
-                { cause: error }
-              )
-            }
+          onSuccess: (createdPost) => {
+            generateUploadUrlsMutation(
+              { count: images.length },
+              {
+                onSuccess: async (uploadUrls) => {
+                  try {
+                    await uploadImages(
+                      images,
+                      uploadUrls.map((img) => img.url)
+                    )
+                  } catch (error) {
+                    throw new Error(
+                      'Something went wrong while uploading the images',
+                      { cause: error }
+                    )
+                  }
 
-            await createPostMutation({
-              ...post,
-              images: uploadUrls.map((img) => img.key),
-            })
-
-            resolve()
-            setIsCreatePostLoading(false)
-            setShowPostCreatedModal(true)
+                  updateImagesMutation(
+                    {
+                      id: createdPost.id,
+                      images: uploadUrls.map((img) => ({
+                        externalKey: img.key,
+                      })),
+                    },
+                    {
+                      onSuccess: () => {
+                        resolve()
+                        setIsCreatePostLoading(false)
+                        setShowPostCreatedModal(true)
+                      },
+                    }
+                  )
+                },
+              }
+            )
           },
         }
       )

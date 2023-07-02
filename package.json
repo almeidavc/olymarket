@@ -1,11 +1,14 @@
 {
   "name": "solito-with-tailwind",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "server",
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "server",
+      "packages/*",
+      "infra/*"
+    ]
+  },
   "devDependencies": {
     "@types/react": "^18.0.17",
     "@types/react-native": "^0.69.5",

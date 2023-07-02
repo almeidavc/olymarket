@@ -1,0 +1,14 @@
+{
+  "name": "compress-image-lambda",
+  "private": true,
+  "scripts": {
+    "build": "rm compressImage.zip && zip -r compressImage.zip ."
+  },
+  "installConfig": {
+    "hoistingLimits": "workspaces"
+  },
+  "dependencies": {
+    "mysql": "^2.18.1",
+    "sharp": "^0.32.1"
+  }
+}

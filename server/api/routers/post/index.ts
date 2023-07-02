@@ -68,9 +68,7 @@ const listMine = protectedProcedure.query(({ ctx }) => {
   return ctx.prisma.post.findMany({
     where: {
       authorId: ctx.auth.userId,
-      status: {
-        not: PostStatus.REMOVED,
-      },
+      status: PostStatus.CREATED,
     },
     orderBy: {
       createdAt: 'desc',
@@ -86,9 +84,7 @@ const listReported = protectedProcedure.query(async ({ ctx }) => {
 
   return ctx.prisma.post.findMany({
     where: {
-      status: {
-        not: PostStatus.REMOVED,
-      },
+      status: PostStatus.CREATED,
       reports: {
         some: {},
       },
@@ -198,7 +194,6 @@ const create = protectedProcedure
   .input(
     z.object({
       category: z.nativeEnum(PostCategory),
-      images: z.string().array(),
       price: z.number().int(),
       title: z.string(),
       description: z.string().optional(),
@@ -214,17 +209,6 @@ const create = protectedProcedure
             id: ctx.auth.userId!,
           },
         },
-        images: {
-          createMany: {
-            data: input.images.map((key) => ({
-              externalKey: key,
-              url: getImageDownloadUrl(key),
-            })),
-          },
-        },
-      },
-      include: {
-        images: true,
       },
     })
   })
