@@ -4,12 +4,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
 export const s3 = new S3Client({
-  endpoint: process.env.S3_BUCKET_ENDPOINT,
-  region: process.env.S3_BUCKET_REGION,
-  credentials: {
-    accessKeyId: process.env.BACKBLAZE_ACCESS_KEY_ID,
-    secretAccessKey: process.env.BACKBLAZE_SECRET_ACCESS_KEY,
-  },
+  region: process.env.S3_REGION,
 })
 
 export async function getSignedUploadUrl() {

@@ -46,8 +46,11 @@ export function CreatePost({ navigation }) {
                 images,
                 uploadUrls.map((img) => img.url)
               )
-            } catch {
-              throw new Error('Something went wrong while uploading the images')
+            } catch (error) {
+              throw new Error(
+                'Something went wrong while uploading the images',
+                { cause: error }
+              )
             }
 
             await createPostMutation({

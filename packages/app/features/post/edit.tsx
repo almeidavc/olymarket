@@ -60,9 +60,10 @@ export function EditPost({ route, navigation }) {
                   newImages,
                   imageUploadUrls.map((img) => img.url)
                 )
-              } catch {
+              } catch (error) {
                 throw new Error(
-                  'Something went wrong while uploading the images'
+                  'Something went wrong while uploading the images',
+                  { cause: error }
                 )
               }
 
