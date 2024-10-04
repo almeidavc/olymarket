@@ -9,7 +9,7 @@ const formatter = winston.format.printf(
     }
 
     return output
-  }
+  },
 )
 
 const colorizeTimestamp = winston.format((info) => {
@@ -32,27 +32,26 @@ const colorizeTimestamp = winston.format((info) => {
 export const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.json()
+    winston.format.json(),
   ),
-  transports: [
-    new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'logs/info.log', level: 'info' }),
-  ],
-  exceptionHandlers: [
-    new winston.transports.File({ filename: 'logs/exceptions.log' }),
-  ],
+  // transports: [
+  // new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+  // new winston.transports.File({ filename: 'logs/info.log', level: 'info' }),
+  // ],
+  // exceptionHandlers: [
+  //   new winston.transports.File({ filename: 'logs/exceptions.log' }),
+  // ],
 })
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(
     new winston.transports.Console({
-      level: 'debug',
       format: winston.format.combine(
         winston.format.timestamp(),
         colorizeTimestamp(),
         winston.format.colorize(),
-        formatter
+        formatter,
       ),
-    })
+    }),
   )
 }

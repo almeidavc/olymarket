@@ -17,7 +17,7 @@ type CompleteConversation = Prisma.ConversationGetPayload<
 
 function findPartnerInParticipants(
   conversation: CompleteConversation,
-  me: string
+  me: string,
 ) {
   return conversation?.participants.find((member) => member.id !== me)
 }
@@ -91,7 +91,7 @@ const list = protectedProcedure.query(async ({ ctx }) => {
     },
   })
   return conversations.map((conversation) =>
-    parseChat(conversation, ctx.auth.userId!)
+    parseChat(conversation, ctx.auth.userId!),
   )
 })
 

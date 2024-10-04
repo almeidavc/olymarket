@@ -1,10 +1,8 @@
 {
-  "name": "server",
+  "name": "@olymarket/api",
   "packageManager": "yarn@3.4.1",
   "scripts": {
-    "build": "tsc",
-    "dev": "NODE_ENV=development ts-node --transpileOnly index.ts",
-    "start": "NODE_ENV=production node dist/index.js",
+    "dev": "dotenv -- tsx index.ts",
     "prod": "NODE_ENV=production pm2 start dist/index.js"
   },
   "dependencies": {
@@ -12,6 +10,7 @@
     "@aws-sdk/s3-request-presigner": "^3.321.1",
     "@clerk/clerk-sdk-node": "^4.8.6",
     "@elastic/elasticsearch": "7",
+    "@olymarket/db": "workspace:^",
     "@trpc/client": "^10.21.3-alpha.3",
     "@trpc/server": "^10.21.3-alpha.3",
     "axios": "^1.7.7",
@@ -27,7 +26,9 @@
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.4",
+    "dotenv-cli": "^7.4.2",
     "http-inspector": "^0.1.11",
+    "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   }
 }

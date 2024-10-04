@@ -1,7 +1,7 @@
 import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import nodemailer from 'nodemailer'
-import { logger } from '../../logger'
+import { logger } from '../../utils/logger'
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

@@ -1,11 +1,7 @@
 import { router, publicProcedure, protectedProcedure } from '../../trpc'
 import { z } from 'zod'
 import { Zone, PostStatus, PostCategory } from '@prisma/client'
-import {
-  deleteImage,
-  getImageDownloadUrl,
-  getSignedUploadUrl,
-} from '../../../s3'
+import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
 import { TRPCError } from '@trpc/server'
 import { assertIsModerator, isModerator } from '../../utils/roles'
 import { assertIsAuthor, assertPostExists, findPostById } from './utils'
@@ -24,7 +20,7 @@ const list = publicProcedure
         limit: z.number().optional(),
         cursor: z.string().optional(),
       })
-      .optional()
+      .optional(),
   )
   .query(async ({ ctx, input }) => {
     const categories = input?.categories.length
@@ -106,7 +102,7 @@ const search = publicProcedure
       categories: z.array(z.nativeEnum(PostCategory)).optional(),
       limit: z.number().optional(),
       cursor: z.any().array().optional(),
-    })
+    }),
   )
   .query(async ({ ctx, input }) => {
     const categories = input.categories?.length
@@ -198,7 +194,7 @@ const create = protectedProcedure
       title: z.string(),
       description: z.string().optional(),
       zone: z.nativeEnum(Zone).optional(),
-    })
+    }),
   )
   .mutation(({ ctx, input }) => {
     return ctx.prisma.post.create({
@@ -222,7 +218,7 @@ const update = protectedProcedure
       title: z.string(),
       description: z.string().optional(),
       zone: z.nativeEnum(Zone).optional(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const post = await findPostById(input.id)
@@ -257,7 +253,7 @@ const updateImages = protectedProcedure
           externalKey: z.string(),
         })
         .array(),
-    })
+    }),
   )
   .mutation(async ({ ctx, input }) => {
     const post = await findPostById(input.id)
@@ -266,10 +262,10 @@ const updateImages = protectedProcedure
 
     const oldImages = post.images
     const removedImages = oldImages.filter(
-      (oldImg) => !input.images.some((img) => img.id === oldImg.id)
+      (oldImg) => !input.images.some((img) => img.id === oldImg.id),
     )
     const addedImages = input.images.filter(
-      (img) => !oldImages.some((oldImg) => oldImg.id === img.id)
+      (img) => !oldImages.some((oldImg) => oldImg.id === img.id),
     )
 
     return await ctx.prisma.post.update({

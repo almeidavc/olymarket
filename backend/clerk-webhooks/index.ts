@@ -1,9 +1,17 @@
-import { app } from '../app'
+import cors from 'cors'
+import express from 'express'
+import http from 'http'
 import bodyParser from 'body-parser'
-import { prisma } from '../prisma'
-import { logger } from '../logger'
+import { PrismaClient } from '@prisma/client'
+import { logger } from '../utils/logger'
 
+const app = express()
+const server = http.createServer(app)
+const prisma = new PrismaClient()
+
+app.use(cors())
 app.use(bodyParser.json())
+
 app.post('/hook', async (req) => {
   const event = req.body
 
@@ -56,7 +64,7 @@ app.post('/hook', async (req) => {
         // catch error thrown when user does not exist
         if (error.code === 'P2025') {
           logger.warn(
-            'Trying to delete an user that does not exist in database'
+            'Trying to delete an user that does not exist in database',
           )
           return
         }
@@ -65,3 +73,5 @@ app.post('/hook', async (req) => {
       }
   }
 })
+
+server.listen(4000)

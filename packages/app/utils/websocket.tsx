@@ -14,7 +14,7 @@ export const useAuthSocket = (): Socket => {
   const { current: socket } = useRef(
     io(url, {
       autoConnect: false,
-    })
+    }),
   )
 
   useEffect(() => {

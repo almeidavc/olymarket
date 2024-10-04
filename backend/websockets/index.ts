@@ -17,7 +17,7 @@ type MessageInput = Pick<
 interface ClientToServerEvents {
   'message:send': (
     payload: { message: MessageInput },
-    acknowledge: (response: { message: Message }) => void
+    acknowledge: (response: { message: Message }) => void,
   ) => void
   authenticate
 }

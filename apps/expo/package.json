@@ -38,7 +38,7 @@
     "typescript": "^5.6.2"
   },
   "scripts": {
-    "start": "expo start --dev-client",
+    "dev": "NODE_ENV=local expo start --go",
     "build": "eas build --platform ios",
     "build:dev": "eas build --profile development --platform ios",
     "submit": "eas submit -p ios",

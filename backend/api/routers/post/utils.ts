@@ -1,6 +1,6 @@
-import { prisma } from '../../../prisma'
 import { Post } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
+import { prisma } from '../../context'
 
 export const findPostById = (id: string) => {
   return prisma.post.findUnique({

@@ -1,5 +1,5 @@
 {
-  "name": "db",
+  "name": "@olymarket/db",
   "packageManager": "yarn@3.4.1",
   "scripts": {
     "generate": "prisma generate",
@@ -7,10 +7,10 @@
     "reset": "prisma migrate reset && prisma db push",
     "studio": "prisma studio"
   },
+  "dependencies": {
+    "@prisma/client": "^5.20.0"
+  },
   "devDependencies": {
     "prisma": "^5.20.0"
-  },
-  "dependencies": {
-    "@prisma/client": "^4.13.0"
   }
 }
