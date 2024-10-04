@@ -7,11 +7,11 @@ import Constants from 'expo-constants'
 import superjson from 'superjson'
 
 function getApiUrl() {
-  const serverUrl = Constants.expoConfig?.extra?.SERVER_URL
-  if (!serverUrl) {
+  const apiUrl = Constants.expoConfig?.extra?.API_URL
+  if (!apiUrl) {
     throw new Error('Server url is not set, please configure it manually')
   }
-  return `${serverUrl}/trpc`
+  return `${apiUrl}/trpc`
 }
 
 export function TRPCProvider({ children }) {

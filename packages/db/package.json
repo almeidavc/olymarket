@@ -8,7 +8,7 @@
     "studio": "prisma studio"
   },
   "devDependencies": {
-    "prisma": "^4.13.0"
+    "prisma": "^5.20.0"
   },
   "dependencies": {
     "@prisma/client": "^4.13.0"

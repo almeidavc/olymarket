@@ -33,7 +33,7 @@ const ban = protectedProcedure
 
     const res = await axios({
       method: 'post',
-      url: `${process.env.CLERK_API_URL_V1}/users/${input.userId}/ban`,
+      url: `${process.env.EXPO_PUBLIC_CLERK_API_URL_V1}/users/${input.userId}/ban`,
       headers: {
         Authorization: `Bearer ${process.env.CLERK_SECRET_KEY}`,
       },

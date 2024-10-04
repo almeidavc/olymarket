@@ -3,8 +3,8 @@ module.exports = ({ config }) => {
     ...config,
     extra: {
       ...config.extra,
-      SERVER_URL: process.env.SERVER_URL,
-      CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
+      API_URL: process.env.EXPO_PUBLIC_API_URL,
+      CLERK_PUBLISHABLE_KEY: process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY,
     },
   }
 }

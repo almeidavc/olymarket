@@ -3,7 +3,7 @@ import { useRef, useEffect } from 'react'
 import { useAuth } from '@clerk/clerk-expo'
 import Constants from 'expo-constants'
 
-const url = Constants.expoConfig?.extra?.SERVER_URL
+const url = Constants.expoConfig?.extra?.API_URL
 if (!url) {
   throw new Error('Server url is not set, please configure it manually')
 }
