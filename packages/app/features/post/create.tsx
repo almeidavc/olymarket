@@ -43,12 +43,12 @@ export function CreatePost() {
                   try {
                     await uploadImages(
                       images,
-                      uploadUrls.map((img) => img.url)
+                      uploadUrls.map((img) => img.url),
                     )
                   } catch (error) {
                     throw new Error(
                       'Something went wrong while uploading the images',
-                      { cause: error }
+                      { cause: error },
                     )
                   }
 
@@ -65,13 +65,13 @@ export function CreatePost() {
                         setIsCreatePostLoading(false)
                         setShowPostCreatedModal(true)
                       },
-                    }
+                    },
                   )
                 },
-              }
+              },
             )
           },
-        }
+        },
       )
     })
   }
@@ -87,7 +87,7 @@ export function CreatePost() {
           <View className="mx-auto mb-3.5 flex h-24 w-24 items-center justify-center rounded-full bg-green-100 p-2 dark:bg-green-900">
             <AntDesign name="check" size={50} color="#22c55e" />
           </View>
-          <Text className="mb-4 text-4xl font-extrabold  text-gray-900">
+          <Text className="mb-4 text-4xl font-extrabold text-gray-900">
             Success!
           </Text>
           <Text className="mb-8 text-2xl font-normal text-gray-500">

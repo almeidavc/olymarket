@@ -30,6 +30,7 @@ const colorizeTimestamp = winston.format((info) => {
 })
 
 export const logger = winston.createLogger({
+  level: process.env.NODE_ENV,
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.json(),

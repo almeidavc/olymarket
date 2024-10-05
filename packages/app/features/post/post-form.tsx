@@ -53,10 +53,10 @@ export const PostFormScreen = ({
   const isAnyFieldDirty = isDirty || isFormDirty
 
   const [imageUris, setImageUris] = useState<string[]>(
-    () => defaultValues?.images?.map((img) => img.url) ?? []
+    () => defaultValues?.images?.map((img) => img.url) ?? [],
   )
   const [category, setCategory] = useState<PostCategory>(
-    defaultValues?.category
+    defaultValues?.category,
   )
   const [zone, setZone] = useState<Zone>(defaultValues?.zone)
 
@@ -93,7 +93,7 @@ export const PostFormScreen = ({
           category,
           zone,
         },
-        imageUris
+        imageUris,
       )
       resetForm()
     })()
