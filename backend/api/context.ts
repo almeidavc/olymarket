@@ -3,7 +3,7 @@ import { CreateExpressContextOptions } from '@trpc/server/adapters/express'
 import { Request } from 'express'
 import { LooseAuthProp } from '@clerk/clerk-sdk-node'
 import { Client } from '@elastic/elasticsearch'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@olymarket/db'
 
 type RequestWithAuth = Request & Partial<LooseAuthProp>
 

@@ -1,7 +1,7 @@
 import { router, publicProcedure } from '../trpc'
 import { z } from 'zod'
 import nodemailer from 'nodemailer'
-import { logger } from '../../utils/logger'
+import { logger } from '@olymarket/backend-utils'
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',

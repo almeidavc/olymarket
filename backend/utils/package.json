@@ -1,0 +1,7 @@
+{
+  "name": "@olymarket/backend-utils",
+  "packageManager": "yarn@3.4.1",
+  "dependencies": {
+    "winston": "^3.15.0"
+  }
+}

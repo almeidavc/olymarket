@@ -28,7 +28,7 @@ export const SkeletonPostCard = () => {
           easing: Easing.bezier(0.4, 0, 0.6, 1),
           useNativeDriver: true,
         }),
-      ])
+      ]),
     ).start()
   }, [])
 
@@ -69,7 +69,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
         <View className="flex-1">
           <Image
             className="h-full w-full rounded-md"
-            resizeMode="cover"
+            contentFit="cover"
             source={{
               uri: post.images![0]?.url,
             }}

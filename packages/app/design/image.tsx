@@ -1,4 +1,4 @@
-import FastImage from 'react-native-fast-image'
+import { Image as ExpoImage, ImageProps } from 'expo-image'
 import { styled } from 'nativewind'
 
-export const Image = styled(FastImage)
+export const Image = styled<ImageProps>(ExpoImage)

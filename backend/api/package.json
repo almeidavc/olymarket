@@ -10,6 +10,7 @@
     "@aws-sdk/s3-request-presigner": "^3.321.1",
     "@clerk/clerk-sdk-node": "^4.8.6",
     "@elastic/elasticsearch": "7",
+    "@olymarket/backend-utils": "workspace:^",
     "@olymarket/db": "workspace:^",
     "@trpc/client": "^10.21.3-alpha.3",
     "@trpc/server": "^10.21.3-alpha.3",

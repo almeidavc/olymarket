@@ -2,8 +2,8 @@ import cors from 'cors'
 import express from 'express'
 import http from 'http'
 import bodyParser from 'body-parser'
-import { PrismaClient } from '@prisma/client'
-import { logger } from '../utils/logger'
+import { PrismaClient } from '@olymarket/db'
+import { logger } from '@olymarket/backend-utils'
 
 const app = express()
 const server = http.createServer(app)
@@ -12,7 +12,7 @@ const prisma = new PrismaClient()
 app.use(cors())
 app.use(bodyParser.json())
 
-app.post('/hook', async (req) => {
+app.post('/', async (req) => {
   const event = req.body
 
   logger.info('Received clerk event', event)
@@ -74,4 +74,4 @@ app.post('/hook', async (req) => {
   }
 })
 
-server.listen(4000)
+server.listen(4001)

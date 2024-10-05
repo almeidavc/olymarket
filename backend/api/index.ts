@@ -5,7 +5,7 @@ import { appRouter } from './routers'
 import { createContext } from './context'
 import { ClerkExpressWithAuth } from '@clerk/clerk-sdk-node'
 import * as trpcExpress from '@trpc/server/adapters/express'
-import { logger } from '../utils/logger'
+import { logger } from '@olymarket/backend-utils'
 
 const app = express()
 app.use(cors())

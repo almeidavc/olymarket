@@ -1,4 +1,18 @@
 {
   "name": "@olymarket/clerk-webhooks",
-  "packageManager": "yarn@3.4.1"
+  "packageManager": "yarn@3.4.1",
+  "scripts": {
+    "dev": "dotenv -- tsx index.ts"
+  },
+  "dependencies": {
+    "@olymarket/backend-utils": "workspace:^",
+    "@olymarket/db": "workspace:^",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^7.4.2",
+    "tsx": "^4.19.1"
+  }
 }

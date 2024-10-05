@@ -31,7 +31,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({ imageUris }) => {
             renderItem={({ item: imageUri, index }) => (
               <Image
                 className="h-full w-full bg-black"
-                resizeMode="contain"
+                contentFit="contain"
                 source={{ uri: imageUri }}
               />
             )}
