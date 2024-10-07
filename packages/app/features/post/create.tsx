@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { trpc } from 'app/utils/trpc'
-import { uploadImages } from './upload-image'
+import { compressAndUploadImages } from './upload-image'
 import { PostFormScreen } from './post-form'
 import { Modal, SafeAreaView } from 'react-native'
 import { View } from 'app/design/core'
@@ -24,7 +24,7 @@ export function CreatePost() {
 
   const { mutate: updateImagesMutation } = trpc.post.updateImages.useMutation({
     onSuccess: () => {
-      context.post.list?.invalidate()
+      context.post.search?.invalidate()
       context.post.listMine?.invalidate()
     },
   })
@@ -41,7 +41,7 @@ export function CreatePost() {
               {
                 onSuccess: async (uploadUrls) => {
                   try {
-                    await uploadImages(
+                    await compressAndUploadImages(
                       images,
                       uploadUrls.map((img) => img.url),
                     )

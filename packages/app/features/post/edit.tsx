@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { trpc } from 'app/utils/trpc'
-import { uploadImages } from './upload-image'
+import { compressAndUploadImages } from './upload-image'
 import { PostFormScreen } from './post-form'
 import { Modal } from 'react-native'
 import { View } from 'app/design/core'
@@ -54,7 +54,7 @@ export function EditPost({ route, navigation }) {
           {
             onSuccess: async (imageUploadUrls) => {
               try {
-                await uploadImages(
+                await compressAndUploadImages(
                   newImages,
                   imageUploadUrls.map((img) => img.url),
                 )

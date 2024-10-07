@@ -1,6 +1,11 @@
-export async function uploadImage(imageUri, uploadImageUrl) {
-  // read image from fs
-  const response = await fetch(imageUri)
+import { manipulateAsync } from 'expo-image-manipulator'
+
+export async function compressAndUploadImage(imageUri, uploadImageUrl) {
+  // compress image
+  const compressed = await manipulateAsync(imageUri, [], { compress: 0.5 })
+
+  // read compressed image from fs
+  const response = await fetch(compressed.uri)
   const blob = await response.blob()
 
   // upload image
@@ -12,10 +17,10 @@ export async function uploadImage(imageUri, uploadImageUrl) {
   return result
 }
 
-export function uploadImages(imageUris, uploadImageUrls) {
+export function compressAndUploadImages(imageUris, uploadImageUrls) {
   const uploads: any[] = []
   for (let i = 0; i < imageUris.length; i++) {
-    uploads.push(uploadImage(imageUris[i], uploadImageUrls[i]))
+    uploads.push(compressAndUploadImage(imageUris[i], uploadImageUrls[i]))
   }
   return Promise.all(uploads)
 }
