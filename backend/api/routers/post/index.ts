@@ -5,6 +5,7 @@ import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
 import { TRPCError } from '@trpc/server'
 import { assertIsModerator, isModerator } from '../../utils/roles'
 import { assertIsAuthor, assertPostExists, findPostById } from './utils'
+import { logger } from '@olymarket/backend-utils'
 
 const getById = publicProcedure
   .input(z.object({ id: z.string() }))
@@ -12,18 +13,17 @@ const getById = publicProcedure
     return await findPostById(input.id)
   })
 
-const list = publicProcedure
+const search = publicProcedure
   .input(
-    z
-      .object({
-        categories: z.array(z.nativeEnum(PostCategory)),
-        limit: z.number().optional(),
-        cursor: z.string().optional(),
-      })
-      .optional(),
+    z.object({
+      query: z.string().optional(),
+      categories: z.array(z.nativeEnum(PostCategory)).optional(),
+      limit: z.number().optional(),
+      cursor: z.string().optional(),
+    }),
   )
   .query(async ({ ctx, input }) => {
-    const categories = input?.categories.length
+    const categories = input?.categories?.length
       ? input.categories
       : Object.keys(PostCategory)
 
@@ -34,6 +34,7 @@ const list = publicProcedure
       take: limit + 1,
       cursor: cursor,
       where: {
+        title: input?.query ? { search: input.query } : undefined,
         status: PostStatus.CREATED,
         category: {
           in: categories,
@@ -94,87 +95,6 @@ const listReported = protectedProcedure.query(async ({ ctx }) => {
     },
   })
 })
-
-const search = publicProcedure
-  .input(
-    z.object({
-      query: z.string().optional(),
-      categories: z.array(z.nativeEnum(PostCategory)).optional(),
-      limit: z.number().optional(),
-      cursor: z.any().array().optional(),
-    }),
-  )
-  .query(async ({ ctx, input }) => {
-    const categories = input.categories?.length
-      ? input.categories
-      : Object.keys(PostCategory)
-
-    const limit = input?.limit ?? 50
-    const cursor = input?.cursor
-
-    let query
-    if (input.query) {
-      query = {
-        multi_match: {
-          query: input.query,
-          fields: ['title^2', 'description', 'author.username'],
-          fuzziness: 'auto',
-          operator: 'or',
-        },
-      }
-    } else {
-      query = {
-        match_all: {},
-      }
-    }
-
-    const res = await ctx.elastic.search({
-      index: 'posts_idx',
-      body: {
-        query: {
-          bool: {
-            must: [query],
-            filter: [
-              {
-                term: {
-                  'status.keyword': PostStatus.CREATED,
-                },
-              },
-              {
-                terms: {
-                  'category.keyword': categories,
-                },
-              },
-            ],
-          },
-        },
-        size: limit,
-        sort: [
-          {
-            _score: 'desc',
-          },
-          {
-            'id.keyword': 'desc',
-          },
-        ],
-        search_after: cursor,
-      },
-    })
-
-    const hits = res.body.hits.hits
-
-    let nextCursor = undefined
-    if (hits.length === limit) {
-      nextCursor = hits[hits.length - 1].sort
-    }
-
-    return {
-      posts: hits.map((hit) => hit._source),
-      pagination: {
-        nextCursor,
-      },
-    }
-  })
 
 const generateImageUploadUrls = protectedProcedure
   .input(z.object({ count: z.number().int().positive() }))
@@ -384,7 +304,6 @@ const report = protectedProcedure
 
 export const postRouter = router({
   getById,
-  list,
   listMine,
   listReported,
   search,

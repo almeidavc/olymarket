@@ -20,11 +20,11 @@ export function FeedScreen({ navigation }) {
   const [categories, setCategories] = useState<PostCategory[]>([])
 
   const { data, fetchNextPage, hasNextPage, refetch, isLoading } =
-    trpc.post.list.useInfiniteQuery(
+    trpc.post.search.useInfiniteQuery(
       { categories },
       {
         getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
-      }
+      },
     )
 
   const posts = data?.pages.flatMap((page) => page.posts)

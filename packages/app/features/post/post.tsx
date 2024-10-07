@@ -35,7 +35,7 @@ export function PostScreen({ route }) {
       onSuccess: (removedPost) => {
         context.post.search.invalidate()
 
-        context.post.list.invalidate()
+        context.post.search.invalidate()
 
         context.post.listMine.setData(undefined, (oldPosts) => {
           if (oldPosts) {
@@ -79,7 +79,7 @@ export function PostScreen({ route }) {
         onSuccess: (chat) => {
           router.push(`/chat/${chat?.id}`)
         },
-      }
+      },
     )
   }
 

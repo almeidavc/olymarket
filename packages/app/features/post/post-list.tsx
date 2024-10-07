@@ -3,7 +3,7 @@ import { FlashList, FlashListProps } from '@shopify/flash-list'
 import { PostCard, SkeletonPostCard } from '../post/cards'
 import { useWindowDimensions } from 'react-native'
 import { inferProcedureOutput } from '@trpc/server'
-import { AppRouter } from 'server/api/routers'
+import { AppRouter } from 'api/routers'
 import React from 'react'
 
 type Post = inferProcedureOutput<AppRouter['post']['getById']>
@@ -36,6 +36,7 @@ export const PostList = React.forwardRef<any, PostListProps>(
           <FlashList
             ref={ref}
             data={Array(6)}
+            keyExtractor={(_, i) => i.toString()}
             numColumns={2}
             estimatedItemSize={0.35 * height}
             renderItem={renderItem}
@@ -57,5 +58,5 @@ export const PostList = React.forwardRef<any, PostListProps>(
         )}
       </View>
     )
-  }
+  },
 )

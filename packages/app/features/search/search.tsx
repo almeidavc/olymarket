@@ -24,7 +24,7 @@ export function SearchScreen({ navigation }) {
   const [isSearchInputFocused, setIsSearchInputFocused] = useState(false)
 
   const [selectedCategories, setSelectedCategories] = useState<PostCategory[]>(
-    []
+    [],
   )
 
   const { data, fetchNextPage, hasNextPage, refetch, isLoading } =
@@ -35,7 +35,7 @@ export function SearchScreen({ navigation }) {
       },
       {
         getNextPageParam: (lastPage) => lastPage.pagination.nextCursor,
-      }
+      },
     )
 
   const posts = data?.pages.flatMap((page) => page.posts)

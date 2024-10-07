@@ -35,7 +35,7 @@ export function SplashScreenManager({
 
   useEffect(() => {
     async function loadFeedAsync() {
-      await context.post.list.prefetch()
+      await context.post.search.prefetch({})
       setFeedReady(true)
     }
 
