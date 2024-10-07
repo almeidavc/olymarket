@@ -1,16 +1,26 @@
 import { router, publicProcedure, protectedProcedure } from '../../trpc'
 import { z } from 'zod'
 import { Zone, PostStatus, PostCategory } from '@prisma/client'
-import { deleteImage, getImageDownloadUrl, getSignedUploadUrl } from '../../s3'
+import { getSignedUploadUrl } from '../../s3'
 import { TRPCError } from '@trpc/server'
 import { assertIsModerator, isModerator } from '../../utils/roles'
-import { assertIsAuthor, assertPostExists, findPostById } from './utils'
-import { logger } from '@olymarket/backend-utils'
+import {
+  assertIsAuthor,
+  assertPostExists,
+  findPostById,
+  resolveImageUrls,
+} from './utils'
+import {
+  GetByIdResponse,
+  ListMineResponse,
+  listReportedResponse,
+  SearchResponse,
+} from '../../types'
 
 const getById = publicProcedure
   .input(z.object({ id: z.string() }))
-  .query(async ({ ctx, input }) => {
-    return await findPostById(input.id)
+  .query(async ({ ctx, input }): Promise<GetByIdResponse> => {
+    return resolveImageUrls(await findPostById(input.id))
   })
 
 const search = publicProcedure
@@ -22,7 +32,7 @@ const search = publicProcedure
       cursor: z.string().optional(),
     }),
   )
-  .query(async ({ ctx, input }) => {
+  .query(async ({ ctx, input }): Promise<SearchResponse> => {
     const categories = input?.categories?.length
       ? input.categories
       : Object.keys(PostCategory)
@@ -53,48 +63,58 @@ const search = publicProcedure
       nextCursor = posts.pop().id
     }
 
+    const postsWithImageUrls = await Promise.all(
+      posts.map((post) => resolveImageUrls(post)),
+    )
+
     return {
-      posts,
+      posts: postsWithImageUrls,
       pagination: {
         nextCursor,
       },
     }
   })
 
-const listMine = protectedProcedure.query(({ ctx }) => {
-  return ctx.prisma.post.findMany({
-    where: {
-      authorId: ctx.auth.userId,
-      status: PostStatus.CREATED,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    include: {
-      images: true,
-    },
-  })
-})
-
-const listReported = protectedProcedure.query(async ({ ctx }) => {
-  await assertIsModerator(ctx.auth.userId!)
-
-  return ctx.prisma.post.findMany({
-    where: {
-      status: PostStatus.CREATED,
-      reports: {
-        some: {},
+const listMine = protectedProcedure.query(
+  async ({ ctx }): Promise<ListMineResponse> => {
+    const posts = await ctx.prisma.post.findMany({
+      where: {
+        authorId: ctx.auth.userId,
+        status: PostStatus.CREATED,
       },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-    include: {
-      images: true,
-      reports: true,
-    },
-  })
-})
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        images: true,
+      },
+    })
+
+    return Promise.all(posts.map((post) => resolveImageUrls(post)))
+  },
+)
+
+const listReported = protectedProcedure.query(
+  async ({ ctx }): Promise<listReportedResponse> => {
+    await assertIsModerator(ctx.auth.userId!)
+
+    return ctx.prisma.post.findMany({
+      where: {
+        status: PostStatus.CREATED,
+        reports: {
+          some: {},
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        images: true,
+        reports: true,
+      },
+    })
+  },
+)
 
 const generateImageUploadUrls = protectedProcedure
   .input(z.object({ count: z.number().int().positive() }))
@@ -170,7 +190,7 @@ const updateImages = protectedProcedure
       images: z
         .object({
           id: z.string().optional(),
-          externalKey: z.string(),
+          key: z.string(),
         })
         .array(),
     }),
@@ -195,10 +215,7 @@ const updateImages = protectedProcedure
       data: {
         images: {
           createMany: {
-            data: addedImages.map((img) => ({
-              externalKey: img.externalKey,
-              url: getImageDownloadUrl(img.externalKey),
-            })),
+            data: addedImages.map((img) => ({ key: img.key })),
           },
           deleteMany: {
             id: {

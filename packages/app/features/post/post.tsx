@@ -106,7 +106,7 @@ export function PostScreen({ route }) {
 
   return (
     <ScrollView>
-      <ImageSlider imageUris={post.images.map((img) => img.url)} />
+      <ImageSlider post={post} />
       <View className="p-4">
         <View className="border-background flex flex-row items-center justify-between border-b pb-4">
           <View className="flex flex-row items-center">

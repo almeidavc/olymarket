@@ -1,4 +1,8 @@
-import { DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import {
+  DeleteObjectCommand,
+  GetObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3'
 import { v4 as uuid } from 'uuid'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
@@ -25,8 +29,12 @@ export async function getSignedUploadUrl() {
   }
 }
 
-export function getImageDownloadUrl(key: string) {
-  return `${process.env.B2_BUCKET_ENDPOINT}/${key}`
+export async function getSignedDownloadUrl(key: string) {
+  const getObjectCommand = new GetObjectCommand({
+    Bucket: process.env.B2_BUCKET_NAME,
+    Key: key,
+  })
+  return getSignedUrl(s3, getObjectCommand)
 }
 
 export function deleteImage(key: string) {

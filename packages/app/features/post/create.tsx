@@ -56,7 +56,7 @@ export function CreatePost() {
                     {
                       id: createdPost.id,
                       images: uploadUrls.map((img) => ({
-                        externalKey: img.key,
+                        key: img.key,
                       })),
                     },
                     {

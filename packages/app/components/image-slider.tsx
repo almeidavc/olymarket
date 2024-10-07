@@ -10,13 +10,16 @@ import {
 import { AntDesign } from '@expo/vector-icons'
 import { PaginatedCarousel } from './carousel'
 import { Image } from 'app/design/image'
+import { Post } from 'app/utils/types'
 
 interface ImageSliderProps {
-  imageUris: string[]
+  post: Post
 }
 
-export const ImageSlider: React.FC<ImageSliderProps> = ({ imageUris }) => {
+export const ImageSlider: React.FC<ImageSliderProps> = ({ post }) => {
   const { width } = useWindowDimensions()
+
+  const images = post?.images
 
   const [showImageFullscreen, setShowImageFullScreen] = useState<string>()
 
@@ -25,14 +28,14 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({ imageUris }) => {
       <Modal visible={!!showImageFullscreen}>
         <View className="relative bg-black">
           <PaginatedCarousel
-            data={imageUris}
+            data={images}
             itemWidth={width}
             sliderWidth={width}
-            renderItem={({ item: imageUri, index }) => (
+            renderItem={({ item: image }) => (
               <Image
                 className="h-full w-full bg-black"
                 contentFit="contain"
-                source={{ uri: imageUri }}
+                source={image.url}
               />
             )}
           />
@@ -46,14 +49,14 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({ imageUris }) => {
         </View>
       </Modal>
       <PaginatedCarousel
-        data={imageUris}
+        data={images}
         itemWidth={width}
         sliderWidth={width}
-        renderItem={({ item: imageUri }) => (
+        renderItem={({ item: image }) => (
           <TouchableWithoutFeedback
-            onPress={() => setShowImageFullScreen(imageUri)}
+            onPress={() => setShowImageFullScreen(image.url)}
           >
-            <Image className="h-[55vh]" source={{ uri: imageUri }} />
+            <Image className="h-[55vh]" source={image.url} />
           </TouchableWithoutFeedback>
         )}
       />

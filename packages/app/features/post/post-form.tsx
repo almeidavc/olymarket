@@ -3,8 +3,6 @@ import { Text } from 'app/design/typography'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { FormInput } from 'app/components/form'
 import { Button } from 'app/components/button'
-import { inferProcedureOutput } from '@trpc/server'
-import { AppRouter } from 'server/api/routers'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { RadioButton } from 'app/components/radio'
@@ -18,8 +16,7 @@ import {
 } from 'app/utils/enums'
 import { Modal, SafeAreaView } from 'react-native'
 import { PriceInput } from './price-input'
-
-type Post = inferProcedureOutput<AppRouter['post']['getById']>
+import { Post } from 'app/utils/types'
 
 interface PostFormProps {
   defaultValues?: Post

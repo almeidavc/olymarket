@@ -2,9 +2,11 @@ import Carousel, { CarouselProps, Pagination } from 'react-native-snap-carousel'
 import { View } from 'app/design/core'
 import React, { useState, useEffect } from 'react'
 
-export const PaginatedCarousel: React.FC<
-  Omit<CarouselProps<any>, 'onSnapToItem'>
-> = ({ data, renderItem, ...props }) => {
+export const PaginatedCarousel = <T,>({
+  data,
+  renderItem,
+  ...props
+}: Omit<CarouselProps<T>, 'onSnapToItem'>) => {
   const [activeItemIndex, setActiveItemIndex] = useState(0)
 
   useEffect(() => {

@@ -1,8 +1,11 @@
-import { Post } from '@prisma/client'
+import { Post, Prisma } from '@prisma/client'
 import { TRPCError } from '@trpc/server'
 import { prisma } from '../../context'
+import { getSignedDownloadUrl } from '../../s3'
 
-export const findPostById = (id: string) => {
+export const findPostById = (
+  id: string,
+): Prisma.PostGetPayload<{ include: { images: true } }> => {
   return prisma.post.findUnique({
     where: {
       id,
@@ -12,6 +15,21 @@ export const findPostById = (id: string) => {
       images: true,
     },
   })
+}
+
+export const resolveImageUrls = async (
+  post: Prisma.PostGetPayload<{ include: { images: true } }>,
+) => {
+  const imageUrls = await Promise.all(
+    post.images.map((image) => getSignedDownloadUrl(image.key)),
+  )
+  return {
+    ...post,
+    images: post.images.map((image, i) => ({
+      ...image,
+      url: imageUrls[i],
+    })),
+  }
 }
 
 export const assertPostExists = (post: Post | null) => {

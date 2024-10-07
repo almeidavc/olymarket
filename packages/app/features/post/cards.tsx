@@ -70,9 +70,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <Image
             className="h-full w-full rounded-md"
             contentFit="cover"
-            source={{
-              uri: post.images![0]?.url,
-            }}
+            source={post.images![0]?.url}
           />
         </View>
         <View>
