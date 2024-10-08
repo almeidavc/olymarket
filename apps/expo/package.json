@@ -35,11 +35,12 @@
     "@babel/core": "^7.20.0",
     "@types/react": "~18.0.27",
     "@types/react-native": "~0.69.1",
+    "eas-cli": "^12.5.1",
     "tailwindcss": "3.3.2",
     "typescript": "^5.6.2"
   },
   "scripts": {
-    "dev": "NODE_ENV=local expo start --go",
+    "dev": "NODE_ENV=dev expo start --go",
     "build": "eas build --platform ios",
     "build:dev": "eas build --profile development --platform ios",
     "submit": "eas submit -p ios",

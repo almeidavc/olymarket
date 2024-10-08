@@ -34,7 +34,7 @@ export const ChatMessages = React.forwardRef<FlatList, ChatMessagesProps>(
           <View
             className={`flex max-w-[80%] flex-col rounded-xl p-2 ${backgroundColor} ${crossAxisAlignment}`}
           >
-            <Text className={`flex-1 ${textColor}`}>{message.content}</Text>
+            <Text className={`${textColor}`}>{message.content}</Text>
             <Caption className={`${textColor}`}>
               {dayjs(message.createdAt).format('HH:mm')}
             </Caption>
@@ -59,5 +59,5 @@ export const ChatMessages = React.forwardRef<FlatList, ChatMessagesProps>(
         />
       </View>
     )
-  }
+  },
 )

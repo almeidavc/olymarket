@@ -2,7 +2,7 @@
   "name": "@olymarket/api",
   "packageManager": "yarn@3.4.1",
   "scripts": {
-    "dev": "dotenv -- tsx index.ts",
+    "dev": "NODE_ENV=debug dotenv -- tsx index.ts",
     "prod": "NODE_ENV=production pm2 start dist/index.js"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "@elastic/elasticsearch": "7",
     "@olymarket/backend-utils": "workspace:^",
     "@olymarket/db": "workspace:^",
+    "@supabase/supabase-js": "^2.45.4",
     "@trpc/client": "^10.21.3-alpha.3",
     "@trpc/server": "^10.21.3-alpha.3",
     "axios": "^1.7.7",

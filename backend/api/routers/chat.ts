@@ -2,6 +2,7 @@ import { router, protectedProcedure } from '../trpc'
 import { z } from 'zod'
 import { TRPCError } from '@trpc/server'
 import { Prisma } from '@prisma/client'
+import { logger } from '@olymarket/backend-utils'
 
 const completeConversation = Prisma.validator<Prisma.ConversationArgs>()({
   include: {
@@ -152,9 +153,42 @@ const findOrCreate = protectedProcedure
     return conversation
   })
 
+const sendMessage = protectedProcedure
+  .input(
+    z.object({
+      to: z.string(),
+      content: z.string(),
+      createdAt: z.date(),
+      conversationId: z.string(),
+    }),
+  )
+  .mutation(async ({ ctx, input }) => {
+    const message = await ctx.prisma.message.create({
+      data: {
+        from: ctx.auth.userId,
+        to: input.to,
+        content: input.content,
+        createdAt: input.createdAt,
+        conversationId: input.conversationId,
+      },
+    })
+
+    const channel = ctx.supabase.channel(input.conversationId)
+    await channel.send({
+      type: 'broadcast',
+      event: 'message',
+      payload: { message },
+    })
+    logger.debug('Broadcasted message successfully: ' + message.content)
+    await ctx.supabase.removeChannel(channel)
+
+    return message
+  })
+
 export const chatRouter = router({
   getById,
   list,
   find,
   findOrCreate,
+  sendMessage,
 })

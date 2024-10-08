@@ -26,7 +26,7 @@ export function EditPost({ route, navigation }) {
   const { mutate: updatePostMutation } = trpc.post.update.useMutation({
     onSuccess: (updatedPost) => {
       context.post.getById?.setData({ id: updatedPost.id }, () => updatedPost)
-      context.post.list?.invalidate()
+      context.post.search?.invalidate()
       context.post.listMine?.setData(undefined, (oldPosts) => {
         return oldPosts?.map((post) =>
           post.id === updatedPost.id ? updatedPost : post,
@@ -38,7 +38,7 @@ export function EditPost({ route, navigation }) {
   const { mutate: updateImagesMutation } = trpc.post.updateImages.useMutation({
     onSuccess: (updatedPost) => {
       context.post.getById?.invalidate({ id: updatedPost.id })
-      context.post.list?.invalidate()
+      context.post.search?.invalidate()
       context.post.listMine?.invalidate()
     },
   })

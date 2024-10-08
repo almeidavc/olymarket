@@ -4,7 +4,6 @@ import { trpc } from 'app/utils/trpc'
 import { PaperAirplaneIcon } from 'react-native-heroicons/outline'
 import { ActivityIndicator, KeyboardAvoidingView } from 'react-native'
 import { useRef, useState, useEffect } from 'react'
-import { useAuthSocket } from '../../utils/websocket'
 import { useAuth } from '@clerk/clerk-expo'
 import { inferProcedureOutput } from '@trpc/server'
 import { AppRouter } from 'server/api/routers'
@@ -13,6 +12,7 @@ import { IconButton } from 'app/components/button'
 import { SafeAreaView } from 'react-native'
 import { ChatMessages, MessageBasic } from './messages'
 import { FlatList } from 'react-native'
+import { supabase } from '../../utils/supabase'
 
 type Chat = inferProcedureOutput<AppRouter['chat']['list']>[number]
 export type Message = Chat['conversation']['messages'][number]
@@ -26,42 +26,16 @@ export function ChatScreen({ route }) {
 
   const { userId } = useAuth()
 
-  const socket = useAuthSocket()
-
   const [input, setInput] = useState<string>('')
-  const [pendingMessages, setPendingMessages] = useState<MessageBasic[]>([])
 
   const { data: chat, isLoading } = trpc.chat.getById.useQuery({
     chatId,
   })
-
   const messages = chat?.conversation?.messages
 
   const context = trpc.useContext()
 
-  const updateListChatsCache = (chat: Chat) => {
-    context.chat.list.setData(undefined, (oldChats) => {
-      if (oldChats === undefined) {
-        return
-      }
-
-      const chatExistsInCache = oldChats.some(
-        (oldChat) => oldChat.conversation.id === chat?.conversation.id
-      )
-
-      if (chatExistsInCache) {
-        return oldChats.map((oldChat) =>
-          oldChat.conversation.id === chat!.conversation.id ? chat : oldChat
-        )
-      }
-
-      return [chat, ...oldChats]
-    })
-  }
-
-  const updateGetChatCache = (chat: Chat) => {
-    context.chat.getById.setData({ chatId }, () => chat)
-  }
+  const { mutate: sendMessageMutation } = trpc.chat.sendMessage.useMutation()
 
   const addMessageToCachedChats = (message: Message) => {
     const outdatedChat = context.chat.getById.getData({ chatId })
@@ -78,34 +52,51 @@ export function ChatScreen({ route }) {
     updateGetChatCache(updatedChat)
   }
 
-  useEffect(() => {
-    socket.on('message:receive', ({ message }) => {
-      addMessageToCachedChats(message)
+  const updateListChatsCache = (chat: Chat) => {
+    context.chat.list.setData(undefined, (oldChats) => {
+      if (oldChats === undefined) {
+        return
+      }
+      const chatExistsInCache = oldChats.some(
+        (oldChat) => oldChat.conversation.id === chat?.conversation.id,
+      )
+      if (chatExistsInCache) {
+        return oldChats.map((oldChat) =>
+          oldChat.conversation.id === chat!.conversation.id ? chat : oldChat,
+        )
+      }
+      return [chat, ...oldChats]
     })
+  }
+
+  const updateGetChatCache = (chat: Chat) => {
+    context.chat.getById.setData({ chatId }, () => chat)
+  }
+
+  useEffect(() => {
+    const channel = supabase.channel(chatId)
+    channel.on('broadcast', { event: 'message' }, ({ payload }) => {
+      addMessageToCachedChats(payload.message)
+    })
+    channel.subscribe()
 
     return () => {
-      socket.off('message:receive')
+      supabase.removeChannel(channel)
     }
   }, [])
 
-  const sendMessage = (content: string) => {
+  const sendMessage = async (content: string) => {
     const message = {
       from: userId,
       to: chat!.partner!.id,
-      content: input,
+      content: content,
       createdAt: new Date(),
       conversationId: chat!.conversation.id,
     }
 
-    socket.emit('message:send', { message }, ({ message }) => {
-      addMessageToCachedChats(message)
-      setPendingMessages((prevMessages) =>
-        prevMessages.slice(0, prevMessages.length - 1)
-      )
-    })
+    sendMessageMutation(message)
 
     setInput('')
-    setPendingMessages((prevMessages) => [message, ...prevMessages!])
     messagesContainer?.current?.scrollToOffset({ offset: 0 })
   }
 
@@ -131,10 +122,7 @@ export function ChatScreen({ route }) {
         keyboardVerticalOffset={headerHeight}
       >
         <View className="flex h-full flex-col">
-          <ChatMessages
-            ref={messagesContainer}
-            messages={[...pendingMessages, ...(messages ?? [])]}
-          />
+          <ChatMessages ref={messagesContainer} messages={messages ?? []} />
           <View className="flex flex-row items-end border-t-[0.5px] border-gray-300 px-4 py-2">
             <View className="mr-2 flex-1">
               <TextInput
