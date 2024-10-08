@@ -24,7 +24,7 @@ export const PostList = React.forwardRef<any, PostListProps>(
       const paddingTop = firstRowPadding && index < 2 ? 'pt-4' : ''
 
       return (
-        <View className={`h-[35vh] w-full pb-4 ${paddingX} ${paddingTop}`}>
+        <View className={`w-full pb-4 ${paddingX} ${paddingTop}`}>
           {isLoading ? <SkeletonPostCard /> : <PostCard post={post} />}
         </View>
       )
