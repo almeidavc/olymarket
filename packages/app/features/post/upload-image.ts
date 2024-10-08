@@ -1,6 +1,9 @@
 import { manipulateAsync } from 'expo-image-manipulator'
 
-export async function compressAndUploadImage(imageUri, uploadImageUrl) {
+export async function compressAndUploadImage(
+  imageUri: string,
+  uploadImageUrl: string,
+) {
   // compress image
   const compressed = await manipulateAsync(imageUri, [], { compress: 0.5 })
 
@@ -17,7 +20,10 @@ export async function compressAndUploadImage(imageUri, uploadImageUrl) {
   return result
 }
 
-export function compressAndUploadImages(imageUris, uploadImageUrls) {
+export function compressAndUploadImages(
+  imageUris: string[],
+  uploadImageUrls: string[],
+) {
   const uploads: any[] = []
   for (let i = 0; i < imageUris.length; i++) {
     uploads.push(compressAndUploadImage(imageUris[i], uploadImageUrls[i]))

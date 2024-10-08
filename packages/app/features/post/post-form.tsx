@@ -17,10 +17,11 @@ import {
 import { Modal, SafeAreaView } from 'react-native'
 import { PriceInput } from './price-input'
 import { Post } from 'app/utils/types'
+import { Image } from './image-select'
 
 interface PostFormProps {
   defaultValues?: Post
-  submit: (post: Partial<Post>, images: string[]) => Promise<void>
+  submit: (post: Partial<Post>, images: Image[]) => Promise<void>
   submitLabel: string
   isSubmitLoading: boolean
 }
@@ -49,9 +50,7 @@ export const PostFormScreen = ({
 
   const isAnyFieldDirty = isDirty || isFormDirty
 
-  const [imageUris, setImageUris] = useState<string[]>(
-    () => defaultValues?.images?.map((img) => img.url) ?? [],
-  )
+  const [images, setImages] = useState<Image[]>(defaultValues?.images ?? [])
   const [category, setCategory] = useState<PostCategory>(
     defaultValues?.category,
   )
@@ -65,13 +64,13 @@ export const PostFormScreen = ({
 
   const resetForm = () => {
     reset()
-    setImageUris([])
+    setImages([])
     setCategory(undefined)
     setZone(undefined)
   }
 
   const onSubmit = async () => {
-    if (imageUris.length === 0) {
+    if (images.length === 0) {
       setShowImagesHelperText(true)
       return
     }
@@ -90,7 +89,7 @@ export const PostFormScreen = ({
           category,
           zone,
         },
-        imageUris,
+        images,
       )
       resetForm()
     })()
@@ -146,9 +145,9 @@ export const PostFormScreen = ({
       </Modal>
       <KeyboardAwareScrollView>
         <ImageSelect
-          imageUris={imageUris}
-          setImageUris={(imageUris) => {
-            setImageUris(imageUris)
+          images={images}
+          setImages={(images) => {
+            setImages(images)
             setShowImagesHelperText(false)
             setIsFormDirty(true)
           }}

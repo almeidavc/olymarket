@@ -7,6 +7,7 @@ import { View } from 'app/design/core'
 import { Text } from 'app/design/typography'
 import { AntDesign } from '@expo/vector-icons'
 import { Button } from 'app/components/button'
+import { Image } from './image-select'
 
 export function EditPost({ route, navigation }) {
   const { postId } = route.params
@@ -20,10 +21,10 @@ export function EditPost({ route, navigation }) {
     id: postId,
   })
 
-  const { mutate: generateUploadUrlsMutation } =
+  const { mutateAsync: generateUploadUrlsMutation } =
     trpc.post.generateImageUploadUrls.useMutation()
 
-  const { mutate: updatePostMutation } = trpc.post.update.useMutation({
+  const { mutateAsync: updatePostMutation } = trpc.post.update.useMutation({
     onSuccess: (updatedPost) => {
       context.post.getById?.setData({ id: updatedPost.id }, () => updatedPost)
       context.post.search?.invalidate()
@@ -35,94 +36,66 @@ export function EditPost({ route, navigation }) {
     },
   })
 
-  const { mutate: updateImagesMutation } = trpc.post.updateImages.useMutation({
-    onSuccess: (updatedPost) => {
-      context.post.getById?.invalidate({ id: updatedPost.id })
-      context.post.search?.invalidate()
-      context.post.listMine?.invalidate()
-    },
-  })
+  const { mutateAsync: updateImagesMutation } =
+    trpc.post.updateImages.useMutation({
+      onSuccess: (updatedPost) => {
+        context.post.getById?.invalidate({ id: updatedPost.id })
+        context.post.search?.invalidate()
+        context.post.listMine?.invalidate()
+      },
+    })
 
-  const editImages = (imageUris) => {
-    const newImages = imageUris.filter((uri) => uri.startsWith('file'))
-    if (newImages.length) {
-      return new Promise<void>(async (resolve, reject) => {
-        generateUploadUrlsMutation(
-          {
-            count: newImages.length,
-          },
-          {
-            onSuccess: async (imageUploadUrls) => {
-              try {
-                await compressAndUploadImages(
-                  newImages,
-                  imageUploadUrls.map((img) => img.url),
-                )
-              } catch (error) {
-                throw new Error(
-                  'Something went wrong while uploading the images',
-                  { cause: error },
-                )
-              }
-
-              let i = 0
-              const images = imageUris.map((imgUri) =>
-                imgUri.startsWith('file')
-                  ? {
-                      key: imageUploadUrls[i++].key,
-                    }
-                  : post?.images.find((img) => img.url === imgUri),
-              )
-              updateImagesMutation(
-                {
-                  id: postId,
-                  images,
-                },
-                {
-                  onSuccess: () => {
-                    resolve()
-                  },
-                },
-              )
-            },
-          },
-        )
+  const editImages = async (updatedImages: Image[]) => {
+    // upload images that were added
+    const addedImages = updatedImages.filter((img) => !img.key)
+    let imageUploadUrls
+    if (addedImages.length) {
+      imageUploadUrls = await generateUploadUrlsMutation({
+        count: addedImages.length,
       })
+      try {
+        await compressAndUploadImages(
+          addedImages.map((img) => img.url),
+          imageUploadUrls.map((img) => img.url),
+        )
+      } catch (error) {
+        throw new Error('Something went wrong while uploading the images', {
+          cause: error,
+        })
+      }
     }
 
-    const images = imageUris.map((imgUri) =>
-      post?.images.find((img) => img.url === imgUri),
-    )
+    // update list of images linked with post in db
+    let i = 0
+    const newImages = updatedImages.map((img) => {
+      // img is new
+      if (!img.key) {
+        return {
+          key: imageUploadUrls[i++].key,
+        }
+      }
+      // img already exists in db
+      return post?.images.find((i) => img.key === i.key)
+    })
 
-    return new Promise<void>((resolve) => {
-      updateImagesMutation(
-        {
-          id: postId,
-          images,
-        },
-        {
-          onSuccess: () => {
-            resolve()
-          },
-        },
-      )
+    return updateImagesMutation({
+      id: postId,
+      images: newImages,
     })
   }
 
-  const editPost = async (editedPost, imageUris) => {
+  const editPost = async (editedPost, updatedImages: Image[]) => {
     setIsEditPostLoading(true)
 
-    const updateImagesRes = editImages(imageUris)
+    const updateImagesRes = editImages(updatedImages)
     const updatePostRes = updatePostMutation({
       ...editedPost,
       id: postId,
     })
 
-    return new Promise<void>(async (resolve) => {
-      await Promise.all([updateImagesRes, updatePostRes])
-      setIsEditPostLoading(false)
-      setShowPostEditedModal(true)
-    })
+    await Promise.all([updateImagesRes, updatePostRes])
+    setIsEditPostLoading(false)
+    setShowPostEditedModal(true)
   }
 
   return (

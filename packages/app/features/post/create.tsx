@@ -8,6 +8,7 @@ import { Text } from 'app/design/typography'
 import { AntDesign } from '@expo/vector-icons'
 import { Button } from 'app/components/button'
 import { useRouter } from 'solito/router'
+import { Image } from './image-select'
 
 export function CreatePost() {
   const router = useRouter()
@@ -17,63 +18,44 @@ export function CreatePost() {
 
   const context = trpc.useContext()
 
-  const { mutate: generateUploadUrlsMutation } =
+  const { mutateAsync: createPostMutation } = trpc.post.create.useMutation()
+
+  const { mutateAsync: generateUploadUrlsMutation } =
     trpc.post.generateImageUploadUrls.useMutation()
 
-  const { mutate: createPostMutation } = trpc.post.create.useMutation()
-
-  const { mutate: updateImagesMutation } = trpc.post.updateImages.useMutation({
-    onSuccess: () => {
-      context.post.search?.invalidate()
-      context.post.listMine?.invalidate()
-    },
-  })
-
-  const createPost = (post, images) => {
-    setIsCreatePostLoading(true)
-    return new Promise<void>((resolve) => {
-      createPostMutation(
-        { ...post },
-        {
-          onSuccess: (createdPost) => {
-            generateUploadUrlsMutation(
-              { count: images.length },
-              {
-                onSuccess: async (uploadUrls) => {
-                  try {
-                    await compressAndUploadImages(
-                      images,
-                      uploadUrls.map((img) => img.url),
-                    )
-                  } catch (error) {
-                    throw new Error(
-                      'Something went wrong while uploading the images',
-                      { cause: error },
-                    )
-                  }
-
-                  updateImagesMutation(
-                    {
-                      id: createdPost.id,
-                      images: uploadUrls.map((img) => ({
-                        key: img.key,
-                      })),
-                    },
-                    {
-                      onSuccess: () => {
-                        resolve()
-                        setIsCreatePostLoading(false)
-                        setShowPostCreatedModal(true)
-                      },
-                    },
-                  )
-                },
-              },
-            )
-          },
-        },
-      )
+  const { mutateAsync: updateImagesMutation } =
+    trpc.post.updateImages.useMutation({
+      onSuccess: () => {
+        context.post.search?.invalidate()
+        context.post.listMine?.invalidate()
+      },
     })
+
+  const createPost = async (post, images: Image[]) => {
+    setIsCreatePostLoading(true)
+    const created = await createPostMutation({ ...post })
+    const uploadUrls = await generateUploadUrlsMutation({
+      count: images.length,
+    })
+    try {
+      await compressAndUploadImages(
+        images.map((img) => img.url),
+        uploadUrls.map((img) => img.url),
+      )
+    } catch (error) {
+      throw new Error('Something went wrong while uploading the images', {
+        cause: error,
+      })
+    }
+
+    await updateImagesMutation({
+      id: created.id,
+      images: uploadUrls.map((img) => ({
+        key: img.key,
+      })),
+    })
+    setIsCreatePostLoading(false)
+    setShowPostCreatedModal(true)
   }
 
   return (
