@@ -20,3 +20,5 @@ app.use(
   ClerkExpressWithAuth(),
   trpcExpress.createExpressMiddleware({ router: appRouter, createContext }),
 )
+
+module.exports = app
