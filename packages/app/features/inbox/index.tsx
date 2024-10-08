@@ -1,5 +1,5 @@
 import { View, TouchableOpacity } from 'app/design/core'
-import { SafeAreaView } from 'react-native'
+import { ActivityIndicator, SafeAreaView } from 'react-native'
 import { Text, Title, Caption } from 'app/design/typography'
 import { trpc } from 'app/utils/trpc'
 import { useRouter } from 'solito/router'
@@ -53,19 +53,18 @@ export function InboxScreen() {
 
   const {
     data: chats,
+    isLoading,
     refetch,
     isRefetching,
   } = trpc.chat.list.useQuery(undefined, {
     refetchOnMount: false,
   })
 
-  const renderItem = ({ item: chat }) => {
+  if (isLoading) {
     return (
-      <TouchableOpacity
-        onPress={() => router.push(`/chat/${chat.conversation.id}`)}
-      >
-        <ChatCard chat={chat} />
-      </TouchableOpacity>
+      <View className="flex h-full items-center justify-center">
+        <ActivityIndicator size="large" />
+      </View>
     )
   }
 
@@ -87,7 +86,13 @@ export function InboxScreen() {
         <FlashList
           data={chats}
           keyExtractor={(chat) => chat.conversation.id}
-          renderItem={renderItem}
+          renderItem={({ item: chat }) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/chat/${chat.conversation.id}`)}
+            >
+              <ChatCard chat={chat} />
+            </TouchableOpacity>
+          )}
           estimatedItemSize={96}
           refreshControl={
             <RefreshControl refreshing={isRefetching} onRefresh={refetch} />
