@@ -1,6 +1,5 @@
 {
   "name": "@olymarket/api",
-  "packageManager": "yarn@3.4.1",
   "scripts": {
     "dev": "NODE_ENV=debug dotenv -- tsx index.ts",
     "build": "tsup index.ts"

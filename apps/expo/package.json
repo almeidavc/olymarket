@@ -1,4 +1,18 @@
 {
+  "name": "expo-app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "dev": "NODE_ENV=dev expo start --go",
+    "build": "eas build --platform ios",
+    "build:dev": "eas build --profile development --platform ios",
+    "submit": "eas submit -p ios",
+    "update": "eas update --branch production",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web"
+  },
   "dependencies": {
     "@react-native-picker/picker": "2.4.8",
     "@shopify/flash-list": "1.4.0",
@@ -38,19 +52,5 @@
     "eas-cli": "^12.5.1",
     "tailwindcss": "3.3.2",
     "typescript": "^5.6.2"
-  },
-  "scripts": {
-    "dev": "NODE_ENV=dev expo start --go",
-    "build": "eas build --platform ios",
-    "build:dev": "eas build --profile development --platform ios",
-    "submit": "eas submit -p ios",
-    "update": "eas update --branch production",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
-  },
-  "main": "index.js",
-  "version": "1.0.0",
-  "private": true,
-  "name": "expo-app"
+  }
 }

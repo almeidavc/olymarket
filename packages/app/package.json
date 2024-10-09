@@ -1,7 +1,8 @@
 {
-  "version": "0.0.0",
   "name": "app",
+  "version": "0.0.0",
   "main": "index.ts",
+  "sideEffects": false,
   "dependencies": {
     "@clerk/clerk-expo": "^0.16.4",
     "@react-native-picker/picker": "^2.4.10",
@@ -9,7 +10,7 @@
     "@react-navigation/elements": "^1.3.17",
     "@react-navigation/material-top-tabs": "^6.6.2",
     "@react-navigation/native": "^6.0.8",
-    "@react-navigation/native-stack": "^6.5.0",
+    "@react-navigation/native-stack": "^6.11.0",
     "@supabase/supabase-js": "^2.45.4",
     "@tanstack/react-query": "^4.29.5",
     "@trpc/client": "^10.21.3-alpha.3",
@@ -32,6 +33,5 @@
     "socket.io-client": "^4.8.0",
     "solito": "^4.2.2",
     "superjson": "^2.2.1"
-  },
-  "sideEffects": false
+  }
 }
