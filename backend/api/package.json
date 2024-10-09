@@ -2,7 +2,7 @@
   "name": "@olymarket/api",
   "scripts": {
     "dev": "NODE_ENV=debug dotenv -- tsx index.ts",
-    "build": "tsup index.ts"
+    "build": "tsup api/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.321.1",
