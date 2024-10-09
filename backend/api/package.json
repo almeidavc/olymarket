@@ -1,8 +1,9 @@
 {
   "name": "@olymarket/api",
+  "type": "module",
   "scripts": {
     "dev": "NODE_ENV=debug dotenv -- tsx index.ts",
-    "build": "tsup api/index.ts"
+    "build": "tsup --format esm api/index.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.321.1",

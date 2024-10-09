@@ -21,4 +21,4 @@ app.use(
   trpcExpress.createExpressMiddleware({ router: appRouter, createContext }),
 )
 
-module.exports = app
+export default app
