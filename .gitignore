@@ -84,3 +84,4 @@ build/**
 .env
 .envrc
 .envrc.prod
+.vercel
